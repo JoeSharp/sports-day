@@ -1,6 +1,7 @@
 services:
   app-db:
     image: postgres:latest
+    container_name: sports-day-service
     networks:
       - sports-day
     environment:
@@ -14,6 +15,7 @@ services:
 
   auth-db:
     image: postgres
+    container_name: sports-day-auth-db
     networks:
       - sports-day
     restart: always
@@ -32,6 +34,7 @@ services:
 
   auth:
     image: quay.io/keycloak/keycloak:22.0
+    container_name: sports-day-auth
     networks:
       - sports-day
     command: start-dev --import-realm
@@ -48,7 +51,7 @@ services:
       auth-db:
         condition: service_healthy
     volumes:
-      - ./auth/realm-export.json:/opt/keycloak/data/import/main-realm.json:ro
+      - ./auth/:/opt/keycloak/data/import/:ro
 
 networks:
   sports-day:
