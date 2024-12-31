@@ -12,8 +12,7 @@ curl -X POST \
  -d "username=${USERNAME}" \
  -d "password=${PASSWORD}" \
  -d "grant_type=password" \
- -o token.json
+ -o tmp/token.json
 
-ACCESS_TOKEN=$(jq -r '.access_token' token.json)
-#rm token.json
+ACCESS_TOKEN=$(jq -r '.access_token' tmp/token.json)
 echo "${ACCESS_TOKEN}"
