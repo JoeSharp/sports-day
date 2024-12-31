@@ -8,3 +8,8 @@ spring:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/sports_day}
     username: sportsAdmin
     password: SP%RTS
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_URL:http://localhost:8085/realms/ratracejoe}
