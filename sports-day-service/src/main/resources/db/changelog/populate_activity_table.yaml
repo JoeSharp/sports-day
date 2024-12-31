@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Joe Sharp
+      labels: populate
+      comment: Populate Activity table
+      changes:
+        - loadData:
+            file: db/data/activities.csv
+            tableName: activity
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: name
+                  type: string
+              - column:
+                  name: description
+                  type: string

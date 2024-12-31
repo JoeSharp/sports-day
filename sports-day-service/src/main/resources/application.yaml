@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: sports-day-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/sports_day}
+    username: tsuser
+    password: ts-password
