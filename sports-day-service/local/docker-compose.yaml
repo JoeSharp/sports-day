@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    networks:
+      - sports-day
+    environment:
+      POSTGRES_USER: sportsAdmin
+      POSTGRES_PASSWORD: SP%RTS
+      POSTGRES_DB: sports_day
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  sports-day:
+    driver: bridge
+
+volumes:
+  postgres_data:

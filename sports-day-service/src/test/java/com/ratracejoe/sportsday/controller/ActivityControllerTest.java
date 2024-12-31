@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday.controller;
 
+import com.ratracejoe.sportsday.model.ActivityDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,7 @@ class ActivityControllerTest {
 
     @Test
     void getActivities() {
-        ResponseEntity<List<String>> response =
+        ResponseEntity<List<ActivityDTO>> response =
                 restTemplate.exchange("/activities", HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<>() {
@@ -28,6 +29,6 @@ class ActivityControllerTest {
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         var activities = response.getBody();
 
-        assertThat(activities).contains("Running");
+        assertThat(activities).anyMatch(a -> "Running".equals(a.name()));
     }
 }

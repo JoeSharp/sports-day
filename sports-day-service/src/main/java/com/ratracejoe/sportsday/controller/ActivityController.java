@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday.controller;
 
+import com.ratracejoe.sportsday.model.ActivityDTO;
 import com.ratracejoe.sportsday.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class ActivityController {
     private final ActivityService activityService;
 
     @GetMapping
-    public List<String> getActivities() {
+    public List<ActivityDTO> getActivities() {
         return activityService.getActivities();
     }
 }

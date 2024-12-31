@@ -1,4 +1,6 @@
 package com.ratracejoe.sportsday.model;
 
-public class ActivityDTO {
+import java.util.UUID;
+
+public record ActivityDTO(UUID id, String name, String description) {
 }
