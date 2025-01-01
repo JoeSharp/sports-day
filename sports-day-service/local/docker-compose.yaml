@@ -13,6 +13,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  kafka:
+    image: apache/kafka
+    container_name: sports-day-audit
+    networks:
+      - sports-day
+    ports:
+      - "9092:9092"
+
   auth-db:
     image: postgres
     container_name: sports-day-auth-db

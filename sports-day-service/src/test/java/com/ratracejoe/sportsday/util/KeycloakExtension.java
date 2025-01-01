@@ -16,6 +16,7 @@ import org.testcontainers.containers.GenericContainer;
 import java.util.Map;
 
 public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
+    private static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:22.0";
     private static final String CLIENT_ID="timesheets-service";
     private static final String CLIENT_SECRET="rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy";
     private static final String USERNAME="joesharp";
@@ -23,7 +24,7 @@ public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
 
     public static int KEYCLOAK_PORT = 8080;
     private static final GenericContainer<?> keycloak =
-            new GenericContainer<>("quay.io/keycloak/keycloak:22.0")
+            new GenericContainer<>(KEYCLOAK_IMAGE)
                 .withCommand("start-dev --import-realm")
                 .withExposedPorts(KEYCLOAK_PORT)
                 .withClasspathResourceMapping("keycloak/", "/opt/keycloak/data/import/", BindMode.READ_ONLY);

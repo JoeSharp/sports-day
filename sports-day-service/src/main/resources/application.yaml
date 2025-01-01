@@ -8,6 +8,8 @@ spring:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/sports_day}
     username: sportsAdmin
     password: SP%RTS
+  kafka:
+    bootstrap-servers: localhost:9092
   security:
     oauth2:
       resourceserver:

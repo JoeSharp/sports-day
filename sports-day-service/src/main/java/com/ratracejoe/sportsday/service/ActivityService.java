@@ -11,9 +11,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ActivityService {
+    private final AuditService auditService;
     private final ActivityRepository activityRepository;
 
     public List<ActivityDTO> getActivities() {
+        auditService.activitiesRead();
         return activityRepository.findAll().stream()
                 .map(ActivityService::mapToDTO)
                 .toList();
