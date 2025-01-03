@@ -25,3 +25,15 @@ These script call each other so it's simplest to be inside that directory
 cd testing/
 ./get_activities.sh
 ```
+
+# Connecting to Supporting Services
+
+## Database (Postgres)
+```bash
+docker exec -it sports-day-service psql -d sports_day -U sportsAdmin
+```
+
+# Cache (Redis)
+```bash
+docker exec -it sports-day-cache redis-cli
+```
