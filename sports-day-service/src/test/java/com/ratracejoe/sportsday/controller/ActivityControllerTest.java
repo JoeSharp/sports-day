@@ -94,5 +94,7 @@ class ActivityControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var activity = response.getBody();
         assertThat(activity.id()).isNotNull();
+        assertThat(auditsReceived)
+                .anyMatch(l -> l.startsWith("Activity Shooting created with ID"));
     }
 }
