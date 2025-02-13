@@ -8,19 +8,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuditService {
-    public static final String AUDIT_TOPIC = "audit";
+  public static final String AUDIT_TOPIC = "audit";
 
-    private final KafkaTemplate<String, String> kafka;
+  private final KafkaTemplate<String, String> kafka;
 
-    public void activitiesRead() {
-        kafka.send(AUDIT_TOPIC, "Activities were read");
-    }
+  public void activitiesRead() {
+    kafka.send(AUDIT_TOPIC, "Activities were read");
+  }
 
-    public void activityCreated(ActivityEntity entity) {
-        kafka.send(AUDIT_TOPIC,
-                String.format("Activity %s created with ID: %s",
-                        entity.getName(),
-                        entity.getId()));
-    }
-
+  public void activityCreated(ActivityEntity entity) {
+    kafka.send(
+        AUDIT_TOPIC,
+        String.format("Activity %s created with ID: %s", entity.getName(), entity.getId()));
+  }
 }

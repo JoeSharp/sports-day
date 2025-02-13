@@ -10,11 +10,11 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @Configuration
 public class CacheConfig {
 
-    @Bean
-    RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+  @Bean
+  RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory connectionFactory) {
+    RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
+    template.setConnectionFactory(connectionFactory);
 
-        return template;
-    }
+    return template;
+  }
 }

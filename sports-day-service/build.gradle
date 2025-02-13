@@ -38,8 +38,16 @@ dependencies {
 	testImplementation "org.testcontainers:postgresql:1.18.3"
 	testImplementation "org.testcontainers:kafka:1.20.4"
 	testImplementation "com.redis:testcontainers-redis:2.2.2"
+	testImplementation "org.awaitility:awaitility:3.0.0"
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.compileJava.finalizedBy(tasks.spotlessApply)
+spotless {
+	java {
+		googleJavaFormat()
+	}
 }
