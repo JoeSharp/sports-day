@@ -3,7 +3,7 @@ package com.ratracejoe.sportsday.controller;
 import static com.ratracejoe.sportsday.service.AuditService.AUDIT_TOPIC;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ratracejoe.sportsday.model.ActivityDTO;
+import com.ratracejoe.sportsday.model.rest.ActivityDTO;
 import com.ratracejoe.sportsday.util.KeycloakExtension;
 import com.redis.testcontainers.RedisContainer;
 import java.time.Duration;
@@ -35,7 +35,8 @@ class ActivityControllerTest {
 
   @Autowired private KafkaTemplate<String, String> kafkaProducer;
 
-  @RegisterExtension private static KeycloakExtension keycloakExtension = new KeycloakExtension();
+  @RegisterExtension
+  private static final KeycloakExtension keycloakExtension = new KeycloakExtension();
 
   private static final List<String> auditsReceived = new ArrayList<>();
 
@@ -69,12 +70,36 @@ class ActivityControllerTest {
   }
 
   @Test
-  void getActivities() {
-    HttpEntity<Void> request = new HttpEntity<>(keycloakExtension.getAuthHeaders());
-    ResponseEntity<List<ActivityDTO>> response =
-        restTemplate.exchange(
-            "/activities", HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
+  void getActivity() {
+    // Given
+    ActivityDTO activityDTO = randomActivityCreated();
 
+    // When
+    ResponseEntity<ActivityDTO> response = callGetActivity(activityDTO.id());
+
+    // Then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().name()).isEqualTo(activityDTO.name());
+    pipecleanAudits();
+    assertThat(auditsReceived).contains(String.format("Activity %s read", activityDTO.id()));
+  }
+
+  @Test
+  void getNonExistentActivity() {
+    // When
+    ResponseEntity<ActivityDTO> response = callGetActivity(UUID.randomUUID());
+
+    // Then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  void getActivities() {
+    // When
+    ResponseEntity<List<ActivityDTO>> response = callGetActivities();
+
+    // Then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     var activities = response.getBody();
 
@@ -85,17 +110,83 @@ class ActivityControllerTest {
 
   @Test
   void createActivity() {
+    // When
     ActivityDTO dto = new ActivityDTO(null, "Shooting", "Pointing guns at things and going bang");
-    HttpEntity<ActivityDTO> request = new HttpEntity<>(dto, keycloakExtension.getAuthHeaders());
-    ResponseEntity<ActivityDTO> response =
-        restTemplate.exchange("/activities", HttpMethod.POST, request, ActivityDTO.class);
+    ResponseEntity<ActivityDTO> response = callCreateActivity(dto);
 
+    // Then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     var activity = response.getBody();
     assertThat(activity).isNotNull();
     assertThat(activity.id()).isNotNull();
     pipecleanAudits();
     assertThat(auditsReceived).anyMatch(l -> l.startsWith("Activity Shooting created with ID"));
+  }
+
+  @Test
+  void deleteActivity() {
+    // Given
+    ActivityDTO activityDTO = randomActivityCreated();
+
+    // When
+    ResponseEntity<Void> response = callDeleteActivity(activityDTO.id());
+
+    // Then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertActivityDoesNotExist(activityDTO);
+    pipecleanAudits();
+    assertThat(auditsReceived).contains(String.format("Activity %s read", activityDTO.id()));
+    assertThat(auditsReceived).contains(String.format("Activity %s deleted", activityDTO.id()));
+  }
+
+  @Test
+  void deleteNonExistentActivity() {
+    // When
+    ResponseEntity<Void> response = callDeleteActivity(UUID.randomUUID());
+
+    // Then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  private ActivityDTO randomActivityCreated() {
+    ActivityDTO dto =
+        new ActivityDTO(
+            null, String.format("Random %s", UUID.randomUUID()), "Created for test purposes");
+    ResponseEntity<ActivityDTO> response = callCreateActivity(dto);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    return response.getBody();
+  }
+
+  private void assertActivityDoesNotExist(ActivityDTO activityDTO) {
+    ResponseEntity<ActivityDTO> response = callGetActivity(activityDTO.id());
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  private ResponseEntity<List<ActivityDTO>> callGetActivities() {
+    HttpEntity<Void> request = new HttpEntity<>(keycloakExtension.getAuthHeaders());
+    return restTemplate.exchange(
+        "/activities", HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
+  }
+
+  private String getActivityIdUrl(UUID id) {
+    return String.format("/activities/%s", id);
+  }
+
+  private ResponseEntity<ActivityDTO> callGetActivity(UUID id) {
+    HttpEntity<Void> request = new HttpEntity<>(keycloakExtension.getAuthHeaders());
+    return restTemplate.exchange(
+        getActivityIdUrl(id), HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
+  }
+
+  private ResponseEntity<Void> callDeleteActivity(UUID id) {
+    HttpEntity<Void> request = new HttpEntity<>(keycloakExtension.getAuthHeaders());
+    return restTemplate.exchange(
+        getActivityIdUrl(id), HttpMethod.DELETE, request, new ParameterizedTypeReference<>() {});
+  }
+
+  private ResponseEntity<ActivityDTO> callCreateActivity(ActivityDTO dto) {
+    HttpEntity<ActivityDTO> request = new HttpEntity<>(dto, keycloakExtension.getAuthHeaders());
+    return restTemplate.exchange("/activities", HttpMethod.POST, request, ActivityDTO.class);
   }
 
   private void pipecleanAudits() {

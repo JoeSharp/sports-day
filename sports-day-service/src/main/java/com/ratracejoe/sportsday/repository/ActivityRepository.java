@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.repository;
 
-import com.ratracejoe.sportsday.repository.entity.ActivityEntity;
+import com.ratracejoe.sportsday.model.entity.ActivityEntity;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.model;
+package com.ratracejoe.sportsday.model.rest;
 
 import java.util.UUID;
 
