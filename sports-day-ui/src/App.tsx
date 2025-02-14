@@ -1,28 +1,19 @@
-import useActivities from './api/useActivities';
+import LoginForm from './components/LoginForm';
+import ActivityTable from './components/ActivityTable';
+import LoggedInForm from './components/LoggedInForm';
+import NewActivityForm from './components/NewActivityForm';
+import useAuthContext from './api/useAuthContext';
 
 function App() {
-  const { activities } = useActivities();
-
+  const { accessToken } = useAuthContext();
   return (
     <div>
       <h1>Sports Day</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {activities.map((activity) => (
-            <tr key={activity.id}>
-              <td>{activity.name}</td>
-              <td>{activity.description}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <LoggedInForm />
+      {!accessToken && <LoginForm />}
+      {!!accessToken && <ActivityTable />}
+      {!!accessToken && <NewActivityForm />}
     </div>
   );
 }

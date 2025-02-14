@@ -15,3 +15,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OAUTH2_URL:http://localhost:8085/realms/ratracejoe}
+
+cors:
+  ui-host: ${UI_DOMAIN:http://localhost:9080}
