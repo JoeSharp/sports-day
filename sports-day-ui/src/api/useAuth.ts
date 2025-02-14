@@ -67,7 +67,18 @@ function useAuth(): UseAuth {
   const logout = React.useCallback(() => {
     setAccessToken(undefined);
     setRefreshToken(undefined);
-  }, []);
+    fetch('/auth/realms/ratracejoe/protocol/openid-connect/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        refresh_token: refreshToken
+      }),
+    })
+  }, [refreshToken]);
 
   return {
     name,
