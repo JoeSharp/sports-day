@@ -53,16 +53,24 @@ public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
     return response.get("access_token").asText();
   }
 
-  @Override
-  public void beforeAll(ExtensionContext context) throws Exception {
+  public void beforeAll() {
     keycloak.start();
     keycloakClient = RestClient.builder().baseUrl(getIssuerUri()).build();
   }
 
   @Override
-  public void afterAll(ExtensionContext context) throws Exception {
+  public void beforeAll(ExtensionContext context) {
+    beforeAll();
+  }
+
+  public void afterAll() {
     keycloak.stop();
     keycloak.close();
+  }
+
+  @Override
+  public void afterAll(ExtensionContext context) {
+    afterAll();
   }
 
   public String getIssuerUri() {

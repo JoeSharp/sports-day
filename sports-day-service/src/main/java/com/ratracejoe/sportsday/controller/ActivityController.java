@@ -6,6 +6,7 @@ import com.ratracejoe.sportsday.service.ActivityService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class ActivityController {
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.CREATED)
   public ActivityDTO createActivity(@RequestBody ActivityDTO newActivity) {
     return activityService.createActivity(newActivity);
   }
