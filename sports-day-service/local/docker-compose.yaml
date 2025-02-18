@@ -1,7 +1,24 @@
 services:
-  app-db:
-    image: postgres:latest
+  sports-day-service:
+    image: sports-day-service
     container_name: sports-day-service
+    networks:
+      - sports-day
+    profiles:
+      - include-app
+    environment:
+      DB_URL: jdbc:postgresql://sports-day-db:5432/sports_day
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      OAUTH2_URL: http://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
+      UI_DOMAIN: http://sports-day-ui:9080/
+    ports:
+      - "${LOCAL_STACK}:8080:8080"
+
+  sports-day-db:
+    image: postgres:latest
+    container_name: sports-day-db
     networks:
       - sports-day
     environment:
@@ -9,23 +26,45 @@ services:
       POSTGRES_PASSWORD: SP%RTS
       POSTGRES_DB: sports_day
     ports:
-      - "5432:5432"
+      - "${LOCAL_STACK}:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis
     container_name: sports-day-cache
-    ports:
-      - "6379:6379"
-
-  kafka:
-    image: apache/kafka
-    container_name: sports-day-audit
     networks:
       - sports-day
     ports:
-      - "9092:9092"
+      - "${LOCAL_STACK}:6379:6379"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    container_name: sports-day-zk
+    networks:
+      - sports-day
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    container_name: sports-day-audit
+    networks:
+      - sports-day
+    depends_on:
+      - zookeeper
+    ports:
+      - "${LOCAL_STACK}:29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${LOCAL_STACK}:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   auth-db:
     image: postgres
@@ -34,7 +73,7 @@ services:
       - sports-day
     restart: always
     ports:
-      - "5433:5432"
+      - "${LOCAL_STACK}:5433:5432"
     environment:
       POSTGRES_ROOT_PASSWORD: keycloak123
       POSTGRES_DB: auth
@@ -53,7 +92,7 @@ services:
       - sports-day
     command: start-dev --import-realm
     ports:
-      - "8085:8080"
+      - "${LOCAL_STACK}:8085:8080"
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin-pw

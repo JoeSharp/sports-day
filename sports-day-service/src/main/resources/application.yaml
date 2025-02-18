@@ -5,16 +5,20 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/sports_day}
+    url: ${DB_URL:jdbc:postgresql://${LOCAL_STACK}:5432/sports_day}
     username: sportsAdmin
     password: SP%RTS
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:${LOCAL_STACK}:29092}
+  data:
+    redis:
+      host: ${REDIS_HOST:${LOCAL_STACK}}
+      port: ${REDIS_PORT:6379}
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${OAUTH2_URL:http://localhost:8085/realms/ratracejoe}
+          issuer-uri: ${OAUTH2_URL:http://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe}
 
 cors:
-  ui-host: ${UI_DOMAIN:http://localhost:9080}
+  ui-host: ${UI_DOMAIN:http://${LOCAL_STACK}:9080}

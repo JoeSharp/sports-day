@@ -43,7 +43,7 @@ public class SportsDayIntegrationTests {
   private static final KeycloakExtension keycloakExtension = new KeycloakExtension();
 
   private static final ConfluentKafkaContainer kafka =
-      new ConfluentKafkaContainer("confluentinc/cp-kafka:7.4.0");
+      new ConfluentKafkaContainer("confluentinc/cp-kafka:7.4.4");
 
   private static final int REDIS_PORT = 6379;
 
@@ -165,11 +165,12 @@ public class SportsDayIntegrationTests {
   public void anAuditCapturesThatSingleActivity(String action) {
     switch (action) {
       case "read":
-        assertThat(auditsReceived).contains(String.format("Activity %s read", activityUnderTest.id()));
+        assertThat(auditsReceived)
+            .contains(String.format("Activity %s read", activityUnderTest.id()));
         break;
       case "deletion":
         assertThat(auditsReceived)
-                .contains(String.format("Activity %s deleted", activityUnderTest.id()));
+            .contains(String.format("Activity %s deleted", activityUnderTest.id()));
         break;
       case "creation":
         var startsWith = String.format("Activity %s created with ID", activityUnderTest.name());
@@ -196,13 +197,13 @@ public class SportsDayIntegrationTests {
   private ResponseEntity<List<ActivityDTO>> callGetActivities() {
     HttpEntity<Void> request = new HttpEntity<>(keycloakExtension.getAuthHeaders());
     return restTemplate.exchange(
-            "/activities", HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
+        "/activities", HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
   }
 
   private ResponseEntity<ActivityDTO> callGetActivity(UUID id) {
     HttpEntity<Void> request = new HttpEntity<>(keycloakExtension.getAuthHeaders());
     return restTemplate.exchange(
-            getActivityIdUrl(id), HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
+        getActivityIdUrl(id), HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
   }
 
   private ResponseEntity<ActivityDTO> callCreateActivity(ActivityDTO dto) {
@@ -213,7 +214,6 @@ public class SportsDayIntegrationTests {
   private ResponseEntity<Void> callDeleteActivity(UUID id) {
     HttpEntity<Void> request = new HttpEntity<>(keycloakExtension.getAuthHeaders());
     return restTemplate.exchange(
-            getActivityIdUrl(id), HttpMethod.DELETE, request, new ParameterizedTypeReference<>() {});
+        getActivityIdUrl(id), HttpMethod.DELETE, request, new ParameterizedTypeReference<>() {});
   }
-
 }
