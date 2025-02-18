@@ -16,7 +16,7 @@ local-stack:
 	echo "Registering IP address for Local Development"
 	sudo ip addr replace ${LOCAL_STACK} dev lo
 
-docker-run-all: docker-image
+docker-run-all: docker-image local-stack
 	echo "Running entire stack, including application, in docker"
 	docker compose -f local/docker-compose.yaml --profile include-app up -d
 
@@ -24,7 +24,7 @@ docker-stop-all:
 	echo "Stopping entire stack, including application, in docker"
 	docker compose -f local/docker-compose.yaml --profile include-app down
 
-docker-run-deps:
+docker-run-deps: local-stack
 	echo "Running dependencies stack in docker"
 	docker compose -f local/docker-compose.yaml up -d
 
@@ -33,6 +33,10 @@ docker-stop-deps:
 	docker compose -f local/docker-compose.yaml down
 
 # Run tests, requires LOCAL_STACK in place
+test-login:
+	echo "Testing: Login"
+	./testing/app_login.sh
+
 test-get-activities:
 	echo "Testing: Retrieving activities"
 	./testing/get_activities.sh

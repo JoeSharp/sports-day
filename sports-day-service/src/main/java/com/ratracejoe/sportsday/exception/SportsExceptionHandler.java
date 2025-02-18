@@ -10,4 +10,8 @@ public class SportsExceptionHandler {
   @ExceptionHandler(ActivityNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public void notFound() {}
+
+  @ExceptionHandler(InvalidAuthException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public void unauthorised() {}
 }
