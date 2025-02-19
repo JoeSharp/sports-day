@@ -13,7 +13,6 @@ const PROXY_DEBUG = (proxy, _options) => {
   });
 };
 
-
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -23,16 +22,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/auth/': {
-        target: "http://localhost:8085",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/auth/, ''),
-        configure: PROXY_DEBUG      
-      },
       '/api/': {
-        target: "http://localhost:8080",
+        target: `http://sports-day-auth.${process.env.LOCAL_STACK}.nip.io:8080`,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        configure: PROXY_DEBUG      
+        configure: PROXY_DEBUG
       },
     }
   }

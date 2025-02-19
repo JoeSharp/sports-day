@@ -1,4 +1,7 @@
 Feature: Activities can be managed
+  Background:
+    Given user logged in as JOE
+
   Scenario: Client requests list of activities
     When the client requests activities
     And all audits have been received

@@ -16,8 +16,6 @@ public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
   private static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:22.0";
   private static final String CLIENT_ID = "timesheets-service";
   private static final String CLIENT_SECRET = "rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy";
-  private static final String USERNAME = "joesharp";
-  private static final String PASSWORD = "password";
 
   public static int KEYCLOAK_PORT = 8080;
   private static final GenericContainer<?> keycloak =
@@ -38,8 +36,8 @@ public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
     map.add("client_id", CLIENT_ID);
     map.add("client_secret", CLIENT_SECRET);
-    map.add("username", USERNAME);
-    map.add("password", PASSWORD);
+    map.add("username", TestUser.JOE.getUsername());
+    map.add("password", TestUser.JOE.getPassword());
     map.add("grant_type", "password");
 
     JsonNode response =

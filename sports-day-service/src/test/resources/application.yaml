@@ -8,3 +8,8 @@ spring:
             clientSecret: rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy
   datasource:
     url: jdbc:tc:postgresql:9.6.8:///sports_day
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

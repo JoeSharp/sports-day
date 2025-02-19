@@ -1,3 +1,13 @@
+# Sports Day UI
+
+The backend uses a LOCAL_STACK variable in local dev to give your developer a proper IP address.
+
+To put this in place when running the UI, run this script (note the . is required for env to export)
+
+```bash
+. ./create_local_stack.sh
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

@@ -8,9 +8,6 @@ interface UseAuth {
   logout: () => void;
 }
 
-const CLIENT_ID = 'timesheets-service';
-const CLIENT_SECRET = 'rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy';
-
 function useAuth(): UseAuth {
   const [name, setName] = React.useState<string>();
   const [accessToken, setAccessToken] = React.useState<string>();
@@ -23,62 +20,60 @@ function useAuth(): UseAuth {
     setName(decoded.name);
   }, []);
 
-  const getToken = React.useCallback(
-    (body) => {
-      fetch('/auth/realms/ratracejoe/protocol/openid-connect/token', {
+  const login = React.useCallback(
+    (username: string, password: string) =>
+      fetch("/api/auth/login", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          ...body,
+          username,
+          password,
         }),
       })
         .then((r) => r.json())
-        .then(({ access_token, refresh_token }) => {
-          setRefreshToken(refresh_token);
-          onAccessTokenChange(access_token);
-        });
-    },
-    [onAccessTokenChange]
-  );
-
-  const login = React.useCallback(
-    (username: string, password: string) =>
-      getToken({
-        username,
-        password,
-        grant_type: 'password',
-      }),
-    [getToken]
+        .then(({ accessToken, refreshToken }) => {
+          setRefreshToken(refreshToken);
+          onAccessTokenChange(accessToken);
+        }),
+    []
   );
 
   const refresh = React.useCallback(
     () =>
-      getToken({
-        refresh_token: refreshToken,
-        grant_type: 'refresh_token',
-      }),
-    [refreshToken, getToken]
+      fetch("/api/auth/refresh", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: new URLSearchParams({
+          refreshToken
+        }),
+      })
+        .then((r) => r.json())
+        .then(({ accessToken, refreshToken }) => {
+          setRefreshToken(refreshToken);
+          onAccessTokenChange(accessToken);
+        }),
+    [accessToken, refreshToken]
   );
 
   const logout = React.useCallback(() => {
     setAccessToken(undefined);
     setRefreshToken(undefined);
-    fetch('/auth/realms/ratracejoe/protocol/openid-connect/logout', {
+    fetch('/api/auth/logout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Bearer ${accessToken}`
       },
       body: new URLSearchParams({
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
-        refresh_token: refreshToken
+        refreshToken
       }),
     })
-  }, [refreshToken]);
+  }, [accessToken, refreshToken]);
 
   return {
     name,
