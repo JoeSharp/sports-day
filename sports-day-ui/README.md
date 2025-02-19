@@ -4,6 +4,7 @@ The backend uses a LOCAL_STACK variable in local dev to give your developer a pr
 
 To put this in place when running the UI, run this script (note the . is required for env to export)
 
+
 ```bash
 . ./create_local_stack.sh
 ```
