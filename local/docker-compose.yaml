@@ -1,18 +1,30 @@
 services:
+  sports-day-ui:
+    image: sports-day-ui
+    container_name: sports-day-ui
+    networks:
+     - sports-day
+    profiles:
+     - include-ui
+    environment:
+      EXTERNAL_API_URL: http://sports-day-service.${LOCAL_STACK}.nip.io:8080
+    ports:
+      - ${LOCAL_STACK}:9080:80
+
   sports-day-service:
     image: sports-day-service
     container_name: sports-day-service
     networks:
       - sports-day
     profiles:
-      - include-app
+      - include-service
     environment:
       DB_URL: jdbc:postgresql://sports-day-db:5432/sports_day
       REDIS_HOST: redis
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       OAUTH2_URL: http://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
-      UI_DOMAIN: http://sports-day-ui:9080/
+      UI_DOMAIN: http://sports-day-ui.${LOCAL_STACK}.nip.io:9080/
     ports:
       - "${LOCAL_STACK}:8080:8080"
 

@@ -4,7 +4,7 @@ PASSWORD="password"
 
 curl -X POST \
   --write-out "HTTP Status: %{http_code}\n" \
-  $AUTH_HOST/auth/login \
+  $AUTH_HOST/api/auth/login \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   -d "username=${USERNAME}" \
   -d "password=${PASSWORD}"

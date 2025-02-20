@@ -6,5 +6,5 @@ ACTIVITY_ID=$1
 curl \
   --write-out "HTTP Status: %{http_code}\n" \
   --header "Authorization: Bearer ${ACCESS_TOKEN}" \
-  ${SERVICE_HOST}/auth/getUser
+  ${SERVICE_HOST}/api/auth/getUser
 

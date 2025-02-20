@@ -28,6 +28,7 @@ function useActivities(): UseActivities {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        mode: 'cors'
       }).then((r) => r.json()),
   });
 
@@ -39,6 +40,7 @@ function useActivities(): UseActivities {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
+        mode: 'cors',
         body: JSON.stringify(newActivity),
       }).then((r) => r.json());
     },
@@ -59,6 +61,7 @@ function useActivities(): UseActivities {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
+          mode: 'cors'
         }
       );
     },

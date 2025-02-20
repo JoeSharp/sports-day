@@ -27,6 +27,7 @@ function useAuth(): UseAuth {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
+        mode: 'cors',
         body: new URLSearchParams({
           username,
           password,
@@ -49,6 +50,7 @@ function useAuth(): UseAuth {
           'Content-Type': 'application/x-www-form-urlencoded',
           Authorization: `Bearer ${accessToken}`,
         },
+        mode: 'cors',
         body: new URLSearchParams({
           refreshToken,
         }),
@@ -71,6 +73,7 @@ function useAuth(): UseAuth {
           'Content-Type': 'application/x-www-form-urlencoded',
           Authorization: `Bearer ${accessToken}`,
         },
+        mode: 'cors',
         body: new URLSearchParams({
           refreshToken,
         }),
