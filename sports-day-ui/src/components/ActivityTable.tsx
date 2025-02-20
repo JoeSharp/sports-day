@@ -4,13 +4,18 @@ import useActivities from '../api/useActivities';
 function ActivityTable() {
   const { activities, deleteActivity } = useActivities();
 
-  const onDelete: React.MouseEventHandler<HTMLBUttonElement> =
+  const onDelete: React.MouseEventHandler<HTMLButtonElement> =
     React.useCallback(
       ({
-        target: {
-          dataset: { activityId },
-        },
-      }) => deleteActivity(activityId),
+        target,
+      }) => {
+        if (!(target instanceof HTMLButtonElement))
+          return;
+
+        if (!target.dataset.activityId) return;
+
+        deleteActivity(target.dataset.activityId);
+      },
       []
     );
 

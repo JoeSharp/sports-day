@@ -1,8 +1,8 @@
 import React from 'react';
 
-interface UseAuth {
-  accessToken: string;
-  name: string;
+export interface UseAuth {
+  accessToken: string | undefined;
+  name: string | undefined;
   login: (username: string, password: string) => void;
   refresh: () => void;
   logout: () => void;
@@ -13,7 +13,7 @@ function useAuth(): UseAuth {
   const [accessToken, setAccessToken] = React.useState<string>();
   const [refreshToken, setRefreshToken] = React.useState<string>();
 
-  const onAccessTokenChange = React.useCallback((access_token) => {
+  const onAccessTokenChange = React.useCallback((access_token: string) => {
     setAccessToken(access_token);
     const parts = access_token.split('.');
     const decoded = JSON.parse(atob(parts[1]));
@@ -22,7 +22,7 @@ function useAuth(): UseAuth {
 
   const login = React.useCallback(
     (username: string, password: string) =>
-      fetch("/api/auth/login", {
+      fetch(`${import.meta.env.VITE_API_HOST}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -42,14 +42,15 @@ function useAuth(): UseAuth {
 
   const refresh = React.useCallback(
     () =>
-      fetch("/api/auth/refresh", {
+      refreshToken &&
+      fetch(`${import.meta.env.VITE_API_HOST}/api/auth/refresh`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Bearer ${accessToken}`
+          Authorization: `Bearer ${accessToken}`,
         },
         body: new URLSearchParams({
-          refreshToken
+          refreshToken,
         }),
       })
         .then((r) => r.json())
@@ -63,16 +64,17 @@ function useAuth(): UseAuth {
   const logout = React.useCallback(() => {
     setAccessToken(undefined);
     setRefreshToken(undefined);
-    fetch('/api/auth/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Bearer ${accessToken}`
-      },
-      body: new URLSearchParams({
-        refreshToken
-      }),
-    })
+    refreshToken &&
+      fetch(`${import.meta.env.VITE_API_HOST}/api/auth/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: new URLSearchParams({
+          refreshToken,
+        }),
+      });
   }, [accessToken, refreshToken]);
 
   return {

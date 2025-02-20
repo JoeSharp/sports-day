@@ -1,12 +1,12 @@
-import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ActivityDTO } from './types';
+import { ActivityDTO, NewActivityDTO } from './types';
 import useAuthContext from './useAuthContext';
 
 interface UseActivities {
   isLoading: boolean;
   error: Error | null;
   activities: ActivityDTO[];
+  addActivity: (activity: NewActivityDTO) => void;
   deleteActivity: (id: string) => void;
 }
 
@@ -24,41 +24,46 @@ function useActivities(): UseActivities {
     enabled: !!accessToken,
     queryKey: ['activities'],
     queryFn: () =>
-      fetch(`/api/activities`, {
+      fetch(`${import.meta.env.VITE_API_HOST}/api/activities`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then((r) => r.json()),
   });
 
-  const addMutation = useMutation({
+  const addMutation = useMutation<ActivityDTO, Error, NewActivityDTO, unknown>({
     mutationFn: (newActivity) => {
-      return fetch('/api/activities', {
+      return fetch(`${import.meta.env.VITE_API_HOST}/api/activities`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newActivity)
-      });
+        body: JSON.stringify(newActivity),
+      }).then((r) => r.json());
     },
-    onSuccess: (res) => {
-      res.json().then(newActivity =>
-        queryClient.setQueryData(['activities'], (old) => [...old, newActivity]));
-    }
+    onSuccess: (newActivity) => {
+      queryClient.setQueryData(['activities'], (old: ActivityDTO[]) => [
+        ...old,
+        newActivity,
+      ]);
+    },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useMutation<any, Error, string, unknown>({
     mutationFn: (activityId: string) => {
-      fetch(`/api/activities/${activityId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      return fetch(
+        `${import.meta.env.VITE_API_HOST}/api/activities/${activityId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
     },
     onSuccess: (_result, activityId, _context) => {
-      queryClient.setQueryData(['activities'], (old) =>
+      queryClient.setQueryData(['activities'], (old: ActivityDTO[]) =>
         old.filter(({ id }) => id != activityId)
       );
     },

@@ -1,9 +1,16 @@
 import React from 'react';
-import useAuth from './useAuth';
+import useAuth, { UseAuth } from './useAuth';
 
 const DEFAULT_USE_AUTH: UseAuth = {
-  token: 'none',
+  name: 'none',
+  accessToken: 'none',
   login: () => {
+    throw new Error('not implemented');
+  },
+  refresh: () => {
+    throw new Error('not implemented');
+  },
+  logout: () => {
     throw new Error('not implemented');
   },
 };

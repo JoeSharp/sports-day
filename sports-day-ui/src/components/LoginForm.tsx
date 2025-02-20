@@ -5,7 +5,7 @@ function LoginForm() {
   const { login } = useAuthContext();
   const [username, setUsername] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
-  const onSubmit = React.useCallback(
+  const onSubmit: React.FormEventHandler = React.useCallback(
     (e) => {
       e.preventDefault();
 
