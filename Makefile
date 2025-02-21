@@ -5,12 +5,20 @@ export LOCAL_STACK=172.16.10.0
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
 docker-run-all: docker-build-service docker-build-ui local-stack docker-quick-run-all
-	xdg-open http://sports-day-ui.${LOCAL_STACK}.nip.io:9080/
+	xdg-open https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
 
 # Create the local stack IP address on your local machine/VM
 local-stack:
 	echo "Registering IP address for Local Development"
 	sudo ip addr replace ${LOCAL_STACK} dev lo
+
+# The certs created for development are committed as part of the repo
+# One should not generally need to rerun this, unless new certs are required
+# It will completely regenerate the CA, so if you have trusted this in your browser and you regenerate them
+# You will need to delete and re-import the CA.
+create-tls-certs:
+	echo "Creating TLS Certificates"
+	cd local && ./create-ssl-files.sh && cd ../
 
 # Run the Vite dev server outside of containers
 # UI can then be reached by visiting http://sports-day-ui.${LOCAL_STACK}.nip.io:5173
@@ -47,7 +55,7 @@ docker-build-service: build-service
 docker-run-ui:
 	echo "Running the UI in Docker"
 	docker compose -f local/docker-compose.yaml --profile include-ui up -d sports-day-ui
-	xdg-open http://sports-day-ui.${LOCAL_STACK}.nip.io:9080/
+	xdg-open https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
 
 docker-stop-ui:
 	echo "Stopping the UI in Docker"
@@ -89,6 +97,25 @@ test-login:
 test-get-activities:
 	echo "Testing: Retrieving activities"
 	./testing/get_activities.sh
+
+# Requires env var
+# Example call:
+# `make test-create-activity ACTIVITY_NAME="Dancing in Moonlight"`
+test-create-activity:
+	echo "Creating Activity ${ACTIVITY_NAME}"
+	./testing/create_activity.sh "${ACTIVITY_NAME}"
+
+# Example call:
+# `make test-get-activity ACTIVITY_ID=58aabbf5-560d-4e90-868c-b1ea9bd53057`
+test-get-activity:
+	echo "Fetching Activity ${ACTIVITY_ID}"
+	./testing/get_activity.sh "${ACTIVITY_ID}"
+
+# Example call:
+# `make test-delete-activity ACTIVITY_ID=58aabbf5-560d-4e90-868c-b1ea9bd53057`
+test-delete-activity:
+	echo "Deleting Activity ${ACTIVITY_ID}"
+	./testing/delete_activity.sh "${ACTIVITY_ID}"
 
 # Useful commands to connect to the various dependencies for manual interaction
 kafka:

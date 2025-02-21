@@ -7,9 +7,24 @@ services:
     profiles:
      - include-ui
     environment:
-      EXTERNAL_API_URL: http://sports-day-service.${LOCAL_STACK}.nip.io:8080
+      EXTERNAL_API_URL: https://sports-day-service.${LOCAL_STACK}.nip.io:8443
     ports:
-      - ${LOCAL_STACK}:9080:80
+      - ${LOCAL_STACK}:9443:443
+    volumes:
+      - ./certs:/etc/ssl/certs/nginx
+
+  sports-day-service-proxy:
+    image: nginx
+    container_name: sports-day-service-proxy
+    profiles:
+      - include-service
+    networks:
+      - sports-day
+    ports:
+      - "${LOCAL_STACK}:8443:443"
+    volumes:
+      - ./nginx/sports-day-proxy.conf:/etc/nginx/conf.d/default.conf
+      - ./certs:/etc/nginx/ssl/certs
 
   sports-day-service:
     image: sports-day-service
@@ -24,9 +39,7 @@ services:
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       OAUTH2_URL: http://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
-      UI_DOMAIN: http://sports-day-ui.${LOCAL_STACK}.nip.io:9080/
-    ports:
-      - "${LOCAL_STACK}:8080:8080"
+      UI_DOMAIN: https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
 
   sports-day-db:
     image: postgres:latest

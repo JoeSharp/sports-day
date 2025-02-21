@@ -21,3 +21,9 @@ The first will be useful when you are making changes to the service or UI.
 The second one will be useful for when you are verifying the containerised version of the application.
 
 Check the Makefile for the right targets
+
+## TLS
+The application exposes the UI and service layers via HTTPS
+For this to work via a Browser, you will need to import the Certificate of the `sportsday` Certificate Authority into your browser/operating system.
+
+The curl scripts are setup to supply those files, so those should work out of the box.
