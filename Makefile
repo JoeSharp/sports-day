@@ -20,6 +20,11 @@ create-tls-certs:
 	echo "Creating TLS Certificates"
 	cd local && ./create-ssl-files.sh && cd ../
 
+# `make create-tls-server SERVER_NAME=keycloak`
+create-tls-server:
+	echo "Creating Server Certificates for ${SERVER_NAME}"
+	cd local && ./create-server.sh sportsday ${SERVER_NAME} && cd ../
+
 # Run the Vite dev server outside of containers
 # UI can then be reached by visiting http://sports-day-ui.${LOCAL_STACK}.nip.io:5173
 dev-run-ui:
@@ -54,7 +59,7 @@ docker-build-service: build-service
 # Docker commands for running/stopping UI/service independantly
 docker-run-ui:
 	echo "Running the UI in Docker"
-	docker compose -f local/docker-compose.yaml --profile include-ui up -d sports-day-ui
+	docker compose -f local/docker-compose.yaml --profile include-ui up -d --wait sports-day-ui
 	xdg-open https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
 
 docker-stop-ui:
@@ -63,7 +68,7 @@ docker-stop-ui:
 
 docker-run-service:
 	echo "Running the Service in Docker"
-	docker compose -f local/docker-compose.yaml --profile include-service up -d sports-day-service
+	docker compose -f local/docker-compose.yaml --profile include-service up -d --wait sports-day-service
 
 docker-stop-service:
 	echo "Stopping the Service in Docker"
@@ -72,7 +77,7 @@ docker-stop-service:
 # Run the entire stack up, assuming the docker images for UI and service are already built
 docker-quick-run-all:
 	echo "Running entire stack, including application, in docker"
-	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui up -d
+	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui up -d --wait
 
 # Stop the entire stack running in Docker
 docker-stop-all:
@@ -82,7 +87,7 @@ docker-stop-all:
 # Just run the dependencies 
 docker-run-deps: local-stack
 	echo "Running dependencies stack in docker"
-	docker compose -f local/docker-compose.yaml up -d
+	docker compose -f local/docker-compose.yaml up -d --wait
 
 # Stop the running of the dependencies
 docker-stop-deps:

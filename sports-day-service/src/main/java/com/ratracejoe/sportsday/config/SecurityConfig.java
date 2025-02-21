@@ -33,7 +33,9 @@ public class SecurityConfig {
     return http.authorizeHttpRequests(
             request ->
                 request
-                    .requestMatchers(new AntPathRequestMatcher("/auth/login"))
+                    .requestMatchers(
+                        new AntPathRequestMatcher("/auth/login"),
+                        new AntPathRequestMatcher("/actuator/**"))
                     .permitAll()
                     .anyRequest()
                     .authenticated())

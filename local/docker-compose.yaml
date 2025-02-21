@@ -33,6 +33,9 @@ services:
     volumes:
       - ./nginx/service-proxy.template.conf:/etc/nginx/templates/default.conf.template
       - ./certs:/etc/ssl/certs/nginx
+    depends_on:
+      sports-day-service:
+        condition: service_healthy
 
   sports-day-service:
     image: sports-day-service
@@ -46,11 +49,18 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      OAUTH2_URL: http://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
+      OAUTH2_URL: https://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
       UI_DOMAIN: https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
+      JAVA_OPTS: "-Djavax.net.ssl.trustStore=/etc/ssl/certs/sportsday.truststore.jks -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.keyStore=/etc/ssl/certs/sports-day-service/sports-day-service.keystore.jks -Djavax.net.ssl.keyStorePassword=changeit"
     ports:
       # Required when running the UI in dev mode on top of the service in docker
       - "${LOCAL_STACK}:8080:8080"
+    volumes:
+      - ./certs/:/etc/ssl/certs/
+    command: ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar"]
+    depends_on:
+      auth-healthcheck:
+        condition: service_completed_successfully
 
   sports-day-db:
     image: postgres:latest
@@ -126,9 +136,9 @@ services:
     container_name: sports-day-auth
     networks:
       - sports-day
-    command: start-dev --import-realm
+    command: start-dev --import-realm --https-port 8085 --http-enabled false --health-enabled true
     ports:
-      - "${LOCAL_STACK}:8085:8080"
+      - "${LOCAL_STACK}:8085:8085"
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin-pw
@@ -136,11 +146,23 @@ services:
       KC_DB_URL: jdbc:postgresql://auth-db:5432/auth
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: kc-password
+      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/certs/sports-day-auth/sports-day-auth.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/certs/sports-day-auth/sports-day-auth.key
     depends_on:
       auth-db:
         condition: service_healthy
     volumes:
       - ./auth/:/opt/keycloak/data/import/:ro
+      - ./certs:/opt/keycloak/certs
+
+  auth-healthcheck:
+    image: curlimages/curl:latest
+    container_name: auth-healthcheck
+    networks:
+      - sports-day
+    depends_on:
+      - auth
+    entrypoint: "curl --retry 24 --retry-delay 5 --max-time 120 --retry-connrefused http://auth:8080/health/ready"
 
 networks:
   sports-day:
