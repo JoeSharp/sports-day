@@ -3,6 +3,13 @@
 A Makefile is included which outlines most of the common development commands and their dependencies.
 Consult this for typical tasks
 
+# SDK
+I use the amazing SDK Man to manage my java versions.
+In the root of the project run the following, to ensure you are on the right java version
+```bash
+sdk env install
+```
+
 ## Networking
 In order for containers to be able to reach eachother, and for auth tokens to have a valid source, I am using the following
 * A custom IP address, registered in your machine, that all containers bind to and listen on
