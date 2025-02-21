@@ -11,7 +11,8 @@ services:
     ports:
       - ${LOCAL_STACK}:9443:443
     volumes:
-      - ./certs:/etc/ssl/certs/nginx
+      - ./certs/sports-day-ui/sports-day-ui.crt:/etc/ssl/certs/nginx/mycert.crt
+      - ./certs/sports-day-ui/sports-day-ui.key:/etc/ssl/certs/nginx/mykey.key
 
   sports-day-service-proxy:
     image: nginx
@@ -24,7 +25,8 @@ services:
       - "${LOCAL_STACK}:8443:443"
     volumes:
       - ./nginx/sports-day-proxy.conf:/etc/nginx/conf.d/default.conf
-      - ./certs:/etc/nginx/ssl/certs
+      - ./certs/sports-day-service/sports-day-service.crt:/etc/ssl/certs/nginx/mycert.crt
+      - ./certs/sports-day-service/sports-day-service.key:/etc/ssl/certs/nginx/mykey.key
 
   sports-day-service:
     image: sports-day-service
