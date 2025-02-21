@@ -8,11 +8,13 @@ services:
      - include-ui
     environment:
       EXTERNAL_API_URL: https://sports-day-service.${LOCAL_STACK}.nip.io:8443
+      SERVER_NAME: sports-day-ui.${LOCAL_STACK}.nip.io
+      SSL_CERTIFICATE: /etc/ssl/certs/nginx/sports-day-ui/sports-day-ui.crt
+      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/sports-day-ui/sports-day-ui.key
     ports:
       - ${LOCAL_STACK}:9443:443
     volumes:
-      - ./certs/sports-day-ui/sports-day-ui.crt:/etc/ssl/certs/nginx/mycert.crt
-      - ./certs/sports-day-ui/sports-day-ui.key:/etc/ssl/certs/nginx/mykey.key
+      - ./certs:/etc/ssl/certs/nginx
 
   sports-day-service-proxy:
     image: nginx
@@ -21,12 +23,16 @@ services:
       - include-service
     networks:
       - sports-day
+    environment:
+      PROXY_PASS: http://sports-day-service:8080
+      SERVER_NAME: sports-day-service.${LOCAL_STACK}.nip.io
+      SSL_CERTIFICATE: /etc/ssl/certs/nginx/sports-day-service/sports-day-service.crt
+      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/sports-day-service/sports-day-service.key
     ports:
       - "${LOCAL_STACK}:8443:443"
     volumes:
-      - ./nginx/sports-day-proxy.conf:/etc/nginx/conf.d/default.conf
-      - ./certs/sports-day-service/sports-day-service.crt:/etc/ssl/certs/nginx/mycert.crt
-      - ./certs/sports-day-service/sports-day-service.key:/etc/ssl/certs/nginx/mykey.key
+      - ./nginx/service-proxy.template.conf:/etc/nginx/templates/default.conf.template
+      - ./certs:/etc/ssl/certs/nginx
 
   sports-day-service:
     image: sports-day-service
