@@ -40,6 +40,9 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       OAUTH2_URL: http://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
       UI_DOMAIN: https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
+    ports:
+      # Required when running the UI in dev mode on top of the service in docker
+      - "${LOCAL_STACK}:8080:8080"
 
   sports-day-db:
     image: postgres:latest
