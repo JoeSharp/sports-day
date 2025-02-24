@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: changelog/init_activity_table.yaml
+  - include:
+      file: changelog/populate_activity_table.yaml

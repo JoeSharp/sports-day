@@ -6,7 +6,7 @@ databaseChangeLog:
       comment: Populate Activity table
       changes:
         - loadData:
-            file: db/data/activities.csv
+            file: data/activities.csv
             tableName: activity
             columns:
               - column:

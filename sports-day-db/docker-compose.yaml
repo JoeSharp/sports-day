@@ -1,0 +1,9 @@
+services:
+  sports-day-db-migration:
+    image: sports-day-db-migration
+    environment:
+      LIQUIBASE_DRIVER: org.postgresql.Driver
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://$LOCAL_STACK:5432/sports_day
+      LIQUIBASE_COMMAND_USERNAME: sportsAdmin
+      LIQUIBASE_COMMAND_PASSWORD: SP%RTS
+

@@ -8,7 +8,7 @@ export CERT_ROOT=./local/certs
 
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
-docker-run-all: docker-build-service docker-build-ui local-stack docker-quick-run-all
+docker-run-all: docker-build-db-migration docker-build-service docker-build-ui local-stack docker-quick-run-all
 	xdg-open https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
 
 # Create the local stack IP address on your local machine/VM
@@ -60,6 +60,11 @@ docker-build-service: build-service
 	echo "Building Docker Image for Service"
 	docker build -t sports-day-service ./sports-day-service/
 
+# Build the liquibase image to migrate the database
+docker-build-db-migration:
+	echo "Building Database Migration Image"
+	docker build -t sports-day-db-migration ./sports-day-db/
+
 # Docker commands for running/stopping UI/service independantly
 docker-run-ui:
 	echo "Running the UI in Docker"
@@ -89,7 +94,7 @@ docker-stop-all:
 	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui down
 
 # Just run the dependencies 
-docker-run-deps: local-stack
+docker-run-deps: local-stack docker-build-db-migration
 	echo "Running dependencies stack in docker"
 	docker compose -f local/docker-compose.yaml up -d --wait
 

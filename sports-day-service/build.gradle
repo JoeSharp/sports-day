@@ -26,7 +26,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.kafka:spring-kafka'
-	implementation 'org.liquibase:liquibase-core'
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -37,6 +36,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.junit.platform:junit-platform-suite'
+	testImplementation 'org.liquibase:liquibase-core'
 	testImplementation "org.testcontainers:testcontainers:1.19.8"
 	testImplementation "org.testcontainers:junit-jupiter:1.20.4"
 	testImplementation "org.testcontainers:postgresql:1.18.3"

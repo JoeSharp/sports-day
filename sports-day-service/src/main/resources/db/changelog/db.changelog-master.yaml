@@ -1,5 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: classpath:db/changelog/init_activity_table.yaml
-  - include:
-      file: classpath:db/changelog/populate_activity_table.yaml
