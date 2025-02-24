@@ -6,6 +6,8 @@ export SERVICE_HOST=http://sports-day-service.${LOCAL_STACK}.nip.io:8080
 export AUTH_HOST=https://sports-day-auth.${LOCAL_STACK}.nip.io:8085
 export CERT_ROOT=./local/certs
 
+UNAME := $(shell uname)
+
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
 docker-run-all: docker-build-db-migration docker-build-service docker-build-ui local-stack docker-quick-run-all
@@ -14,7 +16,12 @@ docker-run-all: docker-build-db-migration docker-build-service docker-build-ui l
 # Create the local stack IP address on your local machine/VM
 local-stack:
 	echo "Registering IP address for Local Development"
+ifeq ($(UNAME), Linux)
 	sudo ip addr replace ${LOCAL_STACK} dev lo
+endif
+ifeq ($(UNAME), Darwin)
+	sudo ifconfig en0 alias ${LOCAL_STACK}/32 up
+endif
 
 # The certs created for development are committed as part of the repo
 # One should not generally need to rerun this, unless new certs are required

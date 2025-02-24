@@ -1,4 +1,4 @@
-FROM liquibase:latest
+FROM liquibase:alpine
 
 WORKDIR /liquibase
 
