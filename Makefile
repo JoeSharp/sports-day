@@ -1,6 +1,10 @@
 # Required to provide a consistent IP address that can be used inside containers
 # to reach things outside containers, and vice versa
 export LOCAL_STACK=172.16.10.0
+#export SERVICE_HOST=https://sports-day-service.${LOCAL_STACK}.nip.io:8443
+export SERVICE_HOST=http://sports-day-service.${LOCAL_STACK}.nip.io:8080
+export AUTH_HOST=https://sports-day-auth.${LOCAL_STACK}.nip.io:8085
+export CERT_ROOT=./local/certs
 
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
@@ -95,9 +99,13 @@ docker-stop-deps:
 	docker compose -f local/docker-compose.yaml down
 
 # Run tests, requires LOCAL_STACK in place
-test-login:
-	echo "Testing: Login"
+test-app-login:
+	echo "Testing: App Login"
 	./testing/app_login.sh
+
+test-keycloak-login:
+	echo "Testing: Keycloak Login"
+	./testing/keycloak_login.sh
 
 test-get-activities:
 	echo "Testing: Retrieving activities"

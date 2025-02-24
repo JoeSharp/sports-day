@@ -1,7 +1,4 @@
-SERVICE_HOST=https://${LOCAL_STACK}:8443
-
 ACCESS_TOKEN=$("$(dirname "$0")/keycloak_login.sh")
-CERT_ROOT=./local/certs
 
 ACTIVITY_ID=$1
 curl \
