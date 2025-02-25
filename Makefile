@@ -1,9 +1,15 @@
 # Required to provide a consistent IP address that can be used inside containers
 # to reach things outside containers, and vice versa
 export LOCAL_STACK=172.16.10.0
+
+# URL for service layer, use HTTPS when running in Docker, HTTP for bootrun
 #export SERVICE_HOST=https://sports-day-service.${LOCAL_STACK}.nip.io:8443
 export SERVICE_HOST=http://sports-day-service.${LOCAL_STACK}.nip.io:8080
+
+# URL for Keycloak used locally
 export AUTH_HOST=https://sports-day-auth.${LOCAL_STACK}.nip.io:8085
+
+# Directory containing the certificates, used in the various test scripts
 export CERT_ROOT=./local/certs
 
 UNAME := $(shell uname)
@@ -71,6 +77,14 @@ docker-build-service: build-service
 docker-build-db-migration:
 	echo "Building Database Migration Image"
 	docker build -t sports-day-db-migration ./sports-day-db/
+
+docker-run-db-migration-test: local-stack docker-build-db-migration
+	echo "Running Migration Test"
+	docker compose -f sports-day-db/docker-compose.yaml up -d --wait
+
+docker-stop-db-migration-test: local-stack docker-build-db-migration
+	echo "Stopping Migration Test"
+	docker compose -f sports-day-db/docker-compose.yaml down
 
 # Docker commands for running/stopping UI/service independantly
 docker-run-ui:
@@ -146,9 +160,13 @@ test-delete-activity:
 kafka:
 	echo "Connecting to Kafka"
 
-postgres:
-	echo "Connecting to local database"
+sports-day-db:
+	echo "Connecting to sports day database"
 	docker exec -it sports-day-db psql -d sports_day -U sportsAdmin
+
+sports-day-migration-test-db:
+	echo "Connecting to migration test database"
+	docker exec -it sports-day-test-db psql -d sports_day -U sportsAdmin
 
 redis:
 	echo "Connecting to local cache"

@@ -1,9 +1,41 @@
 services:
   sports-day-db-migration:
     image: sports-day-db-migration
+    container_name: sports-day-test-db-migration
+    networks:
+      - sports-day-db-test
     environment:
       LIQUIBASE_DRIVER: org.postgresql.Driver
       LIQUIBASE_COMMAND_URL: jdbc:postgresql://$LOCAL_STACK:5432/sports_day
       LIQUIBASE_COMMAND_USERNAME: sportsAdmin
       LIQUIBASE_COMMAND_PASSWORD: SP%RTS
+    depends_on:
+      sports-day-test-db:
+        condition: service_healthy
 
+  sports-day-test-db:
+    image: postgres:latest
+    container_name: sports-day-test-db
+    networks:
+      - sports-day-db-test
+    environment:
+      POSTGRES_USER: sportsAdmin
+      POSTGRES_PASSWORD: SP%RTS
+      POSTGRES_DB: sports_day
+    ports:
+      - "${LOCAL_STACK}:5432:5432"
+    volumes:
+      - sports_day_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U keycloak -d auth
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+
+networks:
+  sports-day-db-test:
+    driver: bridge
+
+volumes:
+  sports_day_test_data:

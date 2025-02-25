@@ -93,7 +93,7 @@ services:
     ports:
       - "${LOCAL_STACK}:5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - sports_day_data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U keycloak -d auth
       interval: 10s
@@ -193,4 +193,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  sports_day_data:
