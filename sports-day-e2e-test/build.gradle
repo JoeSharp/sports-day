@@ -1,0 +1,62 @@
+plugins {
+    id "net.serenity-bdd.serenity-gradle-plugin" version "4.2.13"
+    id 'java'
+}
+
+defaultTasks 'clean', 'test', 'aggregate'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 17
+targetCompatibility = 17
+
+ext {
+    slf4jVersion = '1.7.7'
+    serenityCoreVersion = '4.2.13'
+    junitVersion = '5.11.4'
+    assertJVersion = '3.23.1'
+    lombokVersion = '1.18.24'
+    logbackVersion = '1.2.11'
+}
+
+dependencies {
+    testImplementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-junit5:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-screenplay-webdriver:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-screenplay-rest:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-cucumber:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-ensure:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-junit:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-rest-assured:${serenityCoreVersion}",
+            "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
+            "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
+            "org.assertj:assertj-core:${assertJVersion}",
+            "org.projectlombok:lombok:${lombokVersion}",
+            "ch.qos.logback:logback-classic:${logbackVersion}"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging.showStandardStreams = true
+    systemProperties System.getProperties()
+    jvmArgs = [
+            "-Djavax.net.ssl.trustStore=../local/certs/sports-day.truststore.jks",
+            "-Djavax.net.ssl.trustStorePassword=changeit",
+            "-Djavax.net.ssl.keyStore=../local/certs/sports-day-service/sports-day-service.keystore.jks",
+            "-Djavax.net.ssl.keyStorePassword=changeit"
+    ]
+}
+
+gradle.startParameter.continueOnFailure = true
+
+serenity {
+    //reports = ["single-page-html"]
+
+    // // Specify the root package of any JUnit acceptance tests
+    testRoot="com.ratracejoe.sportsday"
+}
+
+test.finalizedBy(aggregate)

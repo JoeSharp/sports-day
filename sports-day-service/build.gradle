@@ -62,7 +62,7 @@ spotless {
 
 bootRun {
 	jvmArgs = [
-	        "-Djavax.net.ssl.trustStore=../local/certs/sportsday.truststore.jks",
+		"-Djavax.net.ssl.trustStore=../local/certs/sports-day.truststore.jks",
 		"-Djavax.net.ssl.trustStorePassword=changeit",
 		"-Djavax.net.ssl.keyStore=../local/certs/sports-day-service/sports-day-service.keystore.jks",
 		"-Djavax.net.ssl.keyStorePassword=changeit"

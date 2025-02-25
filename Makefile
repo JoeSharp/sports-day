@@ -160,6 +160,18 @@ test-delete-activity:
 	echo "Deleting Activity ${ACTIVITY_ID}"
 	./testing/delete_activity.sh "${ACTIVITY_ID}"
 
+test-app-health:
+	./testing/check_health.sh
+
+# Run the Serenity BDD tests
+# ...Against application running in bootrun
+test-bdd-http:
+	./${APPLICATION_NAME}-e2e-test/gradlew -p ./${APPLICATION_NAME}-e2e-test clearReports test aggregate reports -Denvironment=local-http
+
+# ...or the system running within docker behind TLS proxy
+test-bdd-https:
+	./${APPLICATION_NAME}-e2e-test/gradlew -p ./${APPLICATION_NAME}-e2e-test clearReports test aggregate reports -Denvironment=local-https
+
 # Useful commands to connect to the various dependencies for manual interaction
 kafka:
 	echo "Connecting to Kafka"
