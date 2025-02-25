@@ -7,10 +7,10 @@ services:
     profiles:
      - include-ui
     environment:
-      EXTERNAL_API_URL: https://sports-day-service.${LOCAL_STACK}.nip.io:8443
-      SERVER_NAME: sports-day-ui.${LOCAL_STACK}.nip.io
-      SSL_CERTIFICATE: /etc/ssl/certs/nginx/sports-day-ui/sports-day-ui.crt
-      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/sports-day-ui/sports-day-ui.key
+      EXTERNAL_API_URL: https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
+      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
+      SSL_CERTIFICATE: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.crt
+      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.key
     ports:
       - ${LOCAL_STACK}:9443:443
     volumes:
@@ -24,10 +24,10 @@ services:
     networks:
       - sports-day
     environment:
-      PROXY_PASS: http://sports-day-service:8080
-      SERVER_NAME: sports-day-service.${LOCAL_STACK}.nip.io
-      SSL_CERTIFICATE: /etc/ssl/certs/nginx/sports-day-service/sports-day-service.crt
-      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/sports-day-service/sports-day-service.key
+      PROXY_PASS: http://${APPLICATION_NAME}-service:8080
+      SERVER_NAME: ${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io
+      SSL_CERTIFICATE: /etc/ssl/certs/nginx/${APPLICATION_NAME}-service/${APPLICATION_NAME}-service.crt
+      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/${APPLICATION_NAME}-service/${APPLICATION_NAME}-service.key
     ports:
       - "${LOCAL_STACK}:8443:443"
     volumes:
@@ -45,16 +45,16 @@ services:
     profiles:
       - include-service
     environment:
-      DB_URL: jdbc:postgresql://sports-day-db:5432/sports_day
+      DB_URL: jdbc:postgresql://${APPLICATION_NAME}-db:5432/${DATABASE_NAME}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      OAUTH2_URL: https://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
-      UI_DOMAIN: https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
+      OAUTH2_URL: https://${APPLICATION_NAME}-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
+      UI_DOMAIN: https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
       JAVA_OPTS: > 
-        -Djavax.net.ssl.trustStore=/etc/ssl/certs/sportsday.truststore.jks 
+        -Djavax.net.ssl.trustStore=/etc/ssl/certs/${APPLICATION_NAME}.truststore.jks 
         -Djavax.net.ssl.trustStorePassword=changeit 
-        -Djavax.net.ssl.keyStore=/etc/ssl/certs/sports-day-service/sports-day-service.keystore.jks 
+        -Djavax.net.ssl.keyStore=/etc/ssl/certs/${APPLICATION_NAME}-service/${APPLICATION_NAME}-service.keystore.jks 
         -Djavax.net.ssl.keyStorePassword=changeit
     ports:
       # Required when running the UI in dev mode on top of the service in docker
@@ -74,7 +74,7 @@ services:
       - sports-day
     environment:
       LIQUIBASE_DRIVER: org.postgresql.Driver
-      LIQUIBASE_COMMAND_URL: jdbc:postgresql://sports-day-db:5432/sports_day
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://${APPLICATION_NAME}-db:5432/${DATABASE_NAME}
       LIQUIBASE_COMMAND_USERNAME: sportsAdmin
       LIQUIBASE_COMMAND_PASSWORD: SP%RTS
     depends_on:
@@ -89,7 +89,7 @@ services:
     environment:
       POSTGRES_USER: sportsAdmin
       POSTGRES_PASSWORD: SP%RTS
-      POSTGRES_DB: sports_day
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "${LOCAL_STACK}:5432:5432"
     volumes:
@@ -170,8 +170,8 @@ services:
       KC_DB_URL: jdbc:postgresql://auth-db:5432/auth
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: kc-password
-      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/certs/sports-day-auth/sports-day-auth.crt
-      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/certs/sports-day-auth/sports-day-auth.key
+      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/certs/${APPLICATION_NAME}-auth/${APPLICATION_NAME}-auth.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/certs/${APPLICATION_NAME}-auth/${APPLICATION_NAME}-auth.key
     depends_on:
       auth-db:
         condition: service_healthy

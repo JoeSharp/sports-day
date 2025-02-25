@@ -1,23 +1,27 @@
 # Required to provide a consistent IP address that can be used inside containers
 # to reach things outside containers, and vice versa
 export LOCAL_STACK=172.16.10.0
+export APPLICATION_NAME=sports-day
+export DATABASE_NAME=sports_day
+export DATABASE_ADMIN_USER=sportsAdmin
 
 # URL for service layer, use HTTPS when running in Docker, HTTP for bootrun
-#export SERVICE_HOST=https://sports-day-service.${LOCAL_STACK}.nip.io:8443
-export SERVICE_HOST=http://sports-day-service.${LOCAL_STACK}.nip.io:8080
+#export SERVICE_HOST=https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
+export SERVICE_HOST=http://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8080
 
 # URL for Keycloak used locally
-export AUTH_HOST=https://sports-day-auth.${LOCAL_STACK}.nip.io:8085
+export AUTH_HOST=https://${APPLICATION_NAME}-auth.${LOCAL_STACK}.nip.io:8085
 
 # Directory containing the certificates, used in the various test scripts
 export CERT_ROOT=./local/certs
 
+# Figure out which operating system we are on
 UNAME := $(shell uname)
 
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
 docker-run-all: docker-build-db-migration docker-build-service docker-build-ui local-stack docker-quick-run-all
-	xdg-open https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
+	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
 
 # Create the local stack IP address on your local machine/VM
 local-stack:
@@ -40,69 +44,69 @@ create-tls-certs:
 # `make create-tls-server SERVER_NAME=keycloak`
 create-tls-server:
 	echo "Creating Server Certificates for ${SERVER_NAME}"
-	cd local && ./create-server.sh sportsday ${SERVER_NAME} && cd ../
+	cd local && ./create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} && cd ../
 
 # Run the Vite dev server outside of containers
-# UI can then be reached by visiting http://sports-day-ui.${LOCAL_STACK}.nip.io:5173
+# UI can then be reached by visiting http://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:5173
 dev-run-ui:
 	echo "Running UI in Development Mode"
-	npm run dev --prefix ./sports-day-ui
+	npm run dev --prefix ./${APPLICATION_NAME}-ui
 
 # Run the backend service outside of containers
 dev-run-service:
 	echo "Running Service in Development Mode"
-	./sports-day-service/gradlew -p ./sports-day-service bootRun
+	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service bootRun
 
 # Build the production hostable assets of the UI
 build-ui:
-	npm install --prefix ./sports-day-ui
-	npm run build --prefix ./sports-day-ui
+	npm install --prefix ./${APPLICATION_NAME}-ui
+	npm run build --prefix ./${APPLICATION_NAME}-ui
 
 # Build the docker image for the UI
 docker-build-ui: build-ui
 	echo "Building Docker Image for UI"
-	docker build -t sports-day-ui ./sports-day-ui/
+	docker build -t ${APPLICATION_NAME}-ui ./${APPLICATION_NAME}-ui/
 
 # Build the JAR file for the backend service
 build-service:
 	echo "Building Boot JAR"
-	./sports-day-service/gradlew -p ./sports-day-service bootJar
+	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service bootJar
 
 # Build the Docker image for the backend service
 docker-build-service: build-service
 	echo "Building Docker Image for Service"
-	docker build -t sports-day-service ./sports-day-service/
+	docker build -t ${APPLICATION_NAME}-service ./${APPLICATION_NAME}-service/
 
 # Build the liquibase image to migrate the database
 docker-build-db-migration:
 	echo "Building Database Migration Image"
-	docker build -t sports-day-db-migration ./sports-day-db/
+	docker build -t ${APPLICATION_NAME}-db-migration ./${APPLICATION_NAME}-db/
 
 docker-run-db-migration-test: local-stack docker-build-db-migration
 	echo "Running Migration Test"
-	docker compose -f sports-day-db/docker-compose.yaml up -d --wait
+	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml up -d --wait
 
 docker-stop-db-migration-test: local-stack docker-build-db-migration
 	echo "Stopping Migration Test"
-	docker compose -f sports-day-db/docker-compose.yaml down
+	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml down
 
 # Docker commands for running/stopping UI/service independantly
 docker-run-ui:
 	echo "Running the UI in Docker"
-	docker compose -f local/docker-compose.yaml --profile include-ui up -d --wait sports-day-ui
-	xdg-open https://sports-day-ui.${LOCAL_STACK}.nip.io:9443/
+	docker compose -f local/docker-compose.yaml --profile include-ui up -d --wait ${APPLICATION_NAME}-ui
+	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
 
 docker-stop-ui:
 	echo "Stopping the UI in Docker"
-	docker compose -f local/docker-compose.yaml --profile include-ui down sports-day-ui
+	docker compose -f local/docker-compose.yaml --profile include-ui down ${APPLICATION_NAME}-ui
 
 docker-run-service:
 	echo "Running the Service in Docker"
-	docker compose -f local/docker-compose.yaml --profile include-service up -d --wait sports-day-service
+	docker compose -f local/docker-compose.yaml --profile include-service up -d --wait ${APPLICATION_NAME}-service
 
 docker-stop-service:
 	echo "Stopping the Service in Docker"
-	docker compose -f local/docker-compose.yaml --profile include-service down sports-day-service
+	docker compose -f local/docker-compose.yaml --profile include-service down ${APPLICATION_NAME}-service
 
 # Run the entire stack up, assuming the docker images for UI and service are already built
 docker-quick-run-all:
@@ -160,14 +164,14 @@ test-delete-activity:
 kafka:
 	echo "Connecting to Kafka"
 
-sports-day-db:
-	echo "Connecting to sports day database"
-	docker exec -it sports-day-db psql -d sports_day -U sportsAdmin
+db:
+	echo "Connecting to database"
+	docker exec -it ${APPLICATION_NAME}-db psql -d ${DATABASE_NAME} -U ${DATABASE_ADMIN_USER}
 
-sports-day-migration-test-db:
+migration-test-db:
 	echo "Connecting to migration test database"
-	docker exec -it sports-day-test-db psql -d sports_day -U sportsAdmin
+	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${DATABASE_NAME} -U ${DATABASE_ADMIN_USER}
 
 redis:
 	echo "Connecting to local cache"
-	docker exec -it sports-day-cache redis-cli
+	docker exec -it ${APPLICATION_NAME}-cache redis-cli
