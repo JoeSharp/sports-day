@@ -17,17 +17,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 @ExtendWith(SerenityJUnit5Extension.class)
-public class HealthScreenplayTest {
+public class SportsDayScreenplayTest {
     private static String restApiBaseUrl;
+    private static String username;
+    private static String password;
     private static Actor joe;
 
     @BeforeAll
     public static void beforeAll() {
         EnvironmentVariables variables = SystemEnvironmentVariables.createEnvironmentVariables();
+        var forEnv = EnvironmentSpecificConfiguration
+                .from(variables);
 
-        restApiBaseUrl = EnvironmentSpecificConfiguration
-                .from(variables)
-                .getProperty("accounts.service.url");
+        restApiBaseUrl = forEnv.getProperty("accounts.service.url");
+        username = forEnv.getProperty("service.username");
+        password = forEnv.getProperty("service.password");
         joe = Actor.named("Joe").whoCan(CallAnApi.at(restApiBaseUrl));
     }
 
@@ -45,8 +49,8 @@ public class HealthScreenplayTest {
                 .with(r -> r
                         .accept(ContentType.JSON)
                         .contentType(ContentType.URLENC)
-                        .formParam("username", "joesharp")
-                        .formParam("password", "password")));
+                        .formParam("username", username)
+                        .formParam("password", password)));
         joe.should(seeThatResponse("Access Token Provided",
                 r -> r
                         .statusCode(200)

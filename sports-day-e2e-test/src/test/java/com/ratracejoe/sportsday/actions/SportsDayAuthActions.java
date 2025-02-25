@@ -18,16 +18,18 @@ public class SportsDayAuthActions extends UIInteractions {
 
     @Given("User connected to auth")
     public void givenUserConnectedToAuth() {
-        String baseUri = EnvironmentSpecificConfiguration
-                .from(variables)
-                .getProperty("accounts.service.url");
+        var forEnv = EnvironmentSpecificConfiguration
+                .from(variables);
+        String baseUri = forEnv.getProperty("accounts.service.url");
+        String username = forEnv.getProperty("service.username");
+        String password = forEnv.getProperty("service.password");
         given().baseUri(baseUri)
                 .basePath("/api/auth")
                 .trustStore("../local/certs/sports-day.truststore.jks", "changeit")
                 .accept(ContentType.JSON)
                 .contentType(ContentType.URLENC)
-                .formParam("username", "joesharp")
-                .formParam("password", "password");
+                .formParam("username", username)
+                .formParam("password", password);
     }
 
     @When("User logs in")
