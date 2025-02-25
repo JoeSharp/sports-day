@@ -17,11 +17,12 @@ ext {
     serenityCoreVersion = '4.2.13'
     junitVersion = '5.11.4'
     assertJVersion = '3.23.1'
-    lombokVersion = '1.18.24'
+    lombokVersion = '1.18.28'
     logbackVersion = '1.2.11'
 }
 
 dependencies {
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     testImplementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
             "net.serenity-bdd:serenity-junit5:${serenityCoreVersion}",
             "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}",
