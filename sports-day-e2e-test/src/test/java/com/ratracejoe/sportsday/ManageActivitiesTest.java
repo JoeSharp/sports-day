@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(SerenityJUnit5Extension.class)
+@DisplayName("Managing Activities")
 public class ManageActivitiesTest {
   private Actor serviceMonitor;
   private Actor serviceUser;

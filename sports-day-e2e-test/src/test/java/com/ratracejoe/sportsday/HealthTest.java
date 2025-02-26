@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(SerenityJUnit5Extension.class)
+@DisplayName("Application Monitoring")
 public class HealthTest {
   private Actor serviceMonitor;
 
