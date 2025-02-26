@@ -24,4 +24,8 @@ public class LogoutAsUser implements Task {
                         .header("Authorization", "Bearer " + accessToken)
                         .formParam("refreshToken", refreshToken)));
   }
+
+  public static LogoutAsUser create() {
+    return new LogoutAsUser();
+  }
 }

@@ -12,6 +12,7 @@ import net.thucydides.model.util.EnvironmentVariables;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -30,6 +31,7 @@ public class HealthTest {
   }
 
   @Test
+  @DisplayName("Any user can call the health endpoint")
   public void checkHealth() {
     serviceMonitor.attemptsTo(Get.resource("/api/actuator/health"));
     serviceMonitor.should(

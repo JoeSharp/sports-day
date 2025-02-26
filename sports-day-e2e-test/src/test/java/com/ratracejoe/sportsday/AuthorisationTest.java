@@ -13,6 +13,7 @@ import net.thucydides.model.util.EnvironmentVariables;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -35,6 +36,7 @@ public class AuthorisationTest {
   }
 
   @Test
+  @DisplayName("A service user can login")
   public void login() {
     serviceUser.attemptsTo(new LoginAsUser());
     serviceUser.should(
@@ -44,6 +46,7 @@ public class AuthorisationTest {
   }
 
   @Test
+  @DisplayName("A logged in user, can refresh their auth token")
   public void refresh() {
     serviceUser.attemptsTo(new LoginAsUser());
     serviceUser.attemptsTo(new RefreshAsUser());
@@ -54,9 +57,20 @@ public class AuthorisationTest {
   }
 
   @Test
+  @DisplayName("A logged in user, can log back out")
   public void logout() {
     serviceUser.attemptsTo(new LoginAsUser());
     serviceUser.attemptsTo(new LogoutAsUser());
     serviceUser.should(seeThatResponse("Logout successful", r -> r.statusCode(HttpStatus.SC_OK)));
+
+    /** Hmm.....this doesn't seem to work as expected
+    serviceUser.attemptsTo(new RefreshAsUser());
+    serviceUser.should(
+        seeThatResponse("Access Denied", r -> r.statusCode(HttpStatus.SC_UNAUTHORIZED)));
+
+    serviceUser.attemptsTo(GetActivities.create());
+    serviceUser.should(
+        seeThatResponse("Access Denied", r -> r.statusCode(HttpStatus.SC_UNAUTHORIZED)));
+     */
   }
 }

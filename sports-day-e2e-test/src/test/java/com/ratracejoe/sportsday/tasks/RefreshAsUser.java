@@ -30,4 +30,8 @@ public class RefreshAsUser implements Task {
     t.remember(KEY_ACCESS_TOKEN, loginResponse.accessToken());
     t.remember(KEY_REFRESH_TOKEN, loginResponse.refreshToken());
   }
+
+  public static RefreshAsUser create() {
+    return new RefreshAsUser();
+  }
 }

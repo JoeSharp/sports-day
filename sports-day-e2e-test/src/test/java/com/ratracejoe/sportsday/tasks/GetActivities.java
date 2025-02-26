@@ -15,4 +15,8 @@ public class GetActivities implements Task {
         Get.resource("/api/activities")
             .with(r -> r.header("Authorization", "Bearer " + accessToken)));
   }
+
+  public static GetActivities create() {
+    return new GetActivities();
+  }
 }
