@@ -1,6 +1,5 @@
 package com.ratracejoe.sportsday.tasks;
 
-import com.ratracejoe.sportsday.abilities.Authenticate;
 import com.ratracejoe.sportsday.model.LoginResponseDTO;
 import io.restassured.http.ContentType;
 import net.serenitybdd.rest.SerenityRest;

@@ -9,20 +9,22 @@ repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 17
-targetCompatibility = 17
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 ext {
     slf4jVersion = '1.7.7'
     serenityCoreVersion = '4.2.13'
     junitVersion = '5.11.4'
     assertJVersion = '3.23.1'
-    lombokVersion = '1.18.28'
+    lombokVersion = '1.18.34'
     logbackVersion = '1.2.11'
 }
 
 dependencies {
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     testImplementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
             "net.serenity-bdd:serenity-junit5:${serenityCoreVersion}",
             "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}",
@@ -35,8 +37,9 @@ dependencies {
             "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
             "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
             "org.assertj:assertj-core:${assertJVersion}",
-            "org.projectlombok:lombok:${lombokVersion}",
-            "ch.qos.logback:logback-classic:${logbackVersion}"
+            "ch.qos.logback:logback-classic:${logbackVersion}",
+            "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 }
 
 test {
