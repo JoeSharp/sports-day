@@ -22,8 +22,8 @@ public class LoginAsUser implements Task {
                 r ->
                     r.accept(ContentType.JSON)
                         .contentType(ContentType.URLENC)
-                        .formParam("username", auth.getUsername())
-                        .formParam("password", auth.getPassword())));
+                        .formParam("username", auth.username())
+                        .formParam("password", auth.password())));
     LoginResponseDTO loginResponse =
         SerenityRest.lastResponse().jsonPath().getObject(".", LoginResponseDTO.class);
     t.remember(KEY_ACCESS_TOKEN, loginResponse.accessToken());

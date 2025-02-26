@@ -38,6 +38,8 @@ public class ManageActivitiesTest {
             .whoCan(Authenticate.withCredentials(username, password));
 
     serviceMonitor = Actor.named("MrDavies").whoCan(CallAnApi.at(restApiBaseUrl));
+
+    serviceUser.attemptsTo(new LoginAsUser());
   }
 
   @Test
@@ -49,7 +51,6 @@ public class ManageActivitiesTest {
 
   @Test
   public void getActivities() {
-    serviceUser.attemptsTo(new LoginAsUser());
     serviceUser.attemptsTo(new GetActivities());
     serviceUser.should(
         seeThatResponse("Activities Retrieved", r -> r.statusCode(HttpStatus.SC_OK)));
@@ -58,7 +59,6 @@ public class ManageActivitiesTest {
   @Test
   public void createActivity() {
     ActivityDTO newActivity = new ActivityDTO("Dancing " + UUID.randomUUID(), "Moving to music");
-    serviceUser.attemptsTo(new LoginAsUser());
     serviceUser.attemptsTo(CreateActivity.withActivity(newActivity));
     serviceUser.should(
         seeThatResponse("Activity Created", r -> r.statusCode(HttpStatus.SC_CREATED)));
@@ -75,8 +75,6 @@ public class ManageActivitiesTest {
 
   @Test
   public void deleteActivity() {
-    serviceUser.attemptsTo(new LoginAsUser());
-
     ActivityDTO newActivity = new ActivityDTO("Curling " + UUID.randomUUID(), "Speed sweeping ice");
     serviceUser.attemptsTo(CreateActivity.withActivity(newActivity));
 
