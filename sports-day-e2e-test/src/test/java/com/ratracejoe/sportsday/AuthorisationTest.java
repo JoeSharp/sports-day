@@ -63,14 +63,13 @@ public class AuthorisationTest {
     serviceUser.attemptsTo(new LogoutAsUser());
     serviceUser.should(seeThatResponse("Logout successful", r -> r.statusCode(HttpStatus.SC_OK)));
 
-    /** Hmm.....this doesn't seem to work as expected
-    serviceUser.attemptsTo(new RefreshAsUser());
-    serviceUser.should(
-        seeThatResponse("Access Denied", r -> r.statusCode(HttpStatus.SC_UNAUTHORIZED)));
-
-    serviceUser.attemptsTo(GetActivities.create());
-    serviceUser.should(
-        seeThatResponse("Access Denied", r -> r.statusCode(HttpStatus.SC_UNAUTHORIZED)));
+    /**
+     * Hmm.....this doesn't seem to work as expected serviceUser.attemptsTo(new RefreshAsUser());
+     * serviceUser.should( seeThatResponse("Access Denied", r ->
+     * r.statusCode(HttpStatus.SC_UNAUTHORIZED)));
+     *
+     * <p>serviceUser.attemptsTo(GetActivities.create()); serviceUser.should(
+     * seeThatResponse("Access Denied", r -> r.statusCode(HttpStatus.SC_UNAUTHORIZED)));
      */
   }
 }
