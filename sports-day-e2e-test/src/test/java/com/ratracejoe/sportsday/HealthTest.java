@@ -1,14 +1,12 @@
 package com.ratracejoe.sportsday;
 
+import static com.ratracejoe.sportsday.Constants.REST_API_BASE_URL;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
-import net.serenitybdd.model.environment.EnvironmentSpecificConfiguration;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import net.serenitybdd.screenplay.rest.interactions.Get;
-import net.thucydides.model.environment.SystemEnvironmentVariables;
-import net.thucydides.model.util.EnvironmentVariables;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,12 +21,7 @@ public class HealthTest {
 
   @BeforeEach
   public void beforeEach() {
-    EnvironmentVariables variables = SystemEnvironmentVariables.createEnvironmentVariables();
-    var forEnv = EnvironmentSpecificConfiguration.from(variables);
-
-    String restApiBaseUrl = forEnv.getProperty("accounts.service.url");
-
-    serviceMonitor = Actor.named("MrDavies").whoCan(CallAnApi.at(restApiBaseUrl));
+    serviceMonitor = Actor.named("MrDavies").whoCan(CallAnApi.at(REST_API_BASE_URL));
   }
 
   @Test

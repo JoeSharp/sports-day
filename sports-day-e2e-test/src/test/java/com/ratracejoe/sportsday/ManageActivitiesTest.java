@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday;
 
+import static com.ratracejoe.sportsday.Constants.*;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -9,11 +10,8 @@ import com.ratracejoe.sportsday.model.ActivityDTO;
 import com.ratracejoe.sportsday.tasks.*;
 import java.util.UUID;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
-import net.serenitybdd.model.environment.EnvironmentSpecificConfiguration;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
-import net.thucydides.model.environment.SystemEnvironmentVariables;
-import net.thucydides.model.util.EnvironmentVariables;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,18 +27,12 @@ public class ManageActivitiesTest {
 
   @BeforeEach
   public void beforeEach() {
-    EnvironmentVariables variables = SystemEnvironmentVariables.createEnvironmentVariables();
-    var forEnv = EnvironmentSpecificConfiguration.from(variables);
-
-    String restApiBaseUrl = forEnv.getProperty("accounts.service.url");
-    String username = forEnv.getProperty("service.username");
-    String password = forEnv.getProperty("service.password");
     serviceUser =
         Actor.named("MrSharp")
-            .whoCan(CallAnApi.at(restApiBaseUrl))
-            .whoCan(Authenticate.withCredentials(username, password));
+            .whoCan(CallAnApi.at(REST_API_BASE_URL))
+            .whoCan(Authenticate.withCredentials(SERVICE_USERNAME, SERVICE_PASSWORD));
 
-    serviceMonitor = Actor.named("MrDavies").whoCan(CallAnApi.at(restApiBaseUrl));
+    serviceMonitor = Actor.named("MrDavies").whoCan(CallAnApi.at(REST_API_BASE_URL));
 
     serviceUser.attemptsTo(LoginAsUser.create());
   }
