@@ -8,14 +8,14 @@ import net.serenitybdd.screenplay.Actor;
 @RequiredArgsConstructor
 @Getter
 public class Authenticate implements Ability {
-    private final String username;
-    private final String password;
+  private final String username;
+  private final String password;
 
-    public static Authenticate withCredentials(String username, String password) {
-        return new Authenticate(username, password);
-    }
+  public static Authenticate withCredentials(String username, String password) {
+    return new Authenticate(username, password);
+  }
 
-    public static Authenticate as(Actor actor) {
-        return actor.abilityTo(Authenticate.class);
-    }
+  public static Authenticate as(Actor actor) {
+    return actor.abilityTo(Authenticate.class);
+  }
 }

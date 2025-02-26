@@ -1,6 +1,7 @@
 plugins {
     id "net.serenity-bdd.serenity-gradle-plugin" version "4.2.13"
     id 'java'
+    id "com.diffplug.spotless" version "6.25.0"
 }
 
 defaultTasks 'clean', 'test', 'aggregate'
@@ -40,6 +41,13 @@ dependencies {
             "ch.qos.logback:logback-classic:${logbackVersion}",
             "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+}
+
+tasks.compileJava.finalizedBy(tasks.spotlessApply)
+spotless {
+    java {
+        googleJavaFormat()
+    }
 }
 
 test {
