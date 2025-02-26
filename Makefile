@@ -121,6 +121,7 @@ docker-stop-all:
 docker-clean-all:
 	echo "Stopping entire stack, and removing volumes"
 	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui down -v
+	docker compose -f sports-day-db/docker-compose.yaml down -v
 
 # Just run the dependencies 
 docker-run-deps: local-stack docker-build-db-migration
