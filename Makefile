@@ -3,7 +3,7 @@
 export LOCAL_STACK=172.16.10.0
 export APPLICATION_NAME=sports-day
 export DATABASE_NAME=sports_day
-export DATABASE_ADMIN_USER=sportsAdmin
+export DATABASE_USERNAME=sportsUser
 
 # URL for service layer, use HTTPS when running in Docker, HTTP for bootrun
 #export SERVICE_HOST=https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
@@ -82,13 +82,13 @@ docker-build-db-migration:
 	echo "Building Database Migration Image"
 	docker build -t ${APPLICATION_NAME}-db-migration ./${APPLICATION_NAME}-db/
 
-docker-run-db-migration-test: local-stack docker-build-db-migration
+docker-run-db-migration-test: local-stack docker-stop-db-migration-test docker-build-db-migration
 	echo "Running Migration Test"
 	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml up -d --wait
 
-docker-stop-db-migration-test: local-stack docker-build-db-migration
+docker-stop-db-migration-test: 
 	echo "Stopping Migration Test"
-	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml down
+	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml down -v
 
 # Docker commands for running/stopping UI/service independantly
 docker-run-ui:
@@ -117,6 +117,10 @@ docker-quick-run-all:
 docker-stop-all:
 	echo "Stopping entire stack, including application, in docker"
 	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui down
+
+docker-clean-all:
+	echo "Stopping entire stack, and removing volumes"
+	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui down -v
 
 # Just run the dependencies 
 docker-run-deps: local-stack docker-build-db-migration
@@ -178,11 +182,11 @@ kafka:
 
 db:
 	echo "Connecting to database"
-	docker exec -it ${APPLICATION_NAME}-db psql -d ${DATABASE_NAME} -U ${DATABASE_ADMIN_USER}
+	docker exec -it ${APPLICATION_NAME}-db psql -d ${DATABASE_NAME} -U ${DATABASE_USERNAME}
 
 migration-test-db:
 	echo "Connecting to migration test database"
-	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${DATABASE_NAME} -U ${DATABASE_ADMIN_USER}
+	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${DATABASE_NAME} -U ${DATABASE_USERNAME}
 
 redis:
 	echo "Connecting to local cache"

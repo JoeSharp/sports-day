@@ -6,9 +6,9 @@ services:
       - sports-day-db-test
     environment:
       LIQUIBASE_DRIVER: org.postgresql.Driver
-      LIQUIBASE_COMMAND_URL: jdbc:postgresql://$LOCAL_STACK:5432/sports_day
-      LIQUIBASE_COMMAND_USERNAME: sportsAdmin
-      LIQUIBASE_COMMAND_PASSWORD: SP%RTS
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://${LOCAL_STACK}:5432/${DATABASE_NAME}
+      LIQUIBASE_COMMAND_USERNAME: ${DATABASE_USERNAME}
+      LIQUIBASE_COMMAND_PASSWORD: ${DATABASE_PASSWORD}
     depends_on:
       sports-day-test-db:
         condition: service_healthy
@@ -19,19 +19,18 @@ services:
     networks:
       - sports-day-db-test
     environment:
-      POSTGRES_USER: sportsAdmin
-      POSTGRES_PASSWORD: SP%RTS
-      POSTGRES_DB: sports_day
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "${LOCAL_STACK}:5432:5432"
     volumes:
       - sports_day_test_data:/var/lib/postgresql/data
     healthcheck:
-      test: pg_isready -U keycloak -d auth
+      test: pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}
       interval: 10s
       timeout: 3s
       retries: 3
-
 
 networks:
   sports-day-db-test:
