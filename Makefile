@@ -20,7 +20,7 @@ UNAME := $(shell uname)
 
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
-docker-run-all: local-stack docker-build-db-migration docker-build-service docker-build-ui docker-quick-run-all
+docker-run-all: local-stack docker-build-nginx-tls-proxy docker-build-db-migration docker-build-service docker-build-ui docker-quick-run-all
 	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
 
 # Create the local stack IP address on your local machine/VM
@@ -61,6 +61,11 @@ dev-run-service:
 build-ui:
 	npm install --prefix ./${APPLICATION_NAME}-ui
 	npm run build --prefix ./${APPLICATION_NAME}-ui
+
+# Build docker image fro the nginx tls proxy
+docker-build-nginx-tls-proxy: 
+	echo "Building Docker image for simple nginx TLS proxy"
+	docker build -t nginx-tls-proxy ./nginx-tls-proxy/
 
 # Build the docker image for the UI
 docker-build-ui: build-ui

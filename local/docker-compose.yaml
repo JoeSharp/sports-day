@@ -17,7 +17,7 @@ services:
       - ./certs:/etc/ssl/certs/nginx
 
   sports-day-service-proxy:
-    image: nginx
+    image: nginx-tls-proxy
     container_name: sports-day-service-proxy
     profiles:
       - include-service
@@ -31,7 +31,6 @@ services:
     ports:
       - "${LOCAL_STACK}:8443:443"
     volumes:
-      - ./nginx/service-proxy.template.conf:/etc/nginx/templates/default.conf.template
       - ./certs:/etc/ssl/certs/nginx
     depends_on:
       sports-day-service:
