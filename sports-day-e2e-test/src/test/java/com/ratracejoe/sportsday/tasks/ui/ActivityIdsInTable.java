@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Question;
+import net.serenitybdd.screenplay.ensure.web.ElementLocated;
 import net.serenitybdd.screenplay.targets.Target;
 import org.junit.jupiter.api.DisplayName;
 
@@ -12,16 +13,17 @@ import org.junit.jupiter.api.DisplayName;
 @DisplayName("Activity IDs in Table")
 public class ActivityIdsInTable implements Question<List<String>> {
   private final String tableId;
+  private final String idAttribute;
 
   @Override
   public List<String> answeredBy(Actor actor) {
-    Target tableRows = Target.the("table rows").locatedBy("//table[@id='" + tableId + "']//tr");
+    Target tableRows = ElementLocated.by("//table[@id='" + tableId + "']//tr");
     return tableRows.resolveAllFor(actor).stream()
-        .map(row -> row.getDomAttribute("data-activity-id"))
+        .map(row -> row.getDomAttribute(idAttribute))
         .collect(Collectors.toList());
   }
 
-  public static ActivityIdsInTable forTableId(String tableId) {
-    return new ActivityIdsInTable(tableId);
+  public static ActivityIdsInTable forTableWithAttribute(String tableId, String idAttribute) {
+    return new ActivityIdsInTable(tableId, idAttribute);
   }
 }

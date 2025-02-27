@@ -16,6 +16,7 @@ import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.abilities.BrowseTheWeb;
 import net.serenitybdd.screenplay.actions.Open;
 import net.serenitybdd.screenplay.ensure.Ensure;
+import net.serenitybdd.screenplay.ensure.web.ElementLocated;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import net.serenitybdd.screenplay.targets.Target;
 import org.apache.http.HttpStatus;
@@ -34,9 +35,7 @@ public class UserInterfaceTests {
   private Actor serviceUser;
 
   private final Target ACTIVITIES_HEADING =
-      Target.the("Activites Table Heading")
-          .locatedBy("css:h2")
-          .waitingForNoMoreThan(Duration.ofSeconds(5));
+      ElementLocated.by("css:h2").waitingForNoMoreThan(Duration.ofSeconds(5));
 
   @BeforeEach
   public void beforeEach() {

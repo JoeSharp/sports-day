@@ -20,6 +20,9 @@ ext {
     slf4jVersion = '1.7.7'
     serenityCoreVersion = '4.2.16'
     junitVersion = '5.11.4'
+    junit_platform_launcher_version="1.11.4"
+    junit_platform_suite_version="1.11.4"
+    cucumber_junit_platform_engine_version="7.20.1"
     assertJVersion = '3.27.3'
     lombokVersion = '1.18.34'
     logbackVersion = '1.2.11'
@@ -37,6 +40,10 @@ dependencies {
             "net.serenity-bdd:serenity-rest-assured:${serenityCoreVersion}",
             "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
             "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
+            "org.junit.platform:junit-platform-launcher:${junit_platform_launcher_version}",
+            "io.cucumber:cucumber-junit-platform-engine:${cucumber_junit_platform_engine_version}",
+            "org.junit.platform:junit-platform-suite:${junit_platform_suite_version}",
+            "org.junit.vintage:junit-vintage-engine:${junitVersion}",
             "org.assertj:assertj-core:${assertJVersion}",
             "ch.qos.logback:logback-classic:${logbackVersion}",
             "org.projectlombok:lombok:${lombokVersion}"

@@ -24,7 +24,8 @@ public class CreateActivityUI implements Task {
 
   @Override
   public <T extends Actor> void performAs(T t) {
-    List<String> activityIdsBefore = t.asksFor(ActivityIdsInTable.forTableId("activities"));
+    List<String> activityIdsBefore =
+        t.asksFor(ActivityIdsInTable.forTableWithAttribute("activities", "data-activity-id"));
 
     t.attemptsTo(
         Enter.theValue(activityDTO.name()).into(InputField.withNameOrId("newActivityName")),
@@ -32,7 +33,8 @@ public class CreateActivityUI implements Task {
             .into(InputField.withNameOrId("newActivityDescription")),
         Click.on(Button.withText("Add Activity")));
 
-    List<String> activityIdsAfter = t.asksFor(ActivityIdsInTable.forTableId("activities"));
+    List<String> activityIdsAfter =
+        t.asksFor(ActivityIdsInTable.forTableWithAttribute("activities", "data-activity-id"));
 
     t.should(seeThat(ListSizeComparison.hasOneMoreItemThan(activityIdsAfter, activityIdsBefore)));
 

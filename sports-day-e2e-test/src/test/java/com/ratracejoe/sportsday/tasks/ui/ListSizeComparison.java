@@ -6,11 +6,11 @@ import net.serenitybdd.screenplay.Question;
 import org.junit.jupiter.api.DisplayName;
 
 @DisplayName("Has one more item in than")
-public class ListSizeComparison implements Question<Boolean> {
-  private final List<?> list1;
-  private final List<?> list2;
+public class ListSizeComparison<T> implements Question<Boolean> {
+  private final List<T> list1;
+  private final List<T> list2;
 
-  public ListSizeComparison(List<?> list1, List<?> list2) {
+  public ListSizeComparison(List<T> list1, List<T> list2) {
     this.list1 = list1;
     this.list2 = list2;
   }
@@ -20,7 +20,7 @@ public class ListSizeComparison implements Question<Boolean> {
     return list1.size() == list2.size() + 1;
   }
 
-  public static ListSizeComparison hasOneMoreItemThan(List<?> list1, List<?> list2) {
-    return new ListSizeComparison(list1, list2);
+  public static <T> ListSizeComparison<T> hasOneMoreItemThan(List<T> list1, List<T> list2) {
+    return new ListSizeComparison<>(list1, list2);
   }
 }
