@@ -20,7 +20,7 @@ UNAME := $(shell uname)
 
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
-docker-run-all: docker-build-db-migration docker-build-service docker-build-ui local-stack docker-quick-run-all
+docker-run-all: local-stack docker-build-db-migration docker-build-service docker-build-ui docker-quick-run-all
 	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
 
 # Create the local stack IP address on your local machine/VM
