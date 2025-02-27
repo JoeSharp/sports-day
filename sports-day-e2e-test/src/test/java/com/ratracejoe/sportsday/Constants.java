@@ -11,4 +11,9 @@ public interface Constants {
   String REST_API_BASE_URL = forEnv.getProperty("service.url");
   String SERVICE_USERNAME = forEnv.getProperty("service.username");
   String SERVICE_PASSWORD = forEnv.getProperty("service.password");
+
+  // Keys of facts that can be remembered & recalled
+  String KEY_ACCESS_TOKEN = "accessToken";
+  String KEY_REFRESH_TOKEN = "refreshToken";
+  String KEY_CREATED_ACTIVITY_ID = "CreatedActivityId";
 }

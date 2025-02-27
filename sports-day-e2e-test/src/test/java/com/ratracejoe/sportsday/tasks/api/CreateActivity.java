@@ -1,4 +1,7 @@
-package com.ratracejoe.sportsday.tasks;
+package com.ratracejoe.sportsday.tasks.api;
+
+import static com.ratracejoe.sportsday.Constants.KEY_ACCESS_TOKEN;
+import static com.ratracejoe.sportsday.Constants.KEY_CREATED_ACTIVITY_ID;
 
 import com.ratracejoe.sportsday.model.ActivityDTO;
 import io.restassured.http.ContentType;
@@ -7,10 +10,11 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.rest.interactions.Post;
+import org.junit.jupiter.api.DisplayName;
 
 @RequiredArgsConstructor
+@DisplayName("Create a new activity")
 public class CreateActivity implements Task {
-  public static final String KEY_CREATED_ACTIVITY_ID = "CreatedActivityId";
   private final ActivityDTO activityDTO;
 
   public static CreateActivity withActivity(ActivityDTO activityDTO) {
@@ -19,7 +23,7 @@ public class CreateActivity implements Task {
 
   @Override
   public <T extends Actor> void performAs(T t) {
-    String accessToken = t.recall(LoginAsUser.KEY_ACCESS_TOKEN);
+    String accessToken = t.recall(KEY_ACCESS_TOKEN);
     t.attemptsTo(
         Post.to("/api/activities")
             .with(

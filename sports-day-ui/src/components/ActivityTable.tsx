@@ -32,7 +32,7 @@ function ActivityTable() {
         </thead>
         <tbody>
           {activities.map((activity) => (
-            <tr key={activity.id}>
+            <tr key={activity.id} data-activity-id={activity.id}>
               <td>{activity.name}</td>
               <td>{activity.description}</td>
               <td>

@@ -4,7 +4,9 @@ import static com.ratracejoe.sportsday.Constants.*;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.ratracejoe.sportsday.abilities.Authenticate;
-import com.ratracejoe.sportsday.tasks.*;
+import com.ratracejoe.sportsday.tasks.api.LoginToApi;
+import com.ratracejoe.sportsday.tasks.api.LogoutFromApi;
+import com.ratracejoe.sportsday.tasks.api.RefreshApiToken;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
@@ -31,7 +33,7 @@ public class AuthorisationTest {
   @Test
   @DisplayName("A service user can login")
   public void login() {
-    serviceUser.attemptsTo(new LoginAsUser());
+    serviceUser.attemptsTo(new LoginToApi());
     serviceUser.should(
         seeThatResponse(
             "Access Token Provided",
@@ -41,8 +43,8 @@ public class AuthorisationTest {
   @Test
   @DisplayName("A logged in user, can refresh their auth token")
   public void refresh() {
-    serviceUser.attemptsTo(new LoginAsUser());
-    serviceUser.attemptsTo(new RefreshAsUser());
+    serviceUser.attemptsTo(new LoginToApi());
+    serviceUser.attemptsTo(new RefreshApiToken());
     serviceUser.should(
         seeThatResponse(
             "Access Token Provided",
@@ -52,8 +54,8 @@ public class AuthorisationTest {
   @Test
   @DisplayName("A logged in user, can log back out")
   public void logout() {
-    serviceUser.attemptsTo(new LoginAsUser());
-    serviceUser.attemptsTo(new LogoutAsUser());
+    serviceUser.attemptsTo(new LoginToApi());
+    serviceUser.attemptsTo(new LogoutFromApi());
     serviceUser.should(seeThatResponse("Logout successful", r -> r.statusCode(HttpStatus.SC_OK)));
 
     /**

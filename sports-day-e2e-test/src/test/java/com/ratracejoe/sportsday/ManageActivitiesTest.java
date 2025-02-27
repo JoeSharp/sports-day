@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.*;
 
 import com.ratracejoe.sportsday.abilities.Authenticate;
 import com.ratracejoe.sportsday.model.ActivityDTO;
-import com.ratracejoe.sportsday.tasks.*;
+import com.ratracejoe.sportsday.tasks.api.*;
 import java.util.UUID;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import net.serenitybdd.screenplay.Actor;
@@ -34,7 +34,7 @@ public class ManageActivitiesTest {
 
     serviceMonitor = Actor.named("MrDavies").whoCan(CallAnApi.at(REST_API_BASE_URL));
 
-    serviceUser.attemptsTo(LoginAsUser.create());
+    serviceUser.attemptsTo(LoginToApi.create());
   }
 
   @AfterEach
@@ -66,7 +66,7 @@ public class ManageActivitiesTest {
     serviceUser.should(
         seeThatResponse("Activity Created", r -> r.statusCode(HttpStatus.SC_CREATED)));
 
-    UUID createdId = serviceUser.recall(CreateActivity.KEY_CREATED_ACTIVITY_ID);
+    UUID createdId = serviceUser.recall(KEY_CREATED_ACTIVITY_ID);
     assertThat(createdId).isNotNull();
     serviceUser.attemptsTo(GetActivity.forId(createdId));
     serviceUser.should(
@@ -83,7 +83,7 @@ public class ManageActivitiesTest {
     serviceUser.should(
         seeThatResponse("Activity Created", r -> r.statusCode(HttpStatus.SC_CREATED)));
 
-    UUID createdId = serviceUser.recall(CreateActivity.KEY_CREATED_ACTIVITY_ID);
+    UUID createdId = serviceUser.recall(KEY_CREATED_ACTIVITY_ID);
     assertThat(createdId).isNotNull();
     serviceUser.attemptsTo(GetActivities.create());
     serviceUser.should(
@@ -93,11 +93,12 @@ public class ManageActivitiesTest {
   @Test
   @DisplayName("A logged in user can create then delete a single activity")
   public void deleteActivity() {
-    ActivityDTO newActivity = new ActivityDTO("Curling " + UUID.randomUUID(), "Speed sweeping ice");
+    ActivityDTO newActivity = ActivityDTO.randomActivity();
     serviceUser.attemptsTo(CreateActivity.withActivity(newActivity));
 
-    UUID createdId = serviceUser.recall(CreateActivity.KEY_CREATED_ACTIVITY_ID);
+    UUID createdId = serviceUser.recall(KEY_CREATED_ACTIVITY_ID);
     serviceUser.attemptsTo(DeleteActivity.forId(createdId));
+    serviceUser.forget(KEY_CREATED_ACTIVITY_ID);
     serviceUser.should(seeThatResponse("Activity Deleted", r -> r.statusCode(HttpStatus.SC_OK)));
   }
 }
