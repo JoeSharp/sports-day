@@ -1,9 +1,8 @@
-package com.ratracejoe.sportsday.tasks.api;
+package com.ratracejoe.sportsday.api.tasks;
 
 import static com.ratracejoe.sportsday.Constants.KEY_ACCESS_TOKEN;
 import static com.ratracejoe.sportsday.Constants.KEY_REFRESH_TOKEN;
 
-import com.ratracejoe.sportsday.abilities.Authenticate;
 import com.ratracejoe.sportsday.model.LoginResponseDTO;
 import io.restassured.http.ContentType;
 import net.serenitybdd.rest.SerenityRest;
@@ -12,28 +11,29 @@ import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.rest.interactions.Post;
 import org.junit.jupiter.api.DisplayName;
 
-@DisplayName("Login to API")
-public class LoginToApi implements Task {
+@DisplayName("Refresh API Access Token")
+public class RefreshApiToken implements Task {
 
   @Override
   public <T extends Actor> void performAs(T t) {
-    Authenticate auth = Authenticate.as(t);
+    String accessToken = t.recall(KEY_ACCESS_TOKEN);
+    String refreshToken = t.recall(KEY_REFRESH_TOKEN);
 
     t.attemptsTo(
-        Post.to("/api/auth/login")
+        Post.to("/api/auth/refresh")
             .with(
                 r ->
                     r.accept(ContentType.JSON)
                         .contentType(ContentType.URLENC)
-                        .formParam("username", auth.username())
-                        .formParam("password", auth.password())));
+                        .header("Authorization", "Bearer " + accessToken)
+                        .formParam("refreshToken", refreshToken)));
     LoginResponseDTO loginResponse =
         SerenityRest.lastResponse().jsonPath().getObject(".", LoginResponseDTO.class);
     t.remember(KEY_ACCESS_TOKEN, loginResponse.accessToken());
     t.remember(KEY_REFRESH_TOKEN, loginResponse.refreshToken());
   }
 
-  public static LoginToApi create() {
-    return new LoginToApi();
+  public static RefreshApiToken create() {
+    return new RefreshApiToken();
   }
 }

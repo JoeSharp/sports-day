@@ -36,7 +36,7 @@ function ActivityTable() {
               <td>{activity.name}</td>
               <td>{activity.description}</td>
               <td>
-                <button data-activity-id={activity.id} onClick={onDelete}>
+                <button id={`delete-${activity.id}`} data-activity-id={activity.id} onClick={onDelete}>
                   Delete
                 </button>
               </td>

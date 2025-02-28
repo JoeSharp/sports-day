@@ -16,4 +16,9 @@ public interface Constants {
   String KEY_ACCESS_TOKEN = "accessToken";
   String KEY_REFRESH_TOKEN = "refreshToken";
   String KEY_CREATED_ACTIVITY_ID = "CreatedActivityId";
+  String KEY_CREATED_ACTIVITY = "CreatedActivity";
+  String KEY_DELETED_ACTIVITY_ID = "DeletedActivityId";
+
+  // UI constants
+  String ID_TABLE_ACTIVITIES = "activities";
 }

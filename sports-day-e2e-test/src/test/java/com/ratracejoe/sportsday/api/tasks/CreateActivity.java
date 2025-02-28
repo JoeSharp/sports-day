@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.tasks.api;
+package com.ratracejoe.sportsday.api.tasks;
 
 import static com.ratracejoe.sportsday.Constants.KEY_ACCESS_TOKEN;
 import static com.ratracejoe.sportsday.Constants.KEY_CREATED_ACTIVITY_ID;

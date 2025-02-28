@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.tasks.ui;
+package com.ratracejoe.sportsday.ui.tasks;
 
 import com.ratracejoe.sportsday.abilities.Authenticate;
 import net.serenitybdd.screenplay.Actor;

@@ -1,6 +1,7 @@
-package com.ratracejoe.sportsday.tasks.api;
+package com.ratracejoe.sportsday.api.tasks;
 
 import static com.ratracejoe.sportsday.Constants.KEY_ACCESS_TOKEN;
+import static com.ratracejoe.sportsday.Constants.KEY_DELETED_ACTIVITY_ID;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class DeleteActivity implements Task {
     t.attemptsTo(
         Delete.from("/api/activities/{id}")
             .with(r -> r.pathParam("id", id).header("Authorization", "Bearer " + accessToken)));
+    t.remember(KEY_DELETED_ACTIVITY_ID, id);
   }
 
   public static DeleteActivity forId(UUID id) {
