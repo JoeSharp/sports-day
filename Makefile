@@ -25,6 +25,15 @@ docker-run-all: local-stack docker-build-all docker-quick-run-all
 
 docker-build-all: docker-build-nginx-tls-proxy docker-build-db-migration docker-build-service docker-build-ui
 
+# Really tries to clean up after itself, watch out the pruning doesn't affect other projects...
+clean: docker-clean-all 
+	docker image rm nginx-tls-proxy || true
+	docker image rm ${APPLICATION_NAME}-service || true
+	docker image rm ${APPLICATION_NAME}-ui || true
+	docker image rm ${APPLICATION_NAME}-db-migration || true
+	docker volume prune -f
+	docker system prune -f
+
 # Create the local stack IP address on your local machine/VM
 local-stack:
 	echo "Registering IP address for Local Development"
