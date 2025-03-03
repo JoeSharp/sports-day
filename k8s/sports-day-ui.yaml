@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sports-day-ui
+  labels:
+    app: sports-day-ui
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sports-day-ui
+  template:
+    metadata:
+      labels:
+        app: sports-day-ui
+    spec:
+      containers:
+        - name: sports-day-ui
+          image: sports-day-ui:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 443
+          env:
+            - name: EXTERNAL_API_URL
+              value: https://sports-day-service.172.16.10.0.nip.io:8443

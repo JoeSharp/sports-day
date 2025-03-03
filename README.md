@@ -39,6 +39,10 @@ The curl scripts are setup to supply those files, so those should work out of th
 
 Use the minikube docker container repo
 ```bash
+# Use minikube docker environment
 eval $(minikube -p minikube docker-env)
+
+# Reset the docker env
+eval $(minikube -p minikube docker-env | grep export | cut -d '=' -f1 | sed "s/export/unset/g")
 ```
 

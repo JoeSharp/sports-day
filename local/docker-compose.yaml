@@ -1,4 +1,25 @@
 services:
+
+  sports-day-ui-proxy:
+    image: nginx-tls-proxy
+    container_name: sports-day-ui-proxy
+    profiles:
+      - include-service
+    networks:
+      - sports-day
+    environment:
+      PROXY_PASS: http://${APPLICATION_NAME}-ui:80
+      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
+      SSL_CERTIFICATE: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.crt
+      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.key
+    ports:
+      - "${LOCAL_STACK}:9443:443"
+    volumes:
+      - ./certs:/etc/ssl/certs/nginx
+    depends_on:
+      sports-day-ui:
+        condition: service_healthy
+
   sports-day-ui:
     image: sports-day-ui
     container_name: sports-day-ui
@@ -9,10 +30,6 @@ services:
     environment:
       EXTERNAL_API_URL: https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
       SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
-      SSL_CERTIFICATE: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.crt
-      SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.key
-    ports:
-      - ${LOCAL_STACK}:9443:443
     volumes:
       - ./certs:/etc/ssl/certs/nginx
 
