@@ -1,0 +1,168 @@
+services:
+
+  sports-day-ui:
+    image: sports-day-ui
+    container_name: sports-day-ui
+    networks:
+     - sports-day
+    profiles:
+     - include-ui
+    environment:
+      EXTERNAL_API_URL: http://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8080
+      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
+    ports:
+      # Required when running the UI in dev mode on top of the service in docker
+      - "${LOCAL_STACK}:9080:80"
+
+  sports-day-service:
+    image: sports-day-service
+    container_name: sports-day-service
+    networks:
+      - sports-day
+    profiles:
+      - include-service
+    environment:
+      DB_URL: jdbc:postgresql://${APPLICATION_NAME}-db:5432/${DATABASE_NAME}
+      DB_USERNAME: ${DATABASE_USERNAME}
+      DB_PASSWORD: ${DATABASE_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      OAUTH2_URL: http://${APPLICATION_NAME}-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
+      UI_DOMAIN: http://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9080/
+    ports:
+      # Required when running the UI in dev mode on top of the service in docker
+      - "${LOCAL_STACK}:8080:8080"
+    depends_on:
+      auth-healthcheck:
+        condition: service_completed_successfully
+      sports-day-db-migration:
+        condition: service_completed_successfully
+
+  sports-day-db-migration:
+    image: sports-day-db-migration
+    container_name: sports-day-db-migration
+    networks:
+      - sports-day
+    environment:
+      LIQUIBASE_DRIVER: org.postgresql.Driver
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://${APPLICATION_NAME}-db:5432/${DATABASE_NAME}
+      LIQUIBASE_COMMAND_USERNAME: ${DATABASE_USERNAME}
+      LIQUIBASE_COMMAND_PASSWORD: ${DATABASE_PASSWORD}
+    depends_on:
+      sports-day-db:
+        condition: service_healthy
+
+  sports-day-db:
+    image: postgres:latest
+    container_name: sports-day-db
+    networks:
+      - sports-day
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - "${LOCAL_STACK}:5432:5432"
+    volumes:
+      - sports_day_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ${KEYCLOAK_DATABASE_USERNAME} -d ${KEYCLOAK_DATABASE_NAME}
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  redis:
+    image: redis
+    container_name: sports-day-cache
+    networks:
+      - sports-day
+    ports:
+      - "${LOCAL_STACK}:6379:6379"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    container_name: sports-day-zk
+    networks:
+      - sports-day
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    container_name: sports-day-audit
+    networks:
+      - sports-day
+    depends_on:
+      - zookeeper
+    ports:
+      - "${LOCAL_STACK}:29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${LOCAL_STACK}:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  auth-db:
+    image: postgres
+    container_name: sports-day-auth-db
+    networks:
+      - sports-day
+    restart: always
+    ports:
+      - "${LOCAL_STACK}:5433:5432"
+    volumes:
+      - sports_day_auth_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_ROOT_PASSWORD: ${KEYCLOAK_DATABASE_ROOT_PASSWORD}
+      POSTGRES_DB: ${KEYCLOAK_DATABASE_NAME}
+      POSTGRES_USER: ${KEYCLOAK_DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
+    healthcheck:
+      test: pg_isready -U ${KEYCLOAK_DATABASE_USERNAME} -d ${KEYCLOAK_DATABASE_NAME}
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  auth:
+    image: quay.io/keycloak/keycloak:22.0
+    container_name: sports-day-auth
+    networks:
+      - sports-day
+    command: start-dev --import-realm --http-port 8080 --health-enabled true
+    ports:
+      - "${LOCAL_STACK}:8085:8080"
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://auth-db:5432/${KEYCLOAK_DATABASE_NAME}
+      KC_DB_USERNAME: ${KEYCLOAK_DATABASE_USERNAME}
+      KC_DB_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    volumes:
+      - ./auth/:/opt/keycloak/data/import/:ro
+
+  auth-healthcheck:
+    image: curlimages/curl:latest
+    container_name: auth-healthcheck
+    networks:
+      - sports-day
+    depends_on:
+      - auth
+    entrypoint: "curl --retry 24 --retry-delay 5 --max-time 120 --retry-connrefused http://auth:8080/health/ready"
+
+networks:
+  sports-day:
+    driver: bridge
+
+volumes:
+  sports_day_data:
+  sports_day_auth_data:

@@ -107,7 +107,7 @@ docker-stop-db-migration-test:
 	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml down -v
 
 # Docker commands for running/stopping UI/service independantly
-docker-run-ui:
+docker-run-ui: local-stack
 	echo "Running the UI in Docker"
 	docker compose -f local/docker-compose.yaml --profile include-ui up -d --wait ${APPLICATION_NAME}-ui
 	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
@@ -116,7 +116,7 @@ docker-stop-ui:
 	echo "Stopping the UI in Docker"
 	docker compose -f local/docker-compose.yaml --profile include-ui down ${APPLICATION_NAME}-ui
 
-docker-run-service:
+docker-run-service: local-stack
 	echo "Running the Service in Docker"
 	docker compose -f local/docker-compose.yaml --profile include-service up -d --wait ${APPLICATION_NAME}-service
 
@@ -125,9 +125,18 @@ docker-stop-service:
 	docker compose -f local/docker-compose.yaml --profile include-service down ${APPLICATION_NAME}-service
 
 # Run the entire stack up, assuming the docker images for UI and service are already built
-docker-quick-run-all:
+docker-quick-run-all: local-stack
 	echo "Running entire stack, including application, in docker"
 	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui up -d --wait
+
+# Run the more minimal HTTP stack, shows the moving parts interacting without certs in place
+docker-quick-run-http: local-stack
+	echo "Running HTTP stack, including application, in docker"
+	docker compose -f local/docker-compose.http.yaml --profile include-service --profile include-ui up -d --wait
+
+docker-stop-http:
+	echo "Stopping HTTP stack, including application, in docker"
+	docker compose -f local/docker-compose.http.yaml --profile include-service --profile include-ui down
 
 # Stop the entire stack running in Docker
 docker-stop-all:
