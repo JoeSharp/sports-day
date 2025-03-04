@@ -30,8 +30,6 @@ services:
     environment:
       EXTERNAL_API_URL: https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
       SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
-    volumes:
-      - ./certs:/etc/ssl/certs/nginx
 
   sports-day-service-proxy:
     image: nginx-tls-proxy

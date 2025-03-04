@@ -1,8 +1,0 @@
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = localhost
-DNS.2 = keycloak.172.16.10.0.nip.io
-IP.1 = 172.16.10.0

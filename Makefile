@@ -4,6 +4,7 @@ export LOCAL_STACK=172.16.10.0
 export APPLICATION_NAME=sports-day
 export DATABASE_NAME=sports_day
 export DATABASE_USERNAME=sportsUser
+DOMAINS := service ui client auth
 
 # URL for service layer, use HTTPS when running in Docker, HTTP for bootrun
 #export SERVICE_HOST=https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
@@ -34,6 +35,9 @@ clean: docker-clean-all
 	docker volume prune -f
 	docker system prune -f
 
+# Generates an entirely new CA, server certs and updates k8s secret templates
+tls: create-tls-certs update-test-certs k8s-tls-all
+
 # Create the local stack IP address on your local machine/VM
 local-stack:
 	echo "Registering IP address for Local Development"
@@ -50,12 +54,22 @@ endif
 # You will need to delete and re-import the CA.
 create-tls-certs:
 	echo "Creating TLS Certificates"
-	cd local && ./create-ssl-files.sh && cd ../
+	local/create-ca.sh ${APPLICATION_NAME} ${CERT_ROOT}
+	@for DOMAIN in $(DOMAINS); do \
+		./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-$$DOMAIN ${CERT_ROOT}; \
+	done
 
-# `make create-tls-server SERVER_NAME=keycloak`
+update-test-certs:
+	echo "Copying Everything over to test"
+	rm -rf ./${APPLICATION_NAME}-service/src/test/resources/certs
+	cp -R ${CERT_ROOT} ./${APPLICATION_NAME}-service/src/test/resources
+
+
+# `make create-tls-server SERVER_NAME=sports-day-something`
 create-tls-server:
 	echo "Creating Server Certificates for ${SERVER_NAME}"
-	cd local && ./create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} && cd ../
+	./local/create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} ${CERT_ROOT} && cd ../
+	cp -R ${CERT_ROOT}/${SERVER_NAME} ./${APPLICATION_NAME}-service/src/test/resources/certs
 
 # Run the Vite dev server outside of containers
 # UI can then be reached by visiting http://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:5173
@@ -201,6 +215,21 @@ test-bdd-http:
 # ...or the system running within docker behind TLS proxy
 test-bdd-https:
 	./${APPLICATION_NAME}-e2e-test/gradlew -p ./${APPLICATION_NAME}-e2e-test clearReports test aggregate reports -Denvironment=local-https
+
+# Kubernetes Stuff
+# Generate the definition of the TLS secret for a specific domain
+k8s-tls-domain:
+	echo $$DOMAIN && \
+	export CERT=$$(cat $${CERT_ROOT}/$$DOMAIN/$$DOMAIN.crt | grep -v '-' | tr -d '\n') && \
+	export KEY=$$(cat $$CERT_ROOT/$$DOMAIN/$$DOMAIN.key | grep -v '-' | tr -d '\n') && \
+	envsubst < ./k8s/tls.template.yaml > ./k8s/$$DOMAIN.tls.yaml
+
+# Generate the definition of TLS secrets for all domains
+k8s-tls-all: 
+	@for DOMAIN in $(DOMAINS); do \
+		echo "Generating K8s Secret for $$APPLICATION_NAME-$$DOMAIN"; \
+		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
+	done
 
 # Useful commands to connect to the various dependencies for manual interaction
 kafka:
