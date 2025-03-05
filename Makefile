@@ -235,17 +235,18 @@ k8s-tls-domain:
 	echo $$DOMAIN && \
 	export CERT=$$(cat $${CERT_ROOT}/$$DOMAIN/$$DOMAIN.crt | base64 | tr -d '\n') && \
 	export KEY=$$(cat $$CERT_ROOT/$$DOMAIN/$$DOMAIN.key | base64 | tr -d '\n') && \
-	envsubst < ./k8s/tls.template.yaml > ./k8s/$$DOMAIN.tls.yaml
+	envsubst < ./k8s/secrets/tls.template.yaml > ./k8s/secrets/$$DOMAIN.tls.yaml
 
+# Generate the secrets for the databases
 k8s-db-domain:
 	echo $$DOMAIN && \
 	export POSTGRES_DB=$$(echo -n $${DB_NAME} | base64 | tr -d '\n') && \
 	export POSTGRES_USER=$$(echo -n $${DB_USERNAME} | base64 | tr -d '\n') && \
 	export POSTGRES_PASSWORD=$$(echo -n $${DB_PASSWORD} | base64 | tr -d '\n') && \
-	envsubst < ./k8s/db.secret.template.yaml > ./k8s/$$DOMAIN.db.secret.yaml
+	envsubst < ./k8s/secrets/db.secret.template.yaml > ./k8s/secrets/$$DOMAIN.db.secret.yaml
 
 # Generate the definition of TLS secrets for all domains
-k8s-tls-all: 
+k8s-templates: 
 	@for DOMAIN in $(DOMAINS); do \
 		echo "Generating K8s Secret for $$APPLICATION_NAME-$$DOMAIN"; \
 		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
