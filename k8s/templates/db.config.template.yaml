@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${DOMAIN}-config
+data:
+  DATABASE_NAME: ${DB_NAME}
+  DATABASE_URL: jdbc:postgresql://${DOMAIN}:5432/${DB_NAME}
+
+

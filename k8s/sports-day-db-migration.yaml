@@ -13,15 +13,18 @@ spec:
         - name: LIQUIBASE_DRIVER
           value: org.postgresql.Driver
         - name: LIQUIBASE_COMMAND_URL
-          value: "jdbc:postgresql://sports-day-db:5432/sports_day"
+          valueFrom: 
+            configMapKeyRef:
+              name: sports-day-service-config
+              key: DATABASE_URL
         - name: LIQUIBASE_COMMAND_USERNAME
           valueFrom:
             secretKeyRef:
-              name: sports-day-creds
+              name: sports-day-service-creds
               key: POSTGRES_USER
         - name: LIQUIBASE_COMMAND_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sports-day-creds
+              name: sports-day-service-creds
               key: POSTGRES_PASSWORD
       restartPolicy: Never

@@ -25,19 +25,18 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-creds
+                  name: sports-day-service-creds
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-creds
+                  name: sports-day-service-creds
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: sports-day-creds
-                  key: POSTGRES_DB
-
+              valueFrom: 
+                  configMapKeyRef:
+                    name: sports-day-service-config
+                    key: DATABASE_NAME
 ---
 apiVersion: v1
 kind: Service

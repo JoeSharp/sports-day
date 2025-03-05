@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sports-day-service
+  labels:
+    app: sports-day-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sports-day-service
+  template:
+    metadata:
+      labels:
+        app: sports-day-service
+        app.kubernetes.io/name: sports-day-service
+    spec:
+      containers:
+        - name: sports-day-service
+          image: sports-day-service:latest
+          imagePullPolicy: Never
+          ports:
+            - name: http-web-svc
+              containerPort: 8080
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: sports-day-creds
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sports-day-creds
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: sports-day-creds
+                  key: POSTGRES_DB
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: 6379
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:9092
+            - name: OAUTH2_URL
+              value: https://sports-day-auth.local:8085/realms/ratracejoe
+            - name: UI_DOMAIN
+              value: https://sports-day-ui.local
+
+
+
+      DB_URL: jdbc:postgresql://${APPLICATION_NAME}-db:5432/${SPORTS_DAY_DATABASE_NAME}
+      JAVA_OPTS: > 
+        -Djavax.net.ssl.trustStore=/etc/ssl/certs/${APPLICATION_NAME}.truststore.jks 
+        -Djavax.net.ssl.trustStorePassword=changeit 
+        -Djavax.net.ssl.keyStore=/etc/ssl/certs/${APPLICATION_NAME}-service/${APPLICATION_NAME}-service.keystore.jks 
+        -Djavax.net.ssl.keyStorePassword=changeit
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sports-day-service-service
+spec:
+  selector:
+    app.kubernetes.io/name: sports-day-service
+  ports:
+    - name: service-port
+      protocol: TCP
+      port: 8080
+      targetPort: http-web-svc
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sports-day-service-ingress
+spec:
+  tls:
+    - hosts:
+        - sports-day-service.local
+      secretName: sports-day-service-tls
+  rules:
+    - host: sports-day-service.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sports-day-service-service
+                port:
+                  name: service-port
+
+

@@ -235,15 +235,16 @@ k8s-tls-domain:
 	echo $$DOMAIN && \
 	export CERT=$$(cat $${CERT_ROOT}/$$DOMAIN/$$DOMAIN.crt | base64 | tr -d '\n') && \
 	export KEY=$$(cat $$CERT_ROOT/$$DOMAIN/$$DOMAIN.key | base64 | tr -d '\n') && \
-	envsubst < ./k8s/secrets/tls.template.yaml > ./k8s/secrets/$$DOMAIN.tls.yaml
+	envsubst < ./k8s/templates/tls.template.yaml > ./k8s/secrets/$$DOMAIN.tls.yaml
 
 # Generate the secrets for the databases
-k8s-db-domain:
+k8s-db-template:
 	echo $$DOMAIN && \
-	export POSTGRES_DB=$$(echo -n $${DB_NAME} | base64 | tr -d '\n') && \
+	echo $$DB_NAME && \
 	export POSTGRES_USER=$$(echo -n $${DB_USERNAME} | base64 | tr -d '\n') && \
 	export POSTGRES_PASSWORD=$$(echo -n $${DB_PASSWORD} | base64 | tr -d '\n') && \
-	envsubst < ./k8s/secrets/db.secret.template.yaml > ./k8s/secrets/$$DOMAIN.db.secret.yaml
+	envsubst < ./k8s/templates/db.secret.template.yaml > ./k8s/secrets/$$DOMAIN.db.secret.yaml
+	envsubst < ./k8s/templates/db.config.template.yaml > ./k8s/secrets/$$DOMAIN.db.config.yaml
 
 # Generate the definition of TLS secrets for all domains
 k8s-templates: 
@@ -251,22 +252,26 @@ k8s-templates:
 		echo "Generating K8s Secret for $$APPLICATION_NAME-$$DOMAIN"; \
 		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
 	done
-	$(MAKE) k8s-db-domain DOMAIN=$$APPLICATION_NAME DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
-	$(MAKE) k8s-db-domain DOMAIN=$$APPLICATION_NAME-auth DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
+	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-service DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
+	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-auth DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
 
 # Useful commands to connect to the various dependencies for manual interaction
-kafka:
+docker-exec-kafka:
 	echo "Connecting to Kafka"
 
-db:
+docker-exec-db:
 	echo "Connecting to database"
-	docker exec -it ${APPLICATION_NAME}-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${DATABASE_USERNAME}
+	docker exec -it ${APPLICATION_NAME}-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME}
 
-migration-test-db:
+k8s-exec-db:
+	echo "Connecting to Database"
+	kubectl exec -it deployment/sports-day-db -- psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME} 
+
+docker-exec-migration-test-db:
 	echo "Connecting to migration test database"
-	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${DATABASE_USERNAME}
+	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME}
 
-redis:
+docker-exec-redis:
 	echo "Connecting to local cache"
 	docker exec -it ${APPLICATION_NAME}-cache redis-cli
 
