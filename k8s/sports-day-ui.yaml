@@ -46,10 +46,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: sports-day-ui-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sports-day-ui.local
+      secretName: sports-day-ui-tls
   rules:
     - host: sports-day-ui.local
       http:

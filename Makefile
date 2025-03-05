@@ -220,8 +220,8 @@ test-bdd-https:
 # Generate the definition of the TLS secret for a specific domain
 k8s-tls-domain:
 	echo $$DOMAIN && \
-	export CERT=$$(cat $${CERT_ROOT}/$$DOMAIN/$$DOMAIN.crt | grep -v '-' | tr -d '\n') && \
-	export KEY=$$(cat $$CERT_ROOT/$$DOMAIN/$$DOMAIN.key | grep -v '-' | tr -d '\n') && \
+	export CERT=$$(cat $${CERT_ROOT}/$$DOMAIN/$$DOMAIN.crt | base64 | tr -d '\n') && \
+	export KEY=$$(cat $$CERT_ROOT/$$DOMAIN/$$DOMAIN.key | base64 | tr -d '\n') && \
 	envsubst < ./k8s/tls.template.yaml > ./k8s/$$DOMAIN.tls.yaml
 
 # Generate the definition of TLS secrets for all domains

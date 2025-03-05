@@ -3,6 +3,6 @@ kind: Secret
 metadata:
   name: sports-day-ui-tls
 data:
-  tls.crt: ${CERT}
-  tls.key: ${KEY}
+  tls.crt: 
+  tls.key: 
 type: kubernetes.io/tls
