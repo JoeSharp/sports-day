@@ -32,4 +32,11 @@ Note that we can give ports specific names in the YAML and then refer to them wi
 ## Service
 The nodeport on a service is one that can be reached using the minikube IP, bypassing the ingress, but of course it's a random port
 
+LoadBalancer service can be reached from outside, useful in Cloud, for minikube you have to use `minikube tunnel` to expose it.
 
+ClusterIP is default, and makes the service reachable inside the cluster
+<service-name>.<namepace>.svc.cluster.local
+or simply
+<service-name> if in same namespace
+
+NodePort exposes service on static port on nodes IP, creates a random port and you can use `minikube ip` and that port to reach it.

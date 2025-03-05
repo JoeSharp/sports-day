@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sports-day-db
+  labels:
+    app: sports-day-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sports-day-db
+  template:
+    metadata:
+      labels:
+        app: sports-day-db
+        app.kubernetes.io/name: sports-day-db
+    spec:
+      containers:
+        - name: sports-day-db
+          image: postgres:latest
+          ports:
+            - name: postgres-port
+              containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sports-day-creds
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sports-day-creds
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: sports-day-creds
+                  key: POSTGRES_DB
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sports-day-db
+spec:
+  selector:
+    app.kubernetes.io/name: sports-day-db
+  ports:
+    - name: pg-svc-port
+      protocol: TCP
+      port: 5432
+      targetPort: postgres-port
+

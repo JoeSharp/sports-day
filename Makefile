@@ -2,8 +2,22 @@
 # to reach things outside containers, and vice versa
 export LOCAL_STACK=172.16.10.0
 export APPLICATION_NAME=sports-day
-export DATABASE_NAME=sports_day
-export DATABASE_USERNAME=sportsUser
+
+# Defined here so they can be used in Docker
+# and for constructing YAML files for K8s
+export SPORTS_DAY_DATABASE_NAME=sports_day
+export SPORTS_DAY_DATABASE_USERNAME=sportsUser
+export SPORTS_DAY_DATABASE_PASSWORD=GHPsdfsd234
+
+export KEYCLOAK_DATABASE_NAME=kc
+export KEYCLOAK_DATABASE_USERNAME=keycloak
+export KEYCLOAK_DATABASE_PASSWORD=kc-password
+export KEYCLOAK_DATABASE_ROOT_PASSWORD=superSecret
+export KEYCLOAK_ADMIN_USERNAME=keycloak
+export KEYCLOAK_ADMIN_PASSWORD=Q@v3rP&G
+
+# List of moving parts that will be prefixed with application name
+# Each of these will need a cert/key pair
 DOMAINS := service ui client auth
 
 # URL for service layer, use HTTPS when running in Docker, HTTP for bootrun
@@ -63,7 +77,6 @@ update-test-certs:
 	echo "Copying Everything over to test"
 	rm -rf ./${APPLICATION_NAME}-service/src/test/resources/certs
 	cp -R ${CERT_ROOT} ./${APPLICATION_NAME}-service/src/test/resources
-
 
 # `make create-tls-server SERVER_NAME=sports-day-something`
 create-tls-server:
@@ -224,12 +237,21 @@ k8s-tls-domain:
 	export KEY=$$(cat $$CERT_ROOT/$$DOMAIN/$$DOMAIN.key | base64 | tr -d '\n') && \
 	envsubst < ./k8s/tls.template.yaml > ./k8s/$$DOMAIN.tls.yaml
 
+k8s-db-domain:
+	echo $$DOMAIN && \
+	export POSTGRES_DB=$$(echo -n $${DB_NAME} | base64 | tr -d '\n') && \
+	export POSTGRES_USER=$$(echo -n $${DB_USERNAME} | base64 | tr -d '\n') && \
+	export POSTGRES_PASSWORD=$$(echo -n $${DB_PASSWORD} | base64 | tr -d '\n') && \
+	envsubst < ./k8s/db.secret.template.yaml > ./k8s/$$DOMAIN.db.secret.yaml
+
 # Generate the definition of TLS secrets for all domains
 k8s-tls-all: 
 	@for DOMAIN in $(DOMAINS); do \
 		echo "Generating K8s Secret for $$APPLICATION_NAME-$$DOMAIN"; \
 		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
 	done
+	$(MAKE) k8s-db-domain DOMAIN=$$APPLICATION_NAME DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
+	$(MAKE) k8s-db-domain DOMAIN=$$APPLICATION_NAME-auth DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
 
 # Useful commands to connect to the various dependencies for manual interaction
 kafka:
@@ -237,11 +259,11 @@ kafka:
 
 db:
 	echo "Connecting to database"
-	docker exec -it ${APPLICATION_NAME}-db psql -d ${DATABASE_NAME} -U ${DATABASE_USERNAME}
+	docker exec -it ${APPLICATION_NAME}-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${DATABASE_USERNAME}
 
 migration-test-db:
 	echo "Connecting to migration test database"
-	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${DATABASE_NAME} -U ${DATABASE_USERNAME}
+	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${DATABASE_USERNAME}
 
 redis:
 	echo "Connecting to local cache"
