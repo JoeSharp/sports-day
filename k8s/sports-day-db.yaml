@@ -47,7 +47,7 @@ spec:
   selector:
     app.kubernetes.io/name: sports-day-db
   ports:
-    - name: pg-svc-port
+    - name: postgres-port
       protocol: TCP
       port: 5432
       targetPort: postgres-port

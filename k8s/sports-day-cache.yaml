@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sports-day-cache
+  labels:
+    app: sports-day-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sports-day-cache
+  template:
+    metadata:
+      labels:
+        app: sports-day-cache
+        app.kubernetes.io/name: sports-day-cache
+    spec:
+      containers:
+        - name: sports-day-cache
+          image: redis:latest
+          ports:
+            - name: redis-port
+              containerPort: 6379
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sports-day-cache
+spec:
+  selector:
+    app.kubernetes.io/name: sports-day-cache
+  ports:
+    - name: redis-port
+      protocol: TCP
+      port: 6379
+      targetPort: redis-port
+

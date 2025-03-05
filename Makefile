@@ -269,3 +269,7 @@ migration-test-db:
 redis:
 	echo "Connecting to local cache"
 	docker exec -it ${APPLICATION_NAME}-cache redis-cli
+
+k8s-exec-redis:
+	echo "Connecting to local cache"
+	kubectl exec -it deployment/${APPLICATION_NAME}-cache redis-cli
