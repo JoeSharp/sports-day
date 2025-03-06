@@ -235,6 +235,9 @@ k8s-tls-domain:
 	echo $$DOMAIN && \
 	kubectl create secret tls ${DOMAIN}-tls --cert=${CERT_ROOT}/${DOMAIN}/${DOMAIN}.crt --key=${CERT_ROOT}/${DOMAIN}/${DOMAIN}.key --dry-run=client -o yaml | tee ./k8s/secrets/${DOMAIN}.tls.yaml
 
+k8s-keycloak-config:
+	kubectl create secret generic keycloak-creds --from-literal=KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME} --from-literal=KEYCLOAK_ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD}" --dry-run=client -o yaml | tee ./k8s/secrets/keycloak-creds.yaml
+
 # Generate the secrets for the databases
 k8s-db-template:
 	echo $$DOMAIN && \
@@ -250,6 +253,7 @@ k8s-templates:
 	done
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-db DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-auth DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
+	$(MAKE) k8s-keycloak-config
 
 # Useful commands to connect to the various dependencies for manual interaction
 docker-exec-kafka:
