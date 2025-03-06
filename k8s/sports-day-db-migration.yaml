@@ -15,16 +15,16 @@ spec:
         - name: LIQUIBASE_COMMAND_URL
           valueFrom: 
             configMapKeyRef:
-              name: sports-day-service-config
+              name: sports-day-db-config
               key: DATABASE_URL
         - name: LIQUIBASE_COMMAND_USERNAME
           valueFrom:
             secretKeyRef:
-              name: sports-day-service-creds
+              name: sports-day-db-creds
               key: POSTGRES_USER
         - name: LIQUIBASE_COMMAND_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sports-day-service-creds
+              name: sports-day-db-creds
               key: POSTGRES_PASSWORD
       restartPolicy: Never
