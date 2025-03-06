@@ -34,10 +34,7 @@ spec:
                   name: keycloak-creds
                   key: KEYCLOAK_ADMIN_PASSWORD
             - name: KC_DB
-              valueFrom: 
-                  configMapKeyRef:
-                    name: sports-day-auth-db-config
-                    key: DATABASE_NAME
+              value: postgres
             - name: KC_DB_URL
               valueFrom: 
                   configMapKeyRef:
