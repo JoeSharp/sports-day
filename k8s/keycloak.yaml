@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+        app.kubernetes.io/name: keycloak
+    spec:
+      containers:
+        - name: sports-day-ui
+          image: sports-day-ui:latest
+          imagePullPolicy: Never
+          ports:
+            - name: http-web-svc
+              containerPort: 80
+          env:
+            - name: EXTERNAL_API_URL
+              value: https://sports-day-service.172.16.10.0.nip.io:8443
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+spec:
+  selector:
+    app.kubernetes.io/name: keycloak
+  ports:
+    - name: service-port
+      protocol: TCP
+      port: 8080
+      targetPort: http-web-svc
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak
+spec:
+  tls:
+    - hosts:
+        - keycloak.local
+      secretName: sports-day-auth-tls
+  rules:
+    - host: sports-day-auth.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sports-day-auth
+                port:
+                  name: service-port
+

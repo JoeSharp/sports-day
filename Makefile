@@ -233,18 +233,14 @@ test-bdd-https:
 # Generate the definition of the TLS secret for a specific domain
 k8s-tls-domain:
 	echo $$DOMAIN && \
-	export CERT=$$(cat $${CERT_ROOT}/$$DOMAIN/$$DOMAIN.crt | base64 | tr -d '\n') && \
-	export KEY=$$(cat $$CERT_ROOT/$$DOMAIN/$$DOMAIN.key | base64 | tr -d '\n') && \
-	envsubst < ./k8s/templates/tls.template.yaml > ./k8s/secrets/$$DOMAIN.tls.yaml
+	kubectl create secret tls ${DOMAIN}-tls --cert=${CERT_ROOT}/${DOMAIN}/${DOMAIN}.crt --key=${CERT_ROOT}/${DOMAIN}/${DOMAIN}.key --dry-run=client -o yaml | tee ./k8s/secrets/${DOMAIN}.tls.yaml
 
 # Generate the secrets for the databases
 k8s-db-template:
 	echo $$DOMAIN && \
 	echo $$DB_NAME && \
-	export POSTGRES_USER=$$(echo -n $${DB_USERNAME} | base64 | tr -d '\n') && \
-	export POSTGRES_PASSWORD=$$(echo -n $${DB_PASSWORD} | base64 | tr -d '\n') && \
-	envsubst < ./k8s/templates/db.secret.template.yaml > ./k8s/secrets/$$DOMAIN.db.secret.yaml
-	envsubst < ./k8s/templates/db.config.template.yaml > ./k8s/secrets/$$DOMAIN.db.config.yaml
+	kubectl create secret generic ${DOMAIN}-creds --from-literal=POSTGRES_USER=${DB_USERNAME} --from-literal=POSTGRES_PASSWORD=${DB_PASSWORD} --dry-run=client -o yaml | tee ./k8s/secrets/${DOMAIN}.db.secret.yaml
+	kubectl create configmap ${DOMAIN}-config --from-literal=DATABASE_NAME=${DB_NAME} --from-literal=DATABASE_URL=jdbc:postgresql://${DOMAIN}:5432/${DB_NAME} --dry-run=client -o yaml | tee ./k8s/secrets/${DOMAIN}.db.config.yaml
 
 # Generate the definition of TLS secrets for all domains
 k8s-templates: 

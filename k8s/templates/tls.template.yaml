@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: ${DOMAIN}-tls
-data:
-  tls.crt: ${CERT}
-  tls.key: ${KEY}
-type: kubernetes.io/tls
