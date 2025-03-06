@@ -252,7 +252,7 @@ k8s-templates:
 		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
 	done
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-db DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
-	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-auth DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
+	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-auth-db DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
 	$(MAKE) k8s-keycloak-config
 
 # Useful commands to connect to the various dependencies for manual interaction
@@ -266,6 +266,10 @@ docker-exec-db:
 k8s-exec-db:
 	echo "Connecting to Database"
 	kubectl exec -it deployment/sports-day-db -- psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME} 
+
+k8s-exec-auth-db:
+	echo "Connecting to Auth Database"
+	kubectl exec -it deployment/sports-day-auth-db -- psql -d ${KEYCLOAK_DATABASE_NAME} -U ${KEYCLOAK_DATABASE_USERNAME} 
 
 docker-exec-migration-test-db:
 	echo "Connecting to migration test database"

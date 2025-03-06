@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keycloak-db
+  name: sports-day-auth-db
   labels:
-    app: keycloak-db
+    app: sports-day-auth-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: keycloak-db
+      app: sports-day-auth-db
   template:
     metadata:
       labels:
-        app: keycloak-db
-        app.kubernetes.io/name: keycloak-db
+        app: sports-day-auth-db
+        app.kubernetes.io/name: sports-day-auth-db
     spec:
       containers:
-        - name: keycloak-db
+        - name: sports-day-auth-db
           image: postgres:latest
           ports:
             - name: kc-db-port
@@ -25,26 +25,26 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-auth-creds
+                  name: sports-day-auth-db-creds
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-auth-creds
+                  name: sports-day-auth-db-creds
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               valueFrom: 
                   configMapKeyRef:
-                    name: sports-day-auth-config
+                    name: sports-day-auth-db-config
                     key: DATABASE_NAME
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak-db
+  name: sports-day-auth-db
 spec:
   selector:
-    app.kubernetes.io/name: keycloak-db
+    app.kubernetes.io/name: sports-day-auth-db
   ports:
     - name: kc-db-port
       protocol: TCP

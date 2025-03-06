@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keycloak
+  name: sports-day-auth
   labels:
-    app: keycloak
+    app: sports-day-auth
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: keycloak
+      app: sports-day-auth
   template:
     metadata:
       labels:
-        app: keycloak
-        app.kubernetes.io/name: keycloak
+        app: sports-day-auth
+        app.kubernetes.io/name: sports-day-auth
     spec:
       containers:
         - name: sports-day-auth
@@ -21,7 +21,7 @@ spec:
           ports:
             - name: http-web-svc
               containerPort: 8080
-          command: ["start-dev", "--import-realm", "--https-port", "8085", "--http-enabled", "false", "--health-enabled", "true"]
+          command: ["sh", "-c", "/opt/keycloak/bin/kc.sh start-dev --http-port 8080 --health-enabled true"]
           env:
             - name: KEYCLOAK_ADMIN
               valueFrom:
@@ -36,31 +36,31 @@ spec:
             - name: KC_DB
               valueFrom: 
                   configMapKeyRef:
-                    name: sports-day-auth-config
+                    name: sports-day-auth-db-config
                     key: DATABASE_NAME
             - name: KC_DB_URL
               valueFrom: 
                   configMapKeyRef:
-                    name: sports-day-auth-config
+                    name: sports-day-auth-db-config
                     key: DATABASE_URL
             - name: KC_DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-auth-creds
+                  name: sports-day-auth-db-creds
                   key: POSTGRES_USER
             - name: KC_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-auth-creds
+                  name: sports-day-auth-db-creds
                   key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak
+  name: sports-day-auth
 spec:
   selector:
-    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/name: sports-day-auth
   ports:
     - name: service-port
       protocol: TCP
@@ -71,7 +71,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: keycloak
+  name: sports-day-auth
 spec:
   tls:
     - hosts:
