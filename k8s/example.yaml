@@ -1,25 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: web1
   labels:
-    app: web
+    app: web1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web
+      app: web1
   template:
     metadata:
       labels:
-        app: web
+        app: web1
     spec:
       containers:
         - name: hello-app
-          image: gcr.io/google-samples/hello-app:1.0
-          ports:
-            - name: http-port
-              containerPort: 8080
+          image: kicbase/echo-server:1.0
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -39,24 +36,17 @@ spec:
     spec:
       containers:
         - name: hello-app
-          image: gcr.io/google-samples/hello-app:2.0
-          ports:
-            - name: http-port
-              containerPort: 8080
+          image: kicbase/echo-server:1.0
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: web
+  name: web1
 spec:
   selector:
-    app: web
-  type: NodePort
+    app: web1
   ports:
-    - protocol: TCP
-      name: web-port
-      port: 9080
-      targetPort: http-port
+    - port: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -65,34 +55,30 @@ metadata:
 spec:
   selector:
     app: web2
-  type: NodePort
   ports:
-    - protocol: TCP
-      name: web-port
-      port: 9080
-      targetPort: http-port
+    - port: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example-ingress
+  name: joes-ingress
 spec:
   ingressClassName: nginx
   rules:
     - host: hello-world.example
       http:
         paths:
-          - path: /
+          - path: /joe
             pathType: Prefix
             backend:
               service:
-                name: web
+                name: web1
                 port:
-                  name: web-port
-          - path: /v2
+                  number: 8080
+          - path: /jenny
             pathType: Prefix
             backend:
               service:
                 name: web2
                 port:
-                  name: web-port
+                  number: 8080
