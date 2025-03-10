@@ -15,13 +15,21 @@ spec:
         app: sports-day-auth
         app.kubernetes.io/name: sports-day-auth
     spec:
+      volumes:
+        - name: realm-import
+          configMap:
+            name: sports-day-auth-realm
       containers:
         - name: sports-day-auth
           image: quay.io/keycloak/keycloak:26.1.3
           ports:
             - name: http-web-svc
               containerPort: 8080
-          command: ["sh", "-c", "/opt/keycloak/bin/kc.sh start-dev --proxy-headers xforwarded --http-port 8080 --http-enabled true --health-enabled true"]
+          command: ["sh", "-c", "/opt/keycloak/bin/kc.sh start-dev --import-realm --proxy-headers xforwarded --http-port 8080 --http-enabled true --health-enabled true"]
+          volumeMounts:
+            - name: realm-import
+              mountPath: "/opt/keycloak/data/import/"
+              readOnly: true
           env:
             - name: KEYCLOAK_ADMIN
               valueFrom:

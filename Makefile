@@ -238,6 +238,15 @@ k8s-tls-domain:
 k8s-keycloak-config:
 	kubectl create secret generic keycloak-creds --from-literal=KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME} --from-literal=KEYCLOAK_ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD}" --dry-run=client -o yaml | tee ./k8s/secrets/keycloak-creds.yaml
 
+k8s-keycloak-realm:
+	kubectl create configmap sports-day-auth-realm --from-file=./local/auth/ratracejoe-realm.json --from-file=./local/auth/ratracejoe-users-0.json --dry-run=client -o yaml | tee k8s/secrets/sports-day-auth-realm.yaml
+
+docker-keycloak-harvest-realm:
+	docker exec sports-day-auth /opt/keycloak/bin/kc.sh export --dir /tmp
+	docker cp sports-day-auth:/tmp/ratracejoe-realm.json .
+	docker cp sports-day-auth:/tmp/ratracejoe-users-0.json .
+	cp ratracejoe-*.json ./sports-day-service/src/test/resources/keycloak/
+
 # Generate the secrets for the databases
 k8s-db-template:
 	echo $$DOMAIN && \
@@ -270,6 +279,10 @@ k8s-exec-db:
 k8s-exec-auth-db:
 	echo "Connecting to Auth Database"
 	kubectl exec -it deployment/sports-day-auth-db -- psql -d ${KEYCLOAK_DATABASE_NAME} -U ${KEYCLOAK_DATABASE_USERNAME} 
+
+k8s-exec-auth:
+	echo "Connecting to Keycloak"
+	kubectl exec -it deployment/sports-day-auth -- sh 
 
 docker-exec-migration-test-db:
 	echo "Connecting to migration test database"
