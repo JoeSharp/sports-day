@@ -268,9 +268,6 @@ k8s-templates:
 	$(MAKE) k8s-keycloak-config
 
 # Useful commands to connect to the various dependencies for manual interaction
-docker-exec-kafka:
-	echo "Connecting to Kafka"
-
 docker-exec-db:
 	echo "Connecting to database"
 	docker exec -it ${APPLICATION_NAME}-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME}

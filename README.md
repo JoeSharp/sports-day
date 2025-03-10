@@ -29,6 +29,12 @@ The second one will be useful for when you are verifying the containerised versi
 
 Check the Makefile for the right targets
 
+### Monitoring
+The Kafbat Kafka UI is included in the docker compose file and can be accessed via
+http://localhost:18080
+
+Other dependencies can be monitored via Docker/K8s exec, commands in Makefile
+
 ## TLS
 The application exposes the UI and service layers via HTTPS
 For this to work via a Browser, you will need to import the Certificate of the `sportsday` Certificate Authority into your browser/operating system.
