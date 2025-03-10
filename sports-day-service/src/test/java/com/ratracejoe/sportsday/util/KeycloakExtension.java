@@ -13,7 +13,7 @@ import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 
 public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
-  private static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:22.0";
+  private static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:26.1.3";
   private static final String CLIENT_ID = "timesheets-service";
   private static final String CLIENT_SECRET = "rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy";
 

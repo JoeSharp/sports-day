@@ -29,6 +29,11 @@ Each ingress registered is given a hostname, this appears to be used within the 
 Each ingress is backed by a service
 Note that we can give ports specific names in the YAML and then refer to them with those names.
 
+### Keycloak
+For Keycloak to behave correctly, the ingress needs to forward the right headers.
+The file `k8s/ingress-forward.yaml` file contains a config map which will instruct the ingress to behave as required.
+There are then flags on Keycloak itself (see the command)
+
 ## Service
 The nodeport on a service is one that can be reached using the minikube IP, bypassing the ingress, but of course it's a random port
 
