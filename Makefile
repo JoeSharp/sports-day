@@ -220,6 +220,9 @@ test-delete-activity:
 test-app-health:
 	./testing/check_health.sh
 
+test-service:
+	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service clean test
+
 # Run the Serenity BDD tests
 # ...Against application running in bootrun
 test-bdd-http:
