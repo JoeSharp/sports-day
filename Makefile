@@ -248,7 +248,7 @@ docker-keycloak-harvest-realm:
 	docker exec sports-day-auth /opt/keycloak/bin/kc.sh export --dir /tmp
 	docker cp sports-day-auth:/tmp/ratracejoe-realm.json .
 	docker cp sports-day-auth:/tmp/ratracejoe-users-0.json .
-	cp ratracejoe-*.json ./sports-day-service/src/test/resources/keycloak/
+	mv ratracejoe-*.json ./sports-day-service/src/test/resources/keycloak/
 
 # Generate the secrets for the databases
 k8s-db-template:

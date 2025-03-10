@@ -3,19 +3,19 @@
   "users" : [ {
     "id" : "bfe256f7-b20c-4d0f-b71f-6645c7b3d744",
     "username" : "joesharp",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "Joe",
     "lastName" : "Sharp",
     "email" : "joe.sharp@ratracejoe.co.uk",
+    "emailVerified" : false,
+    "enabled" : true,
+    "totp" : false,
     "credentials" : [ {
       "id" : "d4650b1f-8090-4b0d-8167-661e36e12776",
       "type" : "password",
       "userLabel" : "My password",
       "createdDate" : 1735667695379,
-      "secretData" : "{\"value\":\"+Z//p1b3yu1HGqpA8WDC/nNHUqrBS5buRp5TMH58cN4=\",\"salt\":\"5VilvxceIjD+PKOU0xxxpw==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+      "secretData" : "{\"value\":\"TwnYansBtBE0hKqaO6B28Bas/3QhrHjLbDg05FYNgMI=\",\"salt\":\"rgzgRdTPFYr9jxkIBo9KvA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
