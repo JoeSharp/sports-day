@@ -258,14 +258,13 @@ k8s-db-template:
 	kubectl create configmap ${DOMAIN}-config --from-literal=DATABASE_NAME=${DB_NAME} --from-literal=DATABASE_URL=jdbc:postgresql://${DOMAIN}:5432/${DB_NAME} --dry-run=client -o yaml | tee ./k8s/secrets/${DOMAIN}.db.config.yaml
 
 # Generate the definition of TLS secrets for all domains
-k8s-templates: 
+k8s-templates: k8s-keycloak-config k8s-keycloak-realm
 	@for DOMAIN in $(DOMAINS); do \
 		echo "Generating K8s Secret for $$APPLICATION_NAME-$$DOMAIN"; \
 		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
 	done
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-db DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-auth-db DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
-	$(MAKE) k8s-keycloak-config
 
 # Useful commands to connect to the various dependencies for manual interaction
 docker-exec-db:
