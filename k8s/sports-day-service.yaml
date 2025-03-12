@@ -60,7 +60,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sports-day-service-service
+  name: sports-day-service
 spec:
   selector:
     app.kubernetes.io/name: sports-day-service
@@ -74,7 +74,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sports-day-service-ingress
+  name: sports-day-service
 spec:
   tls:
     - hosts:
@@ -88,7 +88,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: sports-day-service-service
+                name: sports-day-service
                 port:
                   name: service-port
 

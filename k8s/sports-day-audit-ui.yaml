@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sports-day-audit-ui
+  labels:
+    app: sports-day-audit-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sports-day-audit-ui
+  template:
+    metadata:
+      labels:
+        app: sports-day-audit-ui
+        app.kubernetes.io/name: sports-day-audit-ui
+    spec:
+      containers:
+        - name: sports-day-kafbat
+          image: ghcr.io/kafbat/kafka-ui:latest
+          ports:
+            - name: kafbat-port
+              containerPort: 8080
+          env:
+            - name: DYNAMIC_CONFIG_ENABLED
+              value: "true"
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: local
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: sports-day-audit:29092
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sports-day-audit-ui
+spec:
+  selector:
+    app.kubernetes.io/name: sports-day-audit-ui
+  ports:
+    - name: kafbat-port
+      protocol: TCP
+      port: 18080
+      targetPort: kafbat-port
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sports-day-audit-ui
+spec:
+  rules:
+    - host: sports-day-audit-ui.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sports-day-audit-ui
+                port:
+                  name: kafbat-port

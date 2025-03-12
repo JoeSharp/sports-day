@@ -2,6 +2,10 @@
 
 Since Kubernetes is quite a significant topic, I will capture useful commands as I'm learning my way through it.
 
+I do understand that running things like Databases, Kafka and Redis this way is nothing like production.
+It's really just a k8s version of the local docker stack. But I can potentially look to hook into external
+cloud provided versions of these things in time
+
 ## Running the example
 
 kubectl apply -f k8s/example.yaml
