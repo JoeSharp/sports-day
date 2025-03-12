@@ -15,6 +15,33 @@ spec:
         app: sports-day-service
         app.kubernetes.io/name: sports-day-service
     spec:
+      volumes:
+        - name: jks-volume
+          emptyDir: {}
+        - name: ca-volume
+          secret:
+            secretName: sports-day-ca
+        - name: key-volume
+          secret:
+            secretName: sports-day-service-tls
+      initContainers:
+        - name: tls-init
+          image: openjdk:11
+          command:
+            - sh
+            - -c
+            - |
+              keytool -import -alias ca -file /etc/tls/cert/sports-day.crt -keystore /etc/ssl/truststore.jks -storepass changeit -noprompt
+              keytool -import -alias tls -file /etc/tls/key/tls.crt -keystore /etc/ssl/keystore.jks -storepass changeit -noprompt
+          volumeMounts:
+            - name: jks-volume
+              mountPath: /etc/ssl
+            - name: ca-volume
+              mountPath: /etc/tls/cert
+              readOnly: true
+            - name: key-volume
+              mountPath: /etc/tls/key
+              readOnly: true
       containers:
         - name: sports-day-service
           image: sports-day-service:latest
@@ -22,40 +49,52 @@ spec:
           ports:
             - name: http-web-svc
               containerPort: 8080
+          volumeMounts:
+            - name: jks-volume
+              mountPath: /etc/ssl
+            - name: ca-volume
+              mountPath: /etc/tls/cert
+              readOnly: true
+            - name: key-volume
+              mountPath: /etc/tls/key
+              readOnly: true
           env:
+            - name: DB_URL
+              valueFrom: 
+                configMapKeyRef:
+                  name: sports-day-db-config
+                  key: DATABASE_URL
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: sports-day-db-config
+                  key: DATABASE_NAME
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-creds
+                  name: sports-day-db-creds
                   key: POSTGRES_USER
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: sports-day-creds
+                  name: sports-day-db-creds
                   key: POSTGRES_PASSWORD
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: sports-day-creds
-                  key: POSTGRES_DB
             - name: REDIS_HOST
-              value: redis
+              value: sports-day-cache
             - name: REDIS_PORT
-              value: 6379
+              value: "6379"
             - name: KAFKA_BOOTSTRAP_SERVERS
-              value: kafka:9092
+              value: sports-day-audit:29092
             - name: OAUTH2_URL
               value: https://sports-day-auth.local/realms/ratracejoe
             - name: UI_DOMAIN
               value: https://sports-day-ui.local
-
-      DB_URL: jdbc:postgresql://${APPLICATION_NAME}-db:5432/${SPORTS_DAY_DATABASE_NAME}
-      JAVA_OPTS: > 
-        -Djavax.net.ssl.trustStore=/etc/ssl/certs/${APPLICATION_NAME}.truststore.jks 
-        -Djavax.net.ssl.trustStorePassword=changeit 
-        -Djavax.net.ssl.keyStore=/etc/ssl/certs/${APPLICATION_NAME}-service/${APPLICATION_NAME}-service.keystore.jks 
-        -Djavax.net.ssl.keyStorePassword=changeit
-
+            - name: JAVA_OPTS
+              value: > 
+                -Djavax.net.ssl.trustStore=/etc/ssl/truststore.jks 
+                -Djavax.net.ssl.trustStorePassword=changeit 
+                -Djavax.net.ssl.keyStore=/etc/ssl/keystore.jks 
+                -Djavax.net.ssl.keyStorePassword=changeit
 ---
 apiVersion: v1
 kind: Service

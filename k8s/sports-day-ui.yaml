@@ -24,7 +24,7 @@ spec:
               containerPort: 80
           env:
             - name: EXTERNAL_API_URL
-              value: https://sports-day-service.172.16.10.0.nip.io:8443
+              value: https://sports-day-service.local
 
 ---
 apiVersion: v1

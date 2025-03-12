@@ -263,6 +263,7 @@ k8s-templates: k8s-keycloak-config k8s-keycloak-realm
 		echo "Generating K8s Secret for $$APPLICATION_NAME-$$DOMAIN"; \
 		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
 	done
+	kubectl create secret generic sports-day-ca --from-file=${CERT_ROOT}/${APPLICATION_NAME}.crt --dry-run=client -o yaml | tee ./k8s/secrets/${APPLICATION_NAME}-ca.tls.yaml
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-db DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-auth-db DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
 
