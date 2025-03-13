@@ -15,7 +15,7 @@ services:
     ports:
       - "9443:443"
     volumes:
-      - ./certs:/etc/ssl/certs/nginx
+      - ./certs/docker:/etc/ssl/certs/nginx
     depends_on:
       sports-day-ui:
         condition: service_healthy
@@ -46,7 +46,7 @@ services:
     ports:
       - "8443:443"
     volumes:
-      - ./certs:/etc/ssl/certs/nginx
+      - ./certs/docker:/etc/ssl/certs/nginx
     depends_on:
       sports-day-service:
         condition: service_healthy
@@ -76,7 +76,7 @@ services:
       # Required when running the UI in dev mode on top of the service in docker
       - "8080:8080"
     volumes:
-      - ./certs/:/etc/ssl/certs/
+      - ./certs/docker/:/etc/ssl/certs/
     depends_on:
       auth-healthcheck:
         condition: service_completed_successfully
@@ -209,7 +209,7 @@ services:
         condition: service_healthy
     volumes:
       - ./auth/:/opt/keycloak/data/import/:ro
-      - ./certs:/opt/keycloak/certs
+      - ./certs/docker:/opt/keycloak/certs
 
   auth-healthcheck:
     image: curlimages/curl:latest

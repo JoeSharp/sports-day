@@ -19,6 +19,7 @@ export KEYCLOAK_ADMIN_PASSWORD=Q@v3rP&G
 
 # List of moving parts that will be prefixed with application name
 # Each of these will need a cert/key pair
+ENVIRONMENTS := docker minikube
 DOMAINS := service ui client auth
 
 # URL for service layer, use HTTPS when running in Docker, HTTP for bootrun
@@ -56,21 +57,25 @@ tls: create-tls-certs update-test-certs k8s-templates
 # You will need to delete and re-import the CA.
 create-tls-certs:
 	echo "Creating TLS Certificates"
-	local/create-ca.sh ${APPLICATION_NAME} ${CERT_ROOT}
-	@for DOMAIN in $(DOMAINS); do \
-		./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-$$DOMAIN ${CERT_ROOT}; \
+	@for ENVIRONMENT in $(ENVIRONMENTS); do \
+		local/create-ca.sh ${APPLICATION_NAME} $$ENVIRONMENT ${CERT_ROOT}; \
+		for DOMAIN in $(DOMAINS); do \
+			./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-$$DOMAIN $$ENVIRONMENT ${CERT_ROOT}; \
+		done; \
 	done
 
 update-test-certs:
 	echo "Copying Everything over to test"
 	rm -rf ./${APPLICATION_NAME}-service/src/test/resources/certs
-	cp -R ${CERT_ROOT} ./${APPLICATION_NAME}-service/src/test/resources
+	cp -R ${CERT_ROOT}/docker ./${APPLICATION_NAME}-service/src/test/resources
 
 # `make create-tls-server SERVER_NAME=sports-day-something`
 create-tls-server:
 	echo "Creating Server Certificates for ${SERVER_NAME}"
-	./local/create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} ${CERT_ROOT}
-	cp -R ${CERT_ROOT}/${SERVER_NAME} ./${APPLICATION_NAME}-service/src/test/resources/certs
+	@for ENVIRONMENT in $(ENVIRONMENTS); do \
+		./local/create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} $$ENVIRONMENT ${CERT_ROOT}
+	done
+	cp -R ${CERT_ROOT}/docker/${SERVER_NAME} ./${APPLICATION_NAME}-service/src/test/resources/certs
 
 # Run the Vite dev server outside of containers
 # UI can then be reached by visiting http://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:5173
@@ -214,17 +219,17 @@ test-service:
 # Run the Serenity BDD tests
 # ...Against application running in bootrun
 test-bdd-http:
-	./${APPLICATION_NAME}-e2e-test/gradlew -p ./${APPLICATION_NAME}-e2e-test clearReports test aggregate reports -Denvironment=local-http
+	./${APPLICATION_NAME}-e2e-test/gradlew -p ./${APPLICATION_NAME}-e2e-test clean clearReports test aggregate reports -Denvironment=local-http
 
 # ...or the system running within docker behind TLS proxy
 test-bdd-https:
-	./${APPLICATION_NAME}-e2e-test/gradlew -p ./${APPLICATION_NAME}-e2e-test clearReports test aggregate reports -Denvironment=local-https
+	./${APPLICATION_NAME}-e2e-test/gradlew -p ./${APPLICATION_NAME}-e2e-test clean clearReports test aggregate reports -Denvironment=local-https
 
 # Kubernetes Stuff
 # Generate the definition of the TLS secret for a specific domain
 k8s-tls-domain:
 	echo $$DOMAIN && \
-	kubectl create secret tls ${DOMAIN}-tls --cert=${CERT_ROOT}/${DOMAIN}/${DOMAIN}.crt --key=${CERT_ROOT}/${DOMAIN}/${DOMAIN}.key --dry-run=client -o yaml | tee ./k8s/secrets/${DOMAIN}.tls.yaml
+	kubectl create secret tls ${DOMAIN}-tls --cert=${CERT_ROOT}/minikube/${DOMAIN}/${DOMAIN}.crt --key=${CERT_ROOT}/minikube/${DOMAIN}/${DOMAIN}.key --dry-run=client -o yaml | tee ./k8s/secrets/${DOMAIN}.tls.yaml
 
 k8s-keycloak-config:
 	kubectl create secret generic keycloak-creds --from-literal=KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME} --from-literal=KEYCLOAK_ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD}" --dry-run=client -o yaml | tee ./k8s/secrets/keycloak-creds.yaml
@@ -251,7 +256,7 @@ k8s-templates: k8s-keycloak-config k8s-keycloak-realm
 		echo "Generating K8s Secret for $$APPLICATION_NAME-$$DOMAIN"; \
 		$(MAKE) k8s-tls-domain DOMAIN=$$APPLICATION_NAME-$$DOMAIN; \
 	done
-	kubectl create secret generic sports-day-ca --from-file=${CERT_ROOT}/${APPLICATION_NAME}.crt --dry-run=client -o yaml | tee ./k8s/secrets/${APPLICATION_NAME}-ca.tls.yaml
+	kubectl create secret generic sports-day-ca --from-file=${CERT_ROOT}/minikube/${APPLICATION_NAME}.crt --dry-run=client -o yaml | tee ./k8s/secrets/${APPLICATION_NAME}-ca.tls.yaml
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-db DB_NAME=$$SPORTS_DAY_DATABASE_NAME DB_USERNAME=$$SPORTS_DAY_DATABASE_USERNAME DB_PASSWORD=$$SPORTS_DAY_DATABASE_PASSWORD
 	$(MAKE) k8s-db-template DOMAIN=$$APPLICATION_NAME-auth-db DB_NAME=$$KEYCLOAK_DATABASE_NAME DB_USERNAME=$$KEYCLOAK_DATABASE_USERNAME DB_PASSWORD=$$KEYCLOAK_DATABASE_PASSWORD
 

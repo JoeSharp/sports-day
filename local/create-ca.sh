@@ -1,5 +1,6 @@
 CA=$1
-ROOT_DIR=$2
+ENVIRONMENT=$2
+ROOT_DIR=$3/${ENVIRONMENT}
 
 rm -rf ${ROOT_DIR}/*.*
 
