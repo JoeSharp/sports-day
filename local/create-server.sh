@@ -1,7 +1,8 @@
 CA=$1
 DOMAIN=$2
-ENVIRONMENT=$3
-ROOT_DIR=$4/${ENVIRONMENT}
+DNS_POSTFIX=$3
+ENVIRONMENT=$4
+ROOT_DIR=$5/${ENVIRONMENT}
 
 rm ${ROOT_DIR}/$DOMAIN/*
 mkdir -p ${ROOT_DIR}/$DOMAIN
@@ -14,7 +15,7 @@ echo "Create $DOMAIN CSR"
 openssl req \
 -new -key ${ROOT_DIR}/$DOMAIN/$DOMAIN.key \
 -out ${ROOT_DIR}/$DOMAIN/$DOMAIN.csr \
--subj "/C=GB/ST=London/L=London/O=ratracejoe/OU=BX/CN=$DOMAIN.${LOCAL_STACK_HOST}.nip.io"
+-subj "/C=GB/ST=London/L=London/O=ratracejoe/OU=BX/CN=${DOMAIN}.${DNS_POSTFIX}"
 
 echo "Generating $DOMAIN CSR"
 cat > ${ROOT_DIR}/$DOMAIN/$DOMAIN.ext << EOF
@@ -24,8 +25,7 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = localhost
-DNS.2 = $DOMAIN.${LOCAL_STACK_HOST}.nip.io
-DNS.3 = $DOMAIN.local
+DNS.2 = ${DOMAIN}.${DNS_POSTFIX}
 IP.1 = ${LOCAL_STACK_HOST}
 EOF
 

@@ -59,23 +59,21 @@ create-tls-certs:
 	echo "Creating TLS Certificates"
 	@for ENVIRONMENT in $(ENVIRONMENTS); do \
 		local/create-ca.sh ${APPLICATION_NAME} $$ENVIRONMENT ${CERT_ROOT}; \
-		for DOMAIN in $(DOMAINS); do \
-			./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-$$DOMAIN $$ENVIRONMENT ${CERT_ROOT}; \
-		done; \
+	done
+	@for DOMAIN in $(DOMAINS); do \
+		$(MAKE) create-tls-server DOMAIN=$$DOMAIN; \
 	done
 
 update-test-certs:
 	echo "Copying Everything over to test"
 	rm -rf ./${APPLICATION_NAME}-service/src/test/resources/certs
-	cp -R ${CERT_ROOT}/docker ./${APPLICATION_NAME}-service/src/test/resources
+	cp -R ${CERT_ROOT}/docker ./${APPLICATION_NAME}-service/src/test/resources/certs
 
-# `make create-tls-server SERVER_NAME=sports-day-something`
+# `make create-tls-server DOMAIN=something`
 create-tls-server:
-	echo "Creating Server Certificates for ${SERVER_NAME}"
-	@for ENVIRONMENT in $(ENVIRONMENTS); do \
-		./local/create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} $$ENVIRONMENT ${CERT_ROOT}
-	done
-	cp -R ${CERT_ROOT}/docker/${SERVER_NAME} ./${APPLICATION_NAME}-service/src/test/resources/certs
+	echo "Creating Server Certificates for ${DOMAIN}"
+	./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-${DOMAIN} ${LOCAL_STACK_HOST}.nip.io docker ${CERT_ROOT}; \
+	./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-${DOMAIN} local minikube ${CERT_ROOT}; \
 
 # Run the Vite dev server outside of containers
 # UI can then be reached by visiting http://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:5173
@@ -213,7 +211,7 @@ test-delete-activity:
 test-app-health:
 	./testing/check_health.sh
 
-test-service:
+test-service-junit:
 	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service clean test
 
 # Run the Serenity BDD tests
