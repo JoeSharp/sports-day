@@ -1,6 +1,7 @@
 # Required to provide a consistent IP address that can be used inside containers
 # to reach things outside containers, and vice versa
-export LOCAL_STACK=172.16.10.0
+export LOCAL_STACK_CIDR=172.16.10.0/24
+export LOCAL_STACK_HOST=172.16.10.1
 export APPLICATION_NAME=sports-day
 
 # Defined here so they can be used in Docker
@@ -21,11 +22,11 @@ export KEYCLOAK_ADMIN_PASSWORD=Q@v3rP&G
 DOMAINS := service ui client auth
 
 # URL for service layer, use HTTPS when running in Docker, HTTP for bootrun
-#export SERVICE_HOST=https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
-export SERVICE_HOST=http://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8080
+#export SERVICE_HOST=https://${APPLICATION_NAME}-service.${LOCAL_STACK_HOST}.nip.io:8443
+export SERVICE_HOST=http://${APPLICATION_NAME}-service.${LOCAL_STACK_HOST}.nip.io:8080
 
 # URL for Keycloak used locally
-export AUTH_HOST=https://${APPLICATION_NAME}-auth.${LOCAL_STACK}.nip.io:8085
+export AUTH_HOST=https://${APPLICATION_NAME}-auth.${LOCAL_STACK_HOST}.nip.io:8085
 
 # Directory containing the certificates, used in the various test scripts
 export CERT_ROOT=./local/certs
@@ -35,8 +36,8 @@ UNAME := $(shell uname)
 
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
-docker-run-all: local-stack docker-build-all docker-quick-run-all
-	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
+docker-run-all: docker-build-all docker-quick-run-all
+	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
 
 docker-build-all: docker-build-nginx-tls-proxy docker-build-db-migration docker-build-service docker-build-ui
 
@@ -50,17 +51,7 @@ clean: docker-clean-all
 	docker system prune -f
 
 # Generates an entirely new CA, server certs and updates k8s secret templates
-tls: create-tls-certs update-test-certs k8s-tls-all
-
-# Create the local stack IP address on your local machine/VM
-local-stack:
-	echo "Registering IP address for Local Development"
-ifeq ($(UNAME), Linux)
-	sudo ip addr replace ${LOCAL_STACK} dev lo
-endif
-ifeq ($(UNAME), Darwin)
-	sudo ifconfig en0 alias ${LOCAL_STACK}/32 up
-endif
+tls: create-tls-certs update-test-certs k8s-templates
 
 # The certs created for development are committed as part of the repo
 # One should not generally need to rerun this, unless new certs are required
@@ -81,11 +72,11 @@ update-test-certs:
 # `make create-tls-server SERVER_NAME=sports-day-something`
 create-tls-server:
 	echo "Creating Server Certificates for ${SERVER_NAME}"
-	./local/create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} ${CERT_ROOT} && cd ../
+	./local/create-server.sh ${APPLICATION_NAME} ${SERVER_NAME} ${CERT_ROOT}
 	cp -R ${CERT_ROOT}/${SERVER_NAME} ./${APPLICATION_NAME}-service/src/test/resources/certs
 
 # Run the Vite dev server outside of containers
-# UI can then be reached by visiting http://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:5173
+# UI can then be reached by visiting http://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:5173
 dev-run-ui:
 	echo "Running UI in Development Mode"
 	npm run dev --prefix ./${APPLICATION_NAME}-ui
@@ -125,7 +116,7 @@ docker-build-db-migration:
 	echo "Building Database Migration Image"
 	docker build -t ${APPLICATION_NAME}-db-migration ./${APPLICATION_NAME}-db/
 
-docker-run-db-migration-test: local-stack docker-stop-db-migration-test docker-build-db-migration
+docker-run-db-migration-test: docker-stop-db-migration-test docker-build-db-migration
 	echo "Running Migration Test"
 	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml up -d --wait
 
@@ -134,16 +125,16 @@ docker-stop-db-migration-test:
 	docker compose -f ${APPLICATION_NAME}-db/docker-compose.yaml down -v
 
 # Docker commands for running/stopping UI/service independantly
-docker-run-ui: local-stack
+docker-run-ui: 
 	echo "Running the UI in Docker"
 	docker compose -f local/docker-compose.yaml --profile include-ui up -d --wait ${APPLICATION_NAME}-ui
-	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
+	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
 
 docker-stop-ui:
 	echo "Stopping the UI in Docker"
 	docker compose -f local/docker-compose.yaml --profile include-ui down ${APPLICATION_NAME}-ui
 
-docker-run-service: local-stack
+docker-run-service: 
 	echo "Running the Service in Docker"
 	docker compose -f local/docker-compose.yaml --profile include-service up -d --wait ${APPLICATION_NAME}-service
 
@@ -152,12 +143,12 @@ docker-stop-service:
 	docker compose -f local/docker-compose.yaml --profile include-service down ${APPLICATION_NAME}-service
 
 # Run the entire stack up, assuming the docker images for UI and service are already built
-docker-quick-run-all: local-stack
+docker-quick-run-all: 
 	echo "Running entire stack, including application, in docker"
 	docker compose -f local/docker-compose.yaml --profile include-service --profile include-ui up -d --wait
 
 # Run the more minimal HTTP stack, shows the moving parts interacting without certs in place
-docker-quick-run-http: local-stack
+docker-quick-run-http: 
 	echo "Running HTTP stack, including application, in docker"
 	docker compose -f local/docker-compose.http.yaml --profile include-service --profile include-ui up -d --wait
 
@@ -176,7 +167,7 @@ docker-clean-all:
 	docker compose -f sports-day-db/docker-compose.yaml down -v
 
 # Just run the dependencies 
-docker-run-deps: local-stack docker-build-db-migration
+docker-run-deps: docker-build-db-migration
 	echo "Running dependencies stack in docker"
 	docker compose -f local/docker-compose.yaml up -d --wait
 
@@ -185,7 +176,7 @@ docker-stop-deps:
 	echo "Stopping dependencies stack in docker"
 	docker compose -f local/docker-compose.yaml down
 
-# Run tests, requires LOCAL_STACK in place
+# Run tests
 test-app-login:
 	echo "Testing: App Login"
 	./testing/app_login.sh

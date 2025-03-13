@@ -4,6 +4,6 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = localhost
-DNS.2 = sports-day-client.172.16.10.0.nip.io
+DNS.2 = sports-day-client.172.16.10.1.nip.io
 DNS.3 = sports-day-client.local
-IP.1 = 172.16.10.0
+IP.1 = 172.16.10.1

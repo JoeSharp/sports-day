@@ -84,7 +84,7 @@ spec:
             - name: REDIS_PORT
               value: "6379"
             - name: KAFKA_BOOTSTRAP_SERVERS
-              value: sports-day-audit:29092
+              value: sports-day-audit:9092
             - name: OAUTH2_URL
               value: https://sports-day-auth.local/realms/ratracejoe
             - name: UI_DOMAIN

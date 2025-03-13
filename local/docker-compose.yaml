@@ -9,11 +9,11 @@ services:
       - sports-day
     environment:
       PROXY_PASS: http://${APPLICATION_NAME}-ui:80
-      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
+      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io
       SSL_CERTIFICATE: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.crt
       SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/${APPLICATION_NAME}-ui/${APPLICATION_NAME}-ui.key
     ports:
-      - "${LOCAL_STACK}:9443:443"
+      - "9443:443"
     volumes:
       - ./certs:/etc/ssl/certs/nginx
     depends_on:
@@ -28,8 +28,8 @@ services:
     profiles:
      - include-ui
     environment:
-      EXTERNAL_API_URL: https://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8443
-      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
+      EXTERNAL_API_URL: https://${APPLICATION_NAME}-service.${LOCAL_STACK_HOST}.nip.io:8443
+      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io
 
   sports-day-service-proxy:
     image: nginx-tls-proxy
@@ -40,11 +40,11 @@ services:
       - sports-day
     environment:
       PROXY_PASS: http://${APPLICATION_NAME}-service:8080
-      SERVER_NAME: ${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io
+      SERVER_NAME: ${APPLICATION_NAME}-service.${LOCAL_STACK_HOST}.nip.io
       SSL_CERTIFICATE: /etc/ssl/certs/nginx/${APPLICATION_NAME}-service/${APPLICATION_NAME}-service.crt
       SSL_CERTIFICATE_KEY: /etc/ssl/certs/nginx/${APPLICATION_NAME}-service/${APPLICATION_NAME}-service.key
     ports:
-      - "${LOCAL_STACK}:8443:443"
+      - "8443:443"
     volumes:
       - ./certs:/etc/ssl/certs/nginx
     depends_on:
@@ -65,8 +65,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      OAUTH2_URL: https://${APPLICATION_NAME}-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
-      UI_DOMAIN: https://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9443/
+      OAUTH2_URL: https://${APPLICATION_NAME}-auth.${LOCAL_STACK_HOST}.nip.io:8085/realms/ratracejoe
+      UI_DOMAIN: https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
       JAVA_OPTS: > 
         -Djavax.net.ssl.trustStore=/etc/ssl/certs/${APPLICATION_NAME}.truststore.jks 
         -Djavax.net.ssl.trustStorePassword=changeit 
@@ -74,7 +74,7 @@ services:
         -Djavax.net.ssl.keyStorePassword=changeit
     ports:
       # Required when running the UI in dev mode on top of the service in docker
-      - "${LOCAL_STACK}:8080:8080"
+      - "8080:8080"
     volumes:
       - ./certs/:/etc/ssl/certs/
     depends_on:
@@ -107,7 +107,7 @@ services:
       POSTGRES_PASSWORD: ${SPORTS_DAY_DATABASE_PASSWORD}
       POSTGRES_DB: ${SPORTS_DAY_DATABASE_NAME}
     ports:
-      - "${LOCAL_STACK}:5432:5432"
+      - "5432:5432"
     volumes:
       - sports_day_data:/var/lib/postgresql/data
     healthcheck:
@@ -122,7 +122,7 @@ services:
     networks:
       - sports-day
     ports:
-      - "${LOCAL_STACK}:6379:6379"
+      - "6379:6379"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
@@ -143,11 +143,11 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "${LOCAL_STACK}:29092:29092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${LOCAL_STACK}:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${LOCAL_STACK_HOST}:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -173,7 +173,7 @@ services:
       - sports-day
     restart: always
     ports:
-      - "${LOCAL_STACK}:5433:5432"
+      - "5433:5432"
     volumes:
       - sports_day_auth_data:/var/lib/postgresql/data
     environment:
@@ -194,7 +194,7 @@ services:
       - sports-day
     command: start-dev --import-realm --https-port 8085 --http-enabled false --health-enabled true
     ports:
-      - "${LOCAL_STACK}:8085:8085"
+      - "8085:8085"
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
@@ -223,6 +223,9 @@ services:
 networks:
   sports-day:
     driver: bridge
+    ipam:
+      config:
+        - subnet: ${LOCAL_STACK_CIDR}
 
 volumes:
   sports_day_data:

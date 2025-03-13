@@ -13,7 +13,7 @@ echo "Create $DOMAIN CSR"
 openssl req \
 -new -key ${ROOT_DIR}/$DOMAIN/$DOMAIN.key \
 -out ${ROOT_DIR}/$DOMAIN/$DOMAIN.csr \
--subj "/C=GB/ST=London/L=London/O=ratracejoe/OU=BX/CN=$DOMAIN.${LOCAL_STACK}.nip.io"
+-subj "/C=GB/ST=London/L=London/O=ratracejoe/OU=BX/CN=$DOMAIN.${LOCAL_STACK_HOST}.nip.io"
 
 echo "Generating $DOMAIN CSR"
 cat > ${ROOT_DIR}/$DOMAIN/$DOMAIN.ext << EOF
@@ -23,9 +23,9 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = localhost
-DNS.2 = $DOMAIN.${LOCAL_STACK}.nip.io
+DNS.2 = $DOMAIN.${LOCAL_STACK_HOST}.nip.io
 DNS.3 = $DOMAIN.local
-IP.1 = ${LOCAL_STACK}
+IP.1 = ${LOCAL_STACK_HOST}
 EOF
 
 echo "Signing $DOMAIN Certificate"

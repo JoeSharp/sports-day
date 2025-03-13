@@ -8,11 +8,11 @@ services:
     profiles:
      - include-ui
     environment:
-      EXTERNAL_API_URL: http://${APPLICATION_NAME}-service.${LOCAL_STACK}.nip.io:8080
-      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io
+      EXTERNAL_API_URL: http://${APPLICATION_NAME}-service.${LOCAL_STACK_HOST}.nip.io:8080
+      SERVER_NAME: ${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io
     ports:
       # Required when running the UI in dev mode on top of the service in docker
-      - "${LOCAL_STACK}:9080:80"
+      - "9080:80"
 
   sports-day-service:
     image: sports-day-service
@@ -28,11 +28,11 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      OAUTH2_URL: http://${APPLICATION_NAME}-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe
-      UI_DOMAIN: http://${APPLICATION_NAME}-ui.${LOCAL_STACK}.nip.io:9080/
+      OAUTH2_URL: http://${APPLICATION_NAME}-auth.${LOCAL_STACK_HOST}.nip.io:8085/realms/ratracejoe
+      UI_DOMAIN: http://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9080/
     ports:
       # Required when running the UI in dev mode on top of the service in docker
-      - "${LOCAL_STACK}:8080:8080"
+      - "8080:8080"
     depends_on:
       auth-healthcheck:
         condition: service_completed_successfully
@@ -63,7 +63,7 @@ services:
       POSTGRES_PASSWORD: ${SPORTS_DAY_DATABASE_PASSWORD}
       POSTGRES_DB: ${SPORTS_DAY_DATABASE_NAME}
     ports:
-      - "${LOCAL_STACK}:5432:5432"
+      - "5432:5432"
     volumes:
       - sports_day_data:/var/lib/postgresql/data
     healthcheck:
@@ -78,7 +78,7 @@ services:
     networks:
       - sports-day
     ports:
-      - "${LOCAL_STACK}:6379:6379"
+      - "6379:6379"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
@@ -99,11 +99,11 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "${LOCAL_STACK}:29092:29092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${LOCAL_STACK}:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${LOCAL_STACK_HOST}:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -129,7 +129,7 @@ services:
       - sports-day
     restart: always
     ports:
-      - "${LOCAL_STACK}:5433:5432"
+      - "5433:5432"
     volumes:
       - sports_day_auth_data:/var/lib/postgresql/data
     environment:
@@ -150,7 +150,7 @@ services:
       - sports-day
     command: start-dev --import-realm --http-port 8080 --health-enabled true
     ports:
-      - "${LOCAL_STACK}:8085:8080"
+      - "8085:8080"
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
