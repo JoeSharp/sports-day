@@ -31,9 +31,6 @@ export AUTH_HOST=https://${APPLICATION_NAME}-auth.${LOCAL_STACK_HOST}.nip.io:808
 # Directory containing the certificates, used in the various test scripts
 export CERT_ROOT=./local/certs
 
-# Figure out which operating system we are on
-UNAME := $(shell uname)
-
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
 docker-run-all: docker-build-all docker-quick-run-all
