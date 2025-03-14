@@ -97,7 +97,7 @@ docker-build-nginx-tls-proxy:
 	docker build -t nginx-tls-proxy ./nginx-tls-proxy/
 
 # Build the docker image for the UI
-docker-build-ui: build-ui
+docker-build-ui: 
 	echo "Building Docker Image for UI"
 	docker build -t ${APPLICATION_NAME}-ui ./${APPLICATION_NAME}-ui/
 
@@ -107,7 +107,7 @@ build-service:
 	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service bootJar
 
 # Build the Docker image for the backend service
-docker-build-service: build-service
+docker-build-service: 
 	echo "Building Docker Image for Service"
 	docker build -t ${APPLICATION_NAME}-service ./${APPLICATION_NAME}-service/
 

@@ -1,10 +1,20 @@
+# Stage 1: Build
+FROM eclipse-temurin:21-jdk AS builder
+WORKDIR /app
+COPY gradlew gradlew.bat ./
+COPY gradle ./gradle
+COPY build.gradle settings.gradle ./
+COPY src ./src
+RUN ./gradlew build --no-daemon -x test
+
+# Stage 2: Runtime
 FROM amazoncorretto:21-alpine-jdk
 LABEL authors="joesharpcs.co.uk"
 
 # Install curl
 RUN apk --no-cache add curl
 
-COPY build/libs/sports-day-service-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/build/libs/sports-day-service-*.jar app.jar
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 CMD curl -f http://localhost:8080/api/actuator/health || exit 1
 
