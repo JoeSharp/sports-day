@@ -176,7 +176,8 @@ docker-stop-deps:
 	echo "Stopping dependencies stack in docker"
 	docker compose -f local/docker-compose.yaml down
 
-# Run tests
+# Run tests, these all need the environment providing
+# i.e. `make test-app-login ENVIRONMENT=docker|minikube`
 test-app-login:
 	echo "Testing: App Login"
 	./testing/app_login.sh
@@ -191,19 +192,19 @@ test-get-activities:
 
 # Requires env var
 # Example call:
-# `make test-create-activity ACTIVITY_NAME="Dancing in Moonlight"`
+# `make test-create-activity ENVIRONMENT=docker ACTIVITY_NAME="Dancing in Moonlight"`
 test-create-activity:
 	echo "Creating Activity ${ACTIVITY_NAME}"
 	./testing/create_activity.sh "${ACTIVITY_NAME}"
 
 # Example call:
-# `make test-get-activity ACTIVITY_ID=58aabbf5-560d-4e90-868c-b1ea9bd53057`
+# `make test-get-activity ENVIRONMENT=docker ACTIVITY_ID=58aabbf5-560d-4e90-868c-b1ea9bd53057`
 test-get-activity:
 	echo "Fetching Activity ${ACTIVITY_ID}"
 	./testing/get_activity.sh "${ACTIVITY_ID}"
 
 # Example call:
-# `make test-delete-activity ACTIVITY_ID=58aabbf5-560d-4e90-868c-b1ea9bd53057`
+# `make test-delete-activity ENVIRONMENT=docker ACTIVITY_ID=58aabbf5-560d-4e90-868c-b1ea9bd53057`
 test-delete-activity:
 	echo "Deleting Activity ${ACTIVITY_ID}"
 	./testing/delete_activity.sh "${ACTIVITY_ID}"
