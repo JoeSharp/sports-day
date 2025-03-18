@@ -1,0 +1,18 @@
+[
+  {
+    "id": "123",
+    "name": "running",
+    "description": "Propelling oneself with their legs"
+  },
+  {
+    "id": "456",
+    "name": "swimming",
+    "description": "Like a fish!"
+  },
+  {
+    "id": "789",
+    "name": "Burpees",
+    "description": "Surprisingly exhausting"
+  }
+
+]
