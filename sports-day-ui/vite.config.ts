@@ -21,8 +21,6 @@ export default defineConfig({
     strictPort: true,
   },
   server: {
-    host: `sports-day-ui.${process.env.LOCAL_STACK_HOST}.nip.io`,
-    allowedHosts: [`sports-day-ui.${process.env.LOCAL_STACK_HOST}.nip.io`],
     proxy: {
       '/api/': {
         target: `http://sports-day-service.${process.env.LOCAL_STACK_HOST}.nip.io:8080`,

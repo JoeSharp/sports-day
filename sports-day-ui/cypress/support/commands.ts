@@ -36,21 +36,25 @@
 //   }
 // }
 Cypress.Commands.add("defineAllIntercepts", () => {
+  cy.fixture("login").as("login");
 
   let deletedItemId;
+
+  cy.intercept('POST', '/api/auth/login', { fixture: "login" }).as("login");
 
   cy.intercept('DELETE', "/api/activities/*", (req) => {
     deletedItemId = req.url.split('/').pop();
   }).as("deleteActivity");
-
+  cy.fixture("activities").as("activities");
+  cy.intercept("GET", "/api/activities", { fixture: "activities" });
+  /*
   cy.fixture("activities").then((activities) => {
-    console.log('Setting up GET Activities');
-    cy.intercept("/api/activities", req => {
+    cy.intercept("GET", "/api/activities", req => {
       req.reply(res => {
         const act = activities.filter(({ id }) => id !== deletedItemId);
         res.send(act);
       });
     }).as("getActivities");
-
   });
+    */
 });

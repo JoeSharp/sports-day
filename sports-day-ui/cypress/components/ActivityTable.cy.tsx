@@ -1,5 +1,5 @@
 import React from 'react'
-import ActivityTable from './ActivityTable'
+import ActivityTable from '../../src/components/ActivityTable'
 
 describe('<ActivityTable />', () => {
   beforeEach(() => {

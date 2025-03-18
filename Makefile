@@ -127,7 +127,7 @@ docker-stop-db-migration-test:
 # Docker commands for running/stopping UI/service independantly
 docker-run-ui: 
 	echo "Running the UI in Docker"
-	docker compose -f local/docker-compose.yaml --profile include-ui up -d --wait ${APPLICATION_NAME}-ui
+	docker compose -f local/docker-compose.yaml --profile include-ui up -d --wait ${APPLICATION_NAME}-ui ${APPLICATION_NAME}-ui-proxy
 	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
 
 docker-stop-ui:

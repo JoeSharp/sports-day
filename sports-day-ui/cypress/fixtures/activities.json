@@ -1,18 +1,22 @@
 [
   {
     "id": "123",
-    "name": "running",
+    "name": "Running",
     "description": "Propelling oneself with their legs"
   },
   {
     "id": "456",
-    "name": "swimming",
+    "name": "Swimming",
     "description": "Like a fish!"
   },
   {
     "id": "789",
     "name": "Burpees",
     "description": "Surprisingly exhausting"
+  },
+  {
+    "id": "109",
+    "name": "Dancing",
+    "description": "Cypress Testing Shapes"
   }
-
 ]
