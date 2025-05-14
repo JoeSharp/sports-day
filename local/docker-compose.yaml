@@ -4,7 +4,7 @@ services:
     image: nginx-tls-proxy
     container_name: sports-day-ui-proxy
     profiles:
-      - include-service
+      - include-ui
     networks:
       - sports-day
     environment:
