@@ -32,10 +32,12 @@ export AUTH_HOST=https://${APPLICATION_NAME}-auth.${LOCAL_STACK_HOST}.nip.io:808
 # Directory containing the certificates, used in the various test scripts
 export CERT_ROOT=./local/certs
 
+docker-open-ui:
+	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
+
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
-docker-run-all: docker-build-all docker-quick-run-all
-	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
+docker-run-all: docker-build-all docker-quick-run-all docker-open-ui
 
 docker-build-all: docker-build-nginx-tls-proxy docker-build-db-migration docker-build-service docker-build-ui
 
@@ -279,6 +281,9 @@ k8s-exec-auth-db:
 k8s-exec-auth:
 	echo "Connecting to Keycloak"
 	kubectl exec -it deployment/sports-day-auth -- sh 
+
+docker-exec-audit:
+	docker exec -it ${APPLICATION_NAME}-audit kafka-console-consumer --bootstrap-server :9092 --topic audit --from-beginning
 
 docker-exec-migration-test-db:
 	echo "Connecting to migration test database"
