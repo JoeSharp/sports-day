@@ -264,6 +264,10 @@ docker-exec-db:
 	echo "Connecting to database"
 	docker exec -it ${APPLICATION_NAME}-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME}
 
+docker-exec-audit:
+	echo "Observing Audits"
+	docker exec -it ${APPLICATION_NAME}-audit kafka-console-consumer --bootstrap-server :9092 --topic audit --from-beginning
+
 k8s-exec-db:
 	echo "Connecting to Database"
 	kubectl exec -it deployment/sports-day-db -- psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME} 
