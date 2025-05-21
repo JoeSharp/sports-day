@@ -58,6 +58,7 @@ public class ActivityService {
   @Transactional
   public void deleteActivity(UUID id) throws ActivityNotFoundException {
     if (!activityRepository.existsById(id)) {
+      auditService.activityDeletionFailed();
       throw new ActivityNotFoundException(id);
     }
     auditService.activityDeleted(id);

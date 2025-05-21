@@ -16,7 +16,9 @@ Feature: Activities can be managed
   Scenario: Non existent activity deletion handled correctly
     Given random ID is generated
     When the client deletes that activity by ID
+    And all audits have been received
     Then the client receives void response with a status code of 404
+    And an audit captures the failed deletion
 
   Scenario: Client requests individual activity
     Given random activity created

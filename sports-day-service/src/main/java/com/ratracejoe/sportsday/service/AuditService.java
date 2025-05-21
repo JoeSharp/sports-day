@@ -30,4 +30,8 @@ public class AuditService {
   public void activityDeleted(UUID id) {
     kafka.send(AUDIT_TOPIC, String.format("Activity %s deleted", id));
   }
+
+  public void activityDeletionFailed() {
+    kafka.send(AUDIT_TOPIC, "Failed to delete activity");
+  }
 }

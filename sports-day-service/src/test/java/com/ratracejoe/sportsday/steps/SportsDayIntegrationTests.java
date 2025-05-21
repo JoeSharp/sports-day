@@ -179,6 +179,11 @@ public class SportsDayIntegrationTests {
     assertThat(auditsReceived).contains("Activities were read");
   }
 
+  @And("an audit captures the failed deletion")
+  public void anAuditCapturesTheFailedDeletion() {
+    assertThat(auditsReceived).contains("Failed to delete activity");
+  }
+
   @And("an audit captures the {word} of that activity")
   public void anAuditCapturesThatSingleActivity(String action) {
     switch (action) {
