@@ -32,12 +32,13 @@ export AUTH_HOST=https://${APPLICATION_NAME}-auth.${LOCAL_STACK_HOST}.nip.io:808
 # Directory containing the certificates, used in the various test scripts
 export CERT_ROOT=./local/certs
 
-docker-open-ui:
-	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
-
 # Build the UI, Service, Docker images, then run up the entire stack
 # If you have just cloned the repo, this command should take you all the way to a working version of the app
 docker-run-all: docker-build-all docker-quick-run-all docker-open-ui
+
+# Invoke the operating system to open the UI
+docker-open-ui:
+	xdg-open https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
 
 docker-build-all: docker-build-nginx-tls-proxy docker-build-db-migration docker-build-service docker-build-ui
 
@@ -242,7 +243,7 @@ docker-keycloak-harvest-realm:
 	docker exec sports-day-auth /opt/keycloak/bin/kc.sh export --dir /tmp
 	docker cp sports-day-auth:/tmp/ratracejoe-realm.json .
 	docker cp sports-day-auth:/tmp/ratracejoe-users-0.json .
-	mv ratracejoe-*.json ./sports-day-service/src/test/resources/keycloak/
+	mv ratracejoe-*.json ./sports-day-service/web-api/src/test/resources/keycloak/
 
 # Generate the secrets for the databases
 k8s-db-template:
@@ -270,6 +271,15 @@ docker-exec-audit:
 	echo "Observing Audits"
 	docker exec -it ${APPLICATION_NAME}-audit kafka-console-consumer --bootstrap-server :9092 --topic audit --from-beginning
 
+docker-exec-migration-test-db:
+	echo "Connecting to migration test database"
+	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME}
+
+docker-exec-redis:
+	echo "Connecting to local cache"
+	docker exec -it ${APPLICATION_NAME}-cache redis-cli
+
+
 k8s-exec-db:
 	echo "Connecting to Database"
 	kubectl exec -it deployment/sports-day-db -- psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME} 
@@ -281,17 +291,6 @@ k8s-exec-auth-db:
 k8s-exec-auth:
 	echo "Connecting to Keycloak"
 	kubectl exec -it deployment/sports-day-auth -- sh 
-
-docker-exec-audit:
-	docker exec -it ${APPLICATION_NAME}-audit kafka-console-consumer --bootstrap-server :9092 --topic audit --from-beginning
-
-docker-exec-migration-test-db:
-	echo "Connecting to migration test database"
-	docker exec -it ${APPLICATION_NAME}-test-db psql -d ${SPORTS_DAY_DATABASE_NAME} -U ${SPORTS_DAY_DATABASE_USERNAME}
-
-docker-exec-redis:
-	echo "Connecting to local cache"
-	docker exec -it ${APPLICATION_NAME}-cache redis-cli
 
 k8s-exec-redis:
 	echo "Connecting to local cache"

@@ -1,1 +1,3 @@
-rootProject.name = 'sports-day-service'
+rootProject.name = 'sports-day'
+
+include 'web-api'
