@@ -41,6 +41,14 @@ For this to work via a Browser, you will need to import the Certificate of the `
 
 The curl scripts are setup to supply those files, so those should work out of the box.
 
+## Macs are Special
+Because Apple don't trust you to run Docker without setting your own hair on fire, the custom IP address will not be reachable from your host.
+So when you stand the whole thing up, you will have to use this domain
+
+https://sports-day-ui.127.0.0.1.nip.io:9443/
+
+Like a muggle
+
 ## Minikube
 
 Use the minikube docker container repo

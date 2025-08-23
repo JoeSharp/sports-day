@@ -65,7 +65,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      OAUTH2_URL: https://${APPLICATION_NAME}-auth.${LOCAL_STACK_HOST}.nip.io:8085/realms/ratracejoe
+      OAUTH2_URL: https://${APPLICATION_NAME}-auth:8085/realms/ratracejoe
       UI_DOMAIN: https://${APPLICATION_NAME}-ui.${LOCAL_STACK_HOST}.nip.io:9443/
       JAVA_OPTS: > 
         -Djavax.net.ssl.trustStore=/etc/ssl/certs/${APPLICATION_NAME}.truststore.jks 

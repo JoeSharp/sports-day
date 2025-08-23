@@ -69,13 +69,13 @@ create-tls-certs:
 
 update-test-certs:
 	echo "Copying Everything over to test"
-	rm -rf ./${APPLICATION_NAME}-service/src/test/resources/certs
-	cp -R ${CERT_ROOT}/docker ./${APPLICATION_NAME}-service/src/test/resources/certs
+	rm -rf ./${APPLICATION_NAME}-service/web-api/src/test/resources/certs
+	cp -R ${CERT_ROOT}/docker ./${APPLICATION_NAME}-service/web-api/src/test/resources/certs
 
 # `make create-tls-server DOMAIN=something`
 create-tls-server:
 	echo "Creating Server Certificates for ${DOMAIN}"
-	./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-${DOMAIN} ${LOCAL_STACK_HOST}.nip.io docker ${CERT_ROOT}; \
+	./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-${DOMAIN} ${LOCAL_STACK_HOST} docker ${CERT_ROOT}; \
 	./local/create-server.sh ${APPLICATION_NAME} ${APPLICATION_NAME}-${DOMAIN} local minikube ${CERT_ROOT}; \
 
 # Run the Vite dev server outside of containers
@@ -107,7 +107,7 @@ docker-build-ui:
 # Build the JAR file for the backend service
 build-service:
 	echo "Building Boot JAR"
-	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service bootJar
+	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service :web-api:bootJar
 
 # Build the Docker image for the backend service
 docker-build-service: 
