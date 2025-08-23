@@ -43,11 +43,16 @@ The curl scripts are setup to supply those files, so those should work out of th
 
 ## Macs are Special
 Because Apple don't trust you to run Docker without setting your own hair on fire, the custom IP address will not be reachable from your host.
-So when you stand the whole thing up, you will have to use this domain
+So when you stand the whole thing up, you will need to add the following lines to /etc/hosts
 
-https://sports-day-ui.127.0.0.1.nip.io:9443/
+```
+127.0.0.1 sports-day-ui.172.16.10.1.nip.io
+127.0.0.1 sports-day-service.172.16.10.1.nip.io
+127.0.0.1 sports-day-auth.172.16.10.1.nip.io
+```
 
-Like a muggle
+Like a muggle, Linux binds more directly to your host networking, so the custom IP should just be reachable.
+Don't you just love Apple Baby Proofing
 
 ## Minikube
 
