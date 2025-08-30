@@ -6,6 +6,8 @@ import com.ratracejoe.sportsday.web.model.rest.ActivityDTO;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/activities", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ActivityController {
+  private final Logger LOGGER = LoggerFactory.getLogger(ActivityController.class);
   private final IActivityFacade activityService;
 
   @GetMapping("/{id}")
   public ActivityDTO getActivity(@PathVariable UUID id) throws ActivityNotFoundException {
+    LOGGER.info("Retrieving Activity by {}", id);
     return ActivityDTO.fromDomain(activityService.getByUuid(id));
   }
 
@@ -29,12 +33,16 @@ public class ActivityController {
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   public ActivityDTO createActivity(@RequestBody ActivityDTO newActivity) {
-    return ActivityDTO.fromDomain(
-        activityService.createActivity(newActivity.name(), newActivity.description()));
+    var activity =
+        ActivityDTO.fromDomain(
+            activityService.createActivity(newActivity.name(), newActivity.description()));
+    LOGGER.info("Created Activity {}", activity);
+    return activity;
   }
 
   @DeleteMapping("/{id}")
   public void deleteActivity(@PathVariable UUID id) throws ActivityNotFoundException {
+    LOGGER.info("Deleting activity {}", id);
     activityService.deleteByUuid(id);
   }
 }

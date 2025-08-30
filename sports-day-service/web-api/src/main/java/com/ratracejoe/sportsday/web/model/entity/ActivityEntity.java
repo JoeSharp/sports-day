@@ -12,14 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @Id private UUID id;
 
   private String name;
   private String description;
-
-  public ActivityEntity(String name, String description) {
-    this(null, name, description);
-  }
 }

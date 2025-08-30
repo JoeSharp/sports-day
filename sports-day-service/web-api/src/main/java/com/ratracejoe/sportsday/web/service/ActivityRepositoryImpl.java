@@ -46,7 +46,8 @@ public class ActivityRepositoryImpl implements IActivityRepository {
   @Override
   @Transactional
   public void saveActivity(Activity activity) {
-    ActivityEntity entity = new ActivityEntity(activity.name(), activity.description());
+    ActivityEntity entity =
+        new ActivityEntity(activity.id(), activity.name(), activity.description());
     activityRepository.save(entity);
 
     activityCache.save(entityToCache(entity));
