@@ -9,7 +9,7 @@ spring:
             clientId: timesheets-service
             clientSecret: rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy
   datasource:
-    url: jdbc:tc:postgresql:9.6.8:///sports_day?TC_INITFUNCTION=com.ratracejoe.sportsday.SportsDayEntryPoint::createDatabase
+    url: jdbc:tc:postgresql:9.6.8:///sports_day?TC_INITFUNCTION=com.ratracejoe.sportsday.web.SportsDayEntryPoint::createDatabase
 logging:
   level:
     org:

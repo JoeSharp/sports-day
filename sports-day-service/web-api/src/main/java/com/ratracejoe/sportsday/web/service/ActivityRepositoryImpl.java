@@ -5,8 +5,8 @@ import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.web.model.cache.CachedActivity;
 import com.ratracejoe.sportsday.web.model.entity.ActivityEntity;
-import com.ratracejoe.sportsday.web.repository.ActivityCache;
-import com.ratracejoe.sportsday.web.repository.ActivityRepository;
+import com.ratracejoe.sportsday.web.repository.ActivityJpaRepository;
+import com.ratracejoe.sportsday.web.repository.ActivityRedisCache;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ActivityRepositoryImpl implements IActivityRepository {
-  private final ActivityRepository activityRepository;
-  private final ActivityCache activityCache;
+  private final ActivityJpaRepository activityRepository;
+  private final ActivityRedisCache activityCache;
 
   @PostConstruct
   public void postConstruct() {

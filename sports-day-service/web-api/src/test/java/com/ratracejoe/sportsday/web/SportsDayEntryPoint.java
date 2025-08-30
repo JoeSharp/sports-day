@@ -21,7 +21,7 @@ import org.junit.platform.suite.api.Suite;
 @SelectClasspathResource("features")
 @ConfigurationParameter(
     key = Constants.GLUE_PROPERTY_NAME,
-    value = "com.ratracejoe.sportsday.steps")
+    value = "com.ratracejoe.sportsday.web.steps")
 public class SportsDayEntryPoint {
   private static final Logger LOGGER = LoggerFactory.getLogger(SportsDayEntryPoint.class);
 
@@ -33,7 +33,7 @@ public class SportsDayEntryPoint {
       Liquibase liquibase =
           new Liquibase(
               "changelog/db.changelog-master.yaml",
-              new DirectoryResourceAccessor(new File("../sports-day-db/liquibase/")),
+              new DirectoryResourceAccessor(new File("../../sports-day-db/liquibase/")),
               database);
 
       liquibase.update(new Contexts(), new LabelExpression());

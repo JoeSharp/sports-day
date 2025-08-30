@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KafkaAuditLogger implements IAuditLogger {
+public class KafkaAuditLoggerImpl implements IAuditLogger {
   public static final String AUDIT_TOPIC = "audit";
 
   private final KafkaTemplate<String, String> kafka;

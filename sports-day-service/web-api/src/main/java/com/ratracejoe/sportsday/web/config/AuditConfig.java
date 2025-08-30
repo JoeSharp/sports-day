@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.web.config;
 
-import static com.ratracejoe.sportsday.web.service.KafkaAuditLogger.AUDIT_TOPIC;
+import static com.ratracejoe.sportsday.web.service.KafkaAuditLoggerImpl.AUDIT_TOPIC;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;

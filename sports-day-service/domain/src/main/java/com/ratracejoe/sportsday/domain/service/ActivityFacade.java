@@ -8,12 +8,12 @@ import com.ratracejoe.sportsday.outgoing.IActivityRepository;
 import java.util.List;
 import java.util.UUID;
 
-public class ActivityService implements IActivityFacade {
+public class ActivityFacade implements IActivityFacade {
     private final IActivityRepository activityRepository;
     private final AuditService auditService;
 
-    public ActivityService(IActivityRepository repository,
-                           AuditService auditService) {
+    public ActivityFacade(IActivityRepository repository,
+                          AuditService auditService) {
         this.activityRepository = repository;
         this.auditService = auditService;
     }
