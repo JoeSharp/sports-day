@@ -22,15 +22,19 @@ public class AuditService {
         String.format("Activity %s created with ID: %s", activity.name(), activity.id()));
   }
 
+  public void activityReadFailed(UUID id) {
+    auditLogger.sendAudit(String.format("Failed to read Activity %s", id));
+  }
+
   public void activityRead(UUID id) {
-    auditLogger.sendAudit( String.format("Activity %s read", id));
+    auditLogger.sendAudit(String.format("Activity %s read", id));
   }
 
   public void activityDeleted(UUID id) {
     auditLogger.sendAudit(String.format("Activity %s deleted", id));
   }
 
-  public void activityDeletionFailed() {
-    auditLogger.sendAudit("Failed to delete activity");
+  public void activityDeletionFailed(UUID id) {
+    auditLogger.sendAudit(String.format("Failed to delete Activity %s", id));
   }
 }

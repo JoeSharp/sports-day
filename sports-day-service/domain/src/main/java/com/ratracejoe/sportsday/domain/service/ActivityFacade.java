@@ -20,8 +20,14 @@ public class ActivityFacade implements IActivityFacade {
 
     @Override
     public Activity getByUuid(UUID id) throws ActivityNotFoundException {
-        auditService.activityRead(id);
-        return activityRepository.getByUuid(id);
+        try {
+            var activity = activityRepository.getByUuid(id);
+            auditService.activityRead(id);
+            return activity;
+        } catch (ActivityNotFoundException e) {
+            auditService.activityReadFailed(id);
+            throw e;
+        }
     }
 
     @Override
@@ -43,7 +49,7 @@ public class ActivityFacade implements IActivityFacade {
         try {
             activityRepository.deleteByUuid(id);
         } catch (ActivityNotFoundException e) {
-            auditService.activityDeletionFailed();
+            auditService.activityDeletionFailed(id);
             throw e;
         }
         auditService.activityDeleted(id);
