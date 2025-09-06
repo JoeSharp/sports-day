@@ -29,7 +29,7 @@ public class ActivityRepositoryImpl implements IActivityRepository {
   }
 
   @Override
-  public Activity getByUuid(UUID id) throws ActivityNotFoundException {
+  public Activity getById(UUID id) throws ActivityNotFoundException {
     return activityCache
         .findById(id)
         .map(ActivityRepositoryImpl::cacheToDomain)
@@ -45,7 +45,7 @@ public class ActivityRepositoryImpl implements IActivityRepository {
 
   @Override
   @Transactional
-  public void saveActivity(Activity activity) {
+  public void save(Activity activity) {
     ActivityEntity entity =
         new ActivityEntity(activity.id(), activity.name(), activity.description());
     activityRepository.save(entity);
@@ -55,7 +55,7 @@ public class ActivityRepositoryImpl implements IActivityRepository {
 
   @Override
   @Transactional
-  public void deleteByUuid(UUID id) throws ActivityNotFoundException {
+  public void deleteById(UUID id) throws ActivityNotFoundException {
     if (!activityRepository.existsById(id)) {
       throw new ActivityNotFoundException(id);
     }

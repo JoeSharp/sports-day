@@ -1,42 +1,37 @@
 package com.ratracejoe.sportsday.domain.outgoing;
 
 import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
+import com.ratracejoe.sportsday.domain.fixtures.MemoryGenericRepository;
 import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.outgoing.IActivityRepository;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class MemoryActivityRepository implements IActivityRepository {
-    private final Map<UUID, Activity> activities = new HashMap<>();
+  private final MemoryGenericRepository<Activity, ActivityNotFoundException> genericRepository;
 
-    @Override
-    public Activity getByUuid(UUID id) throws ActivityNotFoundException {
-        checkUuidExists(id);
-        return activities.get(id);
-    }
+  public MemoryActivityRepository() {
+    this.genericRepository =
+        new MemoryGenericRepository<>(Activity::id, ActivityNotFoundException::new);
+  }
 
-    @Override
-    public List<Activity> getAll() {
-        return activities.values().stream().toList();
-    }
+  @Override
+  public Activity getById(UUID id) throws ActivityNotFoundException {
+    return genericRepository.getById(id);
+  }
 
-    @Override
-    public void saveActivity(Activity activity) {
-        activities.put(activity.id(), activity);
-    }
+  @Override
+  public List<Activity> getAll() {
+    return genericRepository.getAll();
+  }
 
-    @Override
-    public void deleteByUuid(UUID id) throws ActivityNotFoundException {
-        checkUuidExists(id);
-        activities.remove(id);
-    }
+  @Override
+  public void save(Activity activity) {
+    genericRepository.save(activity);
+  }
 
-    private void checkUuidExists(UUID id) throws ActivityNotFoundException {
-        if (!activities.containsKey(id)) {
-            throw new ActivityNotFoundException(id);
-        }
-    }
+  @Override
+  public void deleteById(UUID id) throws ActivityNotFoundException {
+    genericRepository.deleteById(id);
+  }
 }

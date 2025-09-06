@@ -22,7 +22,7 @@ public class ActivityController {
   @GetMapping("/{id}")
   public ActivityDTO getActivity(@PathVariable UUID id) throws ActivityNotFoundException {
     LOGGER.info("Retrieving Activity by {}", id);
-    return ActivityDTO.fromDomain(activityService.getByUuid(id));
+    return ActivityDTO.fromDomain(activityService.getById(id));
   }
 
   @GetMapping

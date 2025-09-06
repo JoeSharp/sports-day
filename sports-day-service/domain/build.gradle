@@ -19,3 +19,10 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+tasks.compileJava.finalizedBy(tasks.spotlessApply)
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}

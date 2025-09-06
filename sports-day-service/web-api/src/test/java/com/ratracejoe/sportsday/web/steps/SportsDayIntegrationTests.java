@@ -203,7 +203,7 @@ public class SportsDayIntegrationTests {
             .contains(String.format("Activity %s deleted", activityUnderTest.id()));
         break;
       case "creation":
-        var startsWith = String.format("Activity %s created with ID", activityUnderTest.name());
+        var startsWith = String.format("Activity '%s' created with ID", activityUnderTest.name());
         assertThat(auditsReceived).anyMatch(l -> l.startsWith(startsWith));
         break;
     }
