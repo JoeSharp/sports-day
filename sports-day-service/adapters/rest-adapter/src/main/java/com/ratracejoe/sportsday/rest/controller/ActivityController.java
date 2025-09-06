@@ -1,7 +1,7 @@
 package com.ratracejoe.sportsday.rest.controller;
 
 import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
-import com.ratracejoe.sportsday.incoming.IActivityFacade;
+import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
 import com.ratracejoe.sportsday.rest.model.ActivityDTO;
 import java.util.List;
 import java.util.UUID;

@@ -6,7 +6,7 @@ import com.ratracejoe.sportsday.jpa.model.cache.CachedActivity;
 import com.ratracejoe.sportsday.jpa.model.entity.ActivityEntity;
 import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
 import com.ratracejoe.sportsday.jpa.repository.ActivityRedisCache;
-import com.ratracejoe.sportsday.outgoing.IActivityRepository;
+import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.List;

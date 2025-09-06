@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.web.audit;
 
-import com.ratracejoe.sportsday.outgoing.IAuditLogger;
+import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

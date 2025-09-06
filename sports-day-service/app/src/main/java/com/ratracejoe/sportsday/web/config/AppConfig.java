@@ -1,12 +1,12 @@
 package com.ratracejoe.sportsday.web.config;
 
 import com.ratracejoe.sportsday.domain.service.ActivityFacade;
-import com.ratracejoe.sportsday.incoming.IActivityFacade;
 import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
 import com.ratracejoe.sportsday.jpa.repository.ActivityRedisCache;
 import com.ratracejoe.sportsday.jpa.service.ActivityRepositoryImpl;
-import com.ratracejoe.sportsday.outgoing.IActivityRepository;
-import com.ratracejoe.sportsday.outgoing.IAuditLogger;
+import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
+import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
+import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
 import com.ratracejoe.sportsday.rest.controller.ActivityController;
 import com.ratracejoe.sportsday.rest.controller.AuthController;
 import org.springframework.beans.factory.annotation.Qualifier;
