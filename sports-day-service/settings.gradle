@@ -2,5 +2,5 @@ rootProject.name = 'sports-day'
 
 include 'app'
 include 'domain'
-include 'rest-adapter'
-include 'jpa-adapter'
+include 'adapters:rest-adapter'
+include 'adapters:jpa-adapter'
