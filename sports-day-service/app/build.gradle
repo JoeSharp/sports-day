@@ -1,0 +1,66 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+	id "com.diffplug.spotless" version "6.25.0"
+}
+
+group = 'com.ratracejoe'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation project(":domain")
+	implementation project(":rest-adapter")
+	runtimeOnly 'org.postgresql:postgresql'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.platform:junit-platform-suite'
+	testImplementation 'org.liquibase:liquibase-core'
+	testImplementation "org.testcontainers:testcontainers:1.19.8"
+	testImplementation "org.testcontainers:junit-jupiter:1.20.4"
+	testImplementation "org.testcontainers:postgresql:1.18.3"
+	testImplementation "org.testcontainers:kafka:1.20.4"
+	testImplementation "com.redis:testcontainers-redis:2.2.2"
+	testImplementation "org.awaitility:awaitility:3.0.0"
+	testImplementation "io.cucumber:cucumber-java:7.20.0"
+	testImplementation "io.cucumber:cucumber-junit-platform-engine:7.20.0"
+	testImplementation "io.cucumber:cucumber-spring:7.20.0"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+tasks.compileJava.finalizedBy(tasks.spotlessApply)
+spotless {
+	java {
+		googleJavaFormat()
+	}
+}
+
+bootRun {
+	jvmArgs = [
+		"-Djavax.net.ssl.trustStore=../../local/certs/sports-day.truststore.jks",
+		"-Djavax.net.ssl.trustStorePassword=changeit",
+		"-Djavax.net.ssl.keyStore=../../local/certs/sports-day-service/sports-day-service.keystore.jks",
+		"-Djavax.net.ssl.keyStorePassword=changeit"
+	]
+}

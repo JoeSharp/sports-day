@@ -1,5 +1,6 @@
 rootProject.name = 'sports-day'
 
-include 'web-api'
+include 'app'
 include 'domain'
+include 'rest-adapter'
 
