@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.web.model.cache;
+package com.ratracejoe.sportsday.jpa.model.cache;
 
 import jakarta.persistence.Id;
 import java.util.UUID;

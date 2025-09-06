@@ -1,12 +1,12 @@
-package com.ratracejoe.sportsday.web.service;
+package com.ratracejoe.sportsday.jpa.service;
 
 import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
+import com.ratracejoe.sportsday.jpa.model.cache.CachedActivity;
+import com.ratracejoe.sportsday.jpa.model.entity.ActivityEntity;
+import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
+import com.ratracejoe.sportsday.jpa.repository.ActivityRedisCache;
 import com.ratracejoe.sportsday.outgoing.IActivityRepository;
-import com.ratracejoe.sportsday.web.model.cache.CachedActivity;
-import com.ratracejoe.sportsday.web.model.entity.ActivityEntity;
-import com.ratracejoe.sportsday.web.repository.ActivityJpaRepository;
-import com.ratracejoe.sportsday.web.repository.ActivityRedisCache;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.List;

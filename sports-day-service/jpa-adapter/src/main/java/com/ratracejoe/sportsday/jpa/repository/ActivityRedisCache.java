@@ -1,6 +1,6 @@
-package com.ratracejoe.sportsday.web.repository;
+package com.ratracejoe.sportsday.jpa.repository;
 
-import com.ratracejoe.sportsday.web.model.cache.CachedActivity;
+import com.ratracejoe.sportsday.jpa.model.cache.CachedActivity;
 import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 

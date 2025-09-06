@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation project(":domain")
 	implementation project(":rest-adapter")
+	implementation project(":jpa-adapter")
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -33,6 +34,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.junit.platform:junit-platform-suite'
 	testImplementation 'org.liquibase:liquibase-core'
+	testImplementation("com.h2database:h2:2.2.224")
 	testImplementation "org.testcontainers:testcontainers:1.19.8"
 	testImplementation "org.testcontainers:junit-jupiter:1.20.4"
 	testImplementation "org.testcontainers:postgresql:1.18.3"

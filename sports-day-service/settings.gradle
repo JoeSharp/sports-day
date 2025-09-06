@@ -3,4 +3,4 @@ rootProject.name = 'sports-day'
 include 'app'
 include 'domain'
 include 'rest-adapter'
-
+include 'jpa-adapter'
