@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.domain.service;
+package com.ratracejoe.sportsday.domain.facade;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

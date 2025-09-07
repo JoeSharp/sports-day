@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.domain.service;
+package com.ratracejoe.sportsday.domain.facade;
 
 import com.ratracejoe.sportsday.domain.exception.CompetitorNotFoundException;
 import com.ratracejoe.sportsday.domain.exception.TeamNotFoundException;

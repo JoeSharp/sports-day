@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.web.config;
 
-import com.ratracejoe.sportsday.domain.service.ActivityFacade;
+import com.ratracejoe.sportsday.domain.facade.ActivityFacade;
 import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
 import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;

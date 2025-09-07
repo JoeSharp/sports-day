@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.domain.service;
+package com.ratracejoe.sportsday.domain.facade;
 
 import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;

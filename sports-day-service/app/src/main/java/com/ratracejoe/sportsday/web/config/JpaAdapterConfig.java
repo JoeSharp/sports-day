@@ -5,6 +5,7 @@ import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
 import com.ratracejoe.sportsday.jpa.service.ActivityRepositoryJpaImpl;
 import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.redis.repository.ActivityRedisCache;
+import com.ratracejoe.sportsday.redis.service.ActivityRepositoryRedisImpl;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ public class JpaAdapterConfig {
   @Bean
   public IActivityRepository activityRepository(
       ActivityJpaRepository repository, ActivityRedisCache cache) {
-    return new ActivityRepositoryJpaImpl(repository, cache);
+    IActivityRepository cacheRepo = new ActivityRepositoryRedisImpl(cache);
+    return new ActivityRepositoryJpaImpl(repository, cacheRepo);
   }
 }
