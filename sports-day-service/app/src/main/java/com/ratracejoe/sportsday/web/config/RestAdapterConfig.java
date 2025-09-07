@@ -1,9 +1,6 @@
 package com.ratracejoe.sportsday.web.config;
 
 import com.ratracejoe.sportsday.domain.service.ActivityFacade;
-import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
-import com.ratracejoe.sportsday.jpa.repository.ActivityRedisCache;
-import com.ratracejoe.sportsday.jpa.service.ActivityRepositoryImpl;
 import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
 import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
@@ -35,12 +32,6 @@ public class RestAdapterConfig {
       @Value("${spring.security.oauth2.client.registration.keycloak.clientSecret}")
           String clientSecret) {
     return new AuthController(keycloakClient, clientId, clientSecret);
-  }
-
-  @Bean
-  public IActivityRepository activityRepository(
-      ActivityJpaRepository repository, ActivityRedisCache cache) {
-    return new ActivityRepositoryImpl(repository, cache);
   }
 
   @Bean

@@ -2,11 +2,11 @@ package com.ratracejoe.sportsday.jpa.service;
 
 import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.jpa.model.cache.CachedActivity;
-import com.ratracejoe.sportsday.jpa.model.entity.ActivityEntity;
+import com.ratracejoe.sportsday.jpa.model.ActivityEntity;
 import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
-import com.ratracejoe.sportsday.jpa.repository.ActivityRedisCache;
 import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
+import com.ratracejoe.sportsday.redis.model.CachedActivity;
+import com.ratracejoe.sportsday.redis.repository.ActivityRedisCache;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -17,14 +17,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ActivityRepositoryImpl implements IActivityRepository {
+public class ActivityRepositoryJpaImpl implements IActivityRepository {
   private final ActivityJpaRepository activityRepository;
   private final ActivityRedisCache activityCache;
 
   @PostConstruct
   public void postConstruct() {
     activityRepository.findAll().stream()
-        .map(ActivityRepositoryImpl::entityToCache)
+        .map(ActivityRepositoryJpaImpl::entityToCache)
         .forEach(activityCache::save);
   }
 
@@ -32,14 +32,14 @@ public class ActivityRepositoryImpl implements IActivityRepository {
   public Activity getById(UUID id) throws ActivityNotFoundException {
     return activityCache
         .findById(id)
-        .map(ActivityRepositoryImpl::cacheToDomain)
+        .map(ActivityRepositoryJpaImpl::cacheToDomain)
         .orElseThrow(() -> new ActivityNotFoundException(id));
   }
 
   @Override
   public List<Activity> getAll() {
     return StreamSupport.stream(activityCache.findAll().spliterator(), true)
-        .map(ActivityRepositoryImpl::cacheToDomain)
+        .map(ActivityRepositoryJpaImpl::cacheToDomain)
         .toList();
   }
 
