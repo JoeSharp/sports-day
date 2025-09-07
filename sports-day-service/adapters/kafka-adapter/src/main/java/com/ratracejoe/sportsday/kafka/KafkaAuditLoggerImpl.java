@@ -1,11 +1,9 @@
-package com.ratracejoe.sportsday.web.audit;
+package com.ratracejoe.sportsday.kafka;
 
 import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class KafkaAuditLoggerImpl implements IAuditLogger {
   public static final String AUDIT_TOPIC = "audit";

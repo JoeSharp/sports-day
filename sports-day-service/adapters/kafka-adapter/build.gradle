@@ -5,7 +5,7 @@ plugins {
     id "com.diffplug.spotless" version "6.25.0"
 }
 
-group = 'com.ratracejoe.sportsday.rest'
+group = 'com.ratracejoe.sportsday.kafka'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
@@ -13,12 +13,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework:spring-web")
     implementation project(":domain:ports")
-
-    implementation("org.slf4j:slf4j-api") // Facade
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("jakarta.servlet:jakarta.servlet-api")
+    implementation 'org.springframework.kafka:spring-kafka'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

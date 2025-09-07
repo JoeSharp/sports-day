@@ -9,6 +9,7 @@ import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
 import com.ratracejoe.sportsday.rest.controller.ActivityController;
 import com.ratracejoe.sportsday.rest.controller.AuthController;
+import com.ratracejoe.sportsday.rest.exception.SportsExceptionHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-public class AppConfig {
+public class RestAdapterConfig {
   @Bean
   public IActivityFacade activityFacade(IActivityRepository repository, IAuditLogger auditLogger) {
     return new ActivityFacade(repository, auditLogger);
@@ -40,5 +41,10 @@ public class AppConfig {
   public IActivityRepository activityRepository(
       ActivityJpaRepository repository, ActivityRedisCache cache) {
     return new ActivityRepositoryImpl(repository, cache);
+  }
+
+  @Bean
+  public SportsExceptionHandler exceptionHandler() {
+    return new SportsExceptionHandler();
   }
 }

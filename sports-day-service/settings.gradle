@@ -5,3 +5,6 @@ include 'domain:use-cases'
 include 'domain:ports'
 include 'adapters:rest-adapter'
 include 'adapters:jpa-adapter'
+include 'adapters:kafka-adapter'
+findProject(':adapters:kafka-adapter')?.name = 'kafka-adapter'
+

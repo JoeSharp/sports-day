@@ -24,6 +24,7 @@ dependencies {
 	implementation project(":domain:ports")
 	implementation project(":adapters:rest-adapter")
 	implementation project(":adapters:jpa-adapter")
+	implementation project(":adapters:kafka-adapter")
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
