@@ -5,7 +5,6 @@ import com.ratracejoe.sportsday.domain.repository.CompetitorCachedRepository;
 import com.ratracejoe.sportsday.domain.repository.TeamCachedRepository;
 import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
 import com.ratracejoe.sportsday.jpa.repository.CompetitorJpaRepository;
-import com.ratracejoe.sportsday.jpa.repository.MembershipJpaRepository;
 import com.ratracejoe.sportsday.jpa.repository.TeamJpaRepository;
 import com.ratracejoe.sportsday.jpa.service.ActivityRepositoryJpaImpl;
 import com.ratracejoe.sportsday.jpa.service.CompetitorRepositoryJpaImpl;
@@ -20,6 +19,7 @@ import com.ratracejoe.sportsday.redis.service.CompetitorRepositoryRedisImpl;
 import com.ratracejoe.sportsday.redis.service.TeamRepositoryRedisImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class RepositoryConfig {
@@ -47,7 +47,7 @@ public class RepositoryConfig {
   }
 
   @Bean
-  public IMembershipRepository membershipRepository(MembershipJpaRepository jpa) {
-    return new MembershipRepositoryJpaImpl(jpa);
+  public IMembershipRepository membershipRepository(JdbcTemplate jdbcTemplate) {
+    return new MembershipRepositoryJpaImpl(jdbcTemplate);
   }
 }
