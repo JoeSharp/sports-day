@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
+import com.ratracejoe.sportsday.domain.fixtures.FixtureFactory;
 import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.domain.outgoing.MemoryActivityRepository;
 import com.ratracejoe.sportsday.domain.outgoing.MemoryAuditLogger;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +17,9 @@ class ActivityFacadeTest {
 
   @BeforeEach
   void beforeEach() {
-    MemoryActivityRepository activityRepository = new MemoryActivityRepository();
-    auditLogger = new MemoryAuditLogger();
-    activityFacade = new ActivityFacade(activityRepository, auditLogger);
+    FixtureFactory fixtureFactory = new FixtureFactory();
+    auditLogger = fixtureFactory.auditLogger();
+    activityFacade = fixtureFactory.activityFacade();
   }
 
   @Test

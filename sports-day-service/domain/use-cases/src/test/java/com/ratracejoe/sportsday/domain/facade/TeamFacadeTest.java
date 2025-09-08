@@ -3,31 +3,25 @@ package com.ratracejoe.sportsday.domain.facade;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
+import com.ratracejoe.sportsday.domain.fixtures.FixtureFactory;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
 import com.ratracejoe.sportsday.domain.outgoing.MemoryAuditLogger;
-import com.ratracejoe.sportsday.domain.outgoing.MemoryCompetitorRepository;
-import com.ratracejoe.sportsday.domain.outgoing.MemoryMembershipRepository;
-import com.ratracejoe.sportsday.domain.outgoing.MemoryTeamRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TeamFacadeTest {
-  private MemoryAuditLogger auditLogger;
   private TeamFacade teamFacade;
   private CompetitorFacade competitorFacade;
+  private MemoryAuditLogger auditLogger;
 
   @BeforeEach
   void beforeEach() {
-    auditLogger = new MemoryAuditLogger();
-    MemoryTeamRepository teamRepository = new MemoryTeamRepository();
-    MemoryCompetitorRepository competitorRepository = new MemoryCompetitorRepository();
-    MemoryMembershipRepository membershipRepository =
-        new MemoryMembershipRepository(teamRepository, competitorRepository);
-    teamFacade =
-        new TeamFacade(auditLogger, teamRepository, competitorRepository, membershipRepository);
-    competitorFacade = new CompetitorFacade(competitorRepository);
+    FixtureFactory fixtures = new FixtureFactory();
+    auditLogger = fixtures.auditLogger();
+    teamFacade = fixtures.teamFacade();
+    competitorFacade = fixtures.competitorFacade();
   }
 
   @Test
