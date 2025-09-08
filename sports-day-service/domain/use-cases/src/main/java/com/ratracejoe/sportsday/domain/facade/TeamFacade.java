@@ -4,22 +4,20 @@ import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
 import com.ratracejoe.sportsday.ports.incoming.ITeamFacade;
-import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
-import com.ratracejoe.sportsday.ports.outgoing.IGenericRepository;
-import com.ratracejoe.sportsday.ports.outgoing.IMembershipRepository;
+import com.ratracejoe.sportsday.ports.outgoing.*;
 import java.util.List;
 import java.util.UUID;
 
 public class TeamFacade implements ITeamFacade {
   private final IAuditLogger auditLogger;
-  private final IGenericRepository<Team> teamRepository;
-  private final IGenericRepository<Competitor> competitorRepository;
+  private final ITeamRepository teamRepository;
+  private final ICompetitorRepository competitorRepository;
   private final IMembershipRepository membershipRepository;
 
   public TeamFacade(
       IAuditLogger auditLogger,
-      IGenericRepository<Team> teamRepository,
-      IGenericRepository<Competitor> competitorRepository,
+      ITeamRepository teamRepository,
+      ICompetitorRepository competitorRepository,
       IMembershipRepository membershipRepository) {
     this.auditLogger = auditLogger;
     this.teamRepository = teamRepository;

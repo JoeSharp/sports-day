@@ -2,8 +2,7 @@ package com.ratracejoe.sportsday.domain.facade;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ratracejoe.sportsday.domain.exception.CompetitorNotFoundException;
-import com.ratracejoe.sportsday.domain.exception.TeamNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
 import com.ratracejoe.sportsday.domain.outgoing.MemoryAuditLogger;
@@ -47,7 +46,7 @@ class TeamFacadeTest {
   }
 
   @Test
-  void getById() throws TeamNotFoundException {
+  void getById() throws NotFoundException {
     // Given
     Team team = teamFacade.createTeam("The Snakes");
 
@@ -61,7 +60,7 @@ class TeamFacadeTest {
   }
 
   @Test
-  void registerAndRetrieveMembers() throws TeamNotFoundException, CompetitorNotFoundException {
+  void registerAndRetrieveMembers() throws NotFoundException {
     // Given
     Team team = teamFacade.createTeam("The Eagles");
     Competitor memberA = competitorFacade.createCompetitor("Adam Zebra");

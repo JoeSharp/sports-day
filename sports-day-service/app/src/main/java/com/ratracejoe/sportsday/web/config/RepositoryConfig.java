@@ -1,16 +1,17 @@
 package com.ratracejoe.sportsday.web.config;
 
-import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.domain.model.Competitor;
-import com.ratracejoe.sportsday.domain.model.Team;
-import com.ratracejoe.sportsday.domain.repository.CachedRepository;
+import com.ratracejoe.sportsday.domain.repository.ActivityCachedRepository;
+import com.ratracejoe.sportsday.domain.repository.CompetitorCachedRepository;
+import com.ratracejoe.sportsday.domain.repository.TeamCachedRepository;
 import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
 import com.ratracejoe.sportsday.jpa.repository.CompetitorJpaRepository;
+import com.ratracejoe.sportsday.jpa.repository.MembershipJpaRepository;
 import com.ratracejoe.sportsday.jpa.repository.TeamJpaRepository;
 import com.ratracejoe.sportsday.jpa.service.ActivityRepositoryJpaImpl;
 import com.ratracejoe.sportsday.jpa.service.CompetitorRepositoryJpaImpl;
+import com.ratracejoe.sportsday.jpa.service.MembershipRepositoryJpaImpl;
 import com.ratracejoe.sportsday.jpa.service.TeamRepositoryJpaImpl;
-import com.ratracejoe.sportsday.ports.outgoing.IGenericRepository;
+import com.ratracejoe.sportsday.ports.outgoing.*;
 import com.ratracejoe.sportsday.redis.repository.ActivityRedisCache;
 import com.ratracejoe.sportsday.redis.repository.CompetitorRedisCache;
 import com.ratracejoe.sportsday.redis.repository.TeamRedisCache;
@@ -23,26 +24,30 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RepositoryConfig {
   @Bean
-  public IGenericRepository<Activity> activityRepository(
+  public IActivityRepository activityRepository(
       ActivityJpaRepository repository, ActivityRedisCache cache) {
-    IGenericRepository<Activity> jpaRepo = new ActivityRepositoryJpaImpl(repository);
-    IGenericRepository<Activity> cacheRepo = new ActivityRepositoryRedisImpl(cache);
-    return new CachedRepository<>(jpaRepo, cacheRepo);
+    IActivityRepository jpaRepo = new ActivityRepositoryJpaImpl(repository);
+    IActivityRepository cacheRepo = new ActivityRepositoryRedisImpl(cache);
+    return new ActivityCachedRepository(jpaRepo, cacheRepo);
   }
 
   @Bean
-  public IGenericRepository<Competitor> competitorRepository(
+  public ICompetitorRepository competitorRepository(
       CompetitorJpaRepository repository, CompetitorRedisCache cache) {
-    IGenericRepository<Competitor> jpaRepo = new CompetitorRepositoryJpaImpl(repository);
-    IGenericRepository<Competitor> cacheRepo = new CompetitorRepositoryRedisImpl(cache);
-    return new CachedRepository<>(jpaRepo, cacheRepo);
+    ICompetitorRepository jpaRepo = new CompetitorRepositoryJpaImpl(repository);
+    ICompetitorRepository cacheRepo = new CompetitorRepositoryRedisImpl(cache);
+    return new CompetitorCachedRepository(jpaRepo, cacheRepo);
   }
 
   @Bean
-  public IGenericRepository<Team> teamRepository(
-      TeamJpaRepository repository, TeamRedisCache cache) {
-    IGenericRepository<Team> jpaRepo = new TeamRepositoryJpaImpl(repository);
-    IGenericRepository<Team> cacheRepo = new TeamRepositoryRedisImpl(cache);
-    return new CachedRepository<>(jpaRepo, cacheRepo);
+  public ITeamRepository teamRepository(TeamJpaRepository jpa, TeamRedisCache cache) {
+    ITeamRepository jpaRepo = new TeamRepositoryJpaImpl(jpa);
+    ITeamRepository cacheRepo = new TeamRepositoryRedisImpl(cache);
+    return new TeamCachedRepository(jpaRepo, cacheRepo);
+  }
+
+  @Bean
+  public IMembershipRepository membershipRepository(MembershipJpaRepository jpa) {
+    return new MembershipRepositoryJpaImpl(jpa);
   }
 }

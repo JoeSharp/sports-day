@@ -3,16 +3,16 @@ package com.ratracejoe.sportsday.domain.facade;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
+import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
-import com.ratracejoe.sportsday.ports.outgoing.IGenericRepository;
 import java.util.List;
 import java.util.UUID;
 
 public class ActivityFacade implements IActivityFacade {
-  private final IGenericRepository<Activity> activityRepository;
+  private final IActivityRepository activityRepository;
   private final IAuditLogger auditLogger;
 
-  public ActivityFacade(IGenericRepository<Activity> repository, IAuditLogger auditLogger) {
+  public ActivityFacade(IActivityRepository repository, IAuditLogger auditLogger) {
     this.activityRepository = repository;
     this.auditLogger = auditLogger;
   }

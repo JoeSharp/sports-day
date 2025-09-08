@@ -4,11 +4,10 @@ import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.ports.incoming.ICompetitorFacade;
 import com.ratracejoe.sportsday.ports.outgoing.ICompetitorRepository;
-import com.ratracejoe.sportsday.ports.outgoing.IGenericRepository;
 import java.util.UUID;
 
 public class CompetitorFacade implements ICompetitorFacade {
-  private final IGenericRepository<Competitor> competitorRepository;
+  private final ICompetitorRepository competitorRepository;
 
   public CompetitorFacade(ICompetitorRepository competitorRepository) {
     this.competitorRepository = competitorRepository;

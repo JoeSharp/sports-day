@@ -2,7 +2,7 @@ package com.ratracejoe.sportsday.domain.facade;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ratracejoe.sportsday.domain.exception.CompetitorNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.outgoing.MemoryCompetitorRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class CompetitorFacadeTest {
   }
 
   @Test
-  void getById() throws CompetitorNotFoundException {
+  void getById() throws NotFoundException {
     // Given
     Competitor competitor = competitorFacade.createCompetitor("Min Juice");
 

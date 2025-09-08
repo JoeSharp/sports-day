@@ -5,12 +5,12 @@ import com.ratracejoe.sportsday.ports.outgoing.IGenericRepository;
 import java.util.List;
 import java.util.UUID;
 
-public class CachedRepository<T> implements IGenericRepository<T> {
-  private final IGenericRepository<T> persistentRepository;
-  private final IGenericRepository<T> cacheRepository;
+public abstract class CachedRepository<T, R extends IGenericRepository<T>>
+    implements IGenericRepository<T> {
+  private final R persistentRepository;
+  private final R cacheRepository;
 
-  public CachedRepository(
-      IGenericRepository<T> persistentRepository, IGenericRepository<T> cacheRepository) {
+  protected CachedRepository(R persistentRepository, R cacheRepository) {
     this.persistentRepository = persistentRepository;
     this.cacheRepository = cacheRepository;
   }

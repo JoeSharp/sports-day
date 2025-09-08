@@ -9,11 +9,9 @@ import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
-public class GenericRepositoryJpaImpl<T, E> implements IGenericRepository<T> {
+public abstract class GenericRepositoryJpaImpl<T, E> implements IGenericRepository<T> {
   private final JpaRepository<E, UUID> repository;
   private final Function<T, E> toEntity;
   private final Function<E, T> toDomain;
