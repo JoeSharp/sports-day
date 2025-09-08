@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.rest.controller;
 
-import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
 import com.ratracejoe.sportsday.rest.model.ActivityDTO;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ActivityController {
   private final IActivityFacade activityService;
 
   @GetMapping("/{id}")
-  public ActivityDTO getActivity(@PathVariable UUID id) throws ActivityNotFoundException {
+  public ActivityDTO getActivity(@PathVariable UUID id) throws NotFoundException {
     LOGGER.info("Retrieving Activity by {}", id);
     return ActivityDTO.fromDomain(activityService.getById(id));
   }
@@ -41,7 +41,7 @@ public class ActivityController {
   }
 
   @DeleteMapping("/{id}")
-  public void deleteActivity(@PathVariable UUID id) throws ActivityNotFoundException {
+  public void deleteActivity(@PathVariable UUID id) throws NotFoundException {
     LOGGER.info("Deleting activity {}", id);
     activityService.deleteByUuid(id);
   }

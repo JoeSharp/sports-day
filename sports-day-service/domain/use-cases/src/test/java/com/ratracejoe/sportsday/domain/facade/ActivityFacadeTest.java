@@ -3,7 +3,7 @@ package com.ratracejoe.sportsday.domain.facade;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.domain.outgoing.MemoryActivityRepository;
 import com.ratracejoe.sportsday.domain.outgoing.MemoryAuditLogger;
@@ -23,7 +23,7 @@ class ActivityFacadeTest {
   }
 
   @Test
-  void getByIdAuditsCorrectly() throws ActivityNotFoundException {
+  void getByIdAuditsCorrectly() throws NotFoundException {
     // Given
     Activity activity = activityFacade.createActivity("Swimming", "flapping in water");
 
@@ -44,13 +44,12 @@ class ActivityFacadeTest {
     UUID id = UUID.randomUUID();
 
     // When, Then
-    assertThatThrownBy(() -> activityFacade.getById(id))
-        .isInstanceOf(ActivityNotFoundException.class);
+    assertThatThrownBy(() -> activityFacade.getById(id)).isInstanceOf(NotFoundException.class);
     assertThat(auditLogger.getMessages()).containsExactly("Failed to read Activity " + id);
   }
 
   @Test
-  void deleteByUuidSucceeds() throws ActivityNotFoundException {
+  void deleteByUuidSucceeds() throws NotFoundException {
     // Given
     Activity activity = activityFacade.createActivity("Swimming", "flapping in water");
     assertThat(activityFacade.getById(activity.id()))
@@ -62,7 +61,7 @@ class ActivityFacadeTest {
 
     // Then
     assertThatThrownBy(() -> activityFacade.getById(activity.id()))
-        .isInstanceOf(ActivityNotFoundException.class);
+        .isInstanceOf(NotFoundException.class);
 
     assertThat(auditLogger.getMessages())
         .containsExactly(
@@ -78,8 +77,7 @@ class ActivityFacadeTest {
     UUID id = UUID.randomUUID();
 
     // When, Then
-    assertThatThrownBy(() -> activityFacade.deleteByUuid(id))
-        .isInstanceOf(ActivityNotFoundException.class);
+    assertThatThrownBy(() -> activityFacade.deleteByUuid(id)).isInstanceOf(NotFoundException.class);
 
     assertThat(auditLogger.getMessages()).containsExactly("Failed to delete Activity " + id);
   }

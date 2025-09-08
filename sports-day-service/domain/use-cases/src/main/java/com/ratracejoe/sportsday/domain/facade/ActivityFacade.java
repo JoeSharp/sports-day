@@ -1,29 +1,29 @@
 package com.ratracejoe.sportsday.domain.facade;
 
-import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
-import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
+import com.ratracejoe.sportsday.ports.outgoing.IGenericRepository;
 import java.util.List;
 import java.util.UUID;
 
 public class ActivityFacade implements IActivityFacade {
-  private final IActivityRepository activityRepository;
+  private final IGenericRepository<Activity> activityRepository;
   private final IAuditLogger auditLogger;
 
-  public ActivityFacade(IActivityRepository repository, IAuditLogger auditLogger) {
+  public ActivityFacade(IGenericRepository<Activity> repository, IAuditLogger auditLogger) {
     this.activityRepository = repository;
     this.auditLogger = auditLogger;
   }
 
   @Override
-  public Activity getById(UUID id) throws ActivityNotFoundException {
+  public Activity getById(UUID id) throws NotFoundException {
     try {
       var activity = activityRepository.getById(id);
       auditLogger.sendAudit(String.format("Activity %s read", id));
       return activity;
-    } catch (ActivityNotFoundException e) {
+    } catch (NotFoundException e) {
       auditLogger.sendAudit(String.format("Failed to read Activity %s", id));
       throw e;
     }
@@ -45,10 +45,10 @@ public class ActivityFacade implements IActivityFacade {
   }
 
   @Override
-  public void deleteByUuid(UUID id) throws ActivityNotFoundException {
+  public void deleteByUuid(UUID id) throws NotFoundException {
     try {
       activityRepository.deleteById(id);
-    } catch (ActivityNotFoundException e) {
+    } catch (NotFoundException e) {
       auditLogger.sendAudit(String.format("Failed to delete Activity %s", id));
       throw e;
     }

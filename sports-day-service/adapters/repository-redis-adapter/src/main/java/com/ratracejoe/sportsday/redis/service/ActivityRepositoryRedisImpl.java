@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.redis.service;
 
-import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.redis.model.CachedActivity;
@@ -15,11 +15,11 @@ public class ActivityRepositoryRedisImpl implements IActivityRepository {
   private final ActivityRedisCache cache;
 
   @Override
-  public Activity getById(UUID id) throws ActivityNotFoundException {
+  public Activity getById(UUID id) throws NotFoundException {
     return cache
         .findById(id)
         .map(ActivityRepositoryRedisImpl::cacheToDomain)
-        .orElseThrow(() -> new ActivityNotFoundException(id));
+        .orElseThrow(() -> new NotFoundException(Activity.class, id));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class ActivityRepositoryRedisImpl implements IActivityRepository {
   }
 
   @Override
-  public void deleteById(UUID id) throws ActivityNotFoundException {
+  public void deleteById(UUID id) throws NotFoundException {
     cache.deleteById(id);
   }
 

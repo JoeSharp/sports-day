@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.domain.facade;
 
-import com.ratracejoe.sportsday.domain.exception.CompetitorNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.ports.incoming.ICompetitorFacade;
 import com.ratracejoe.sportsday.ports.outgoing.ICompetitorRepository;
@@ -21,7 +21,7 @@ public class CompetitorFacade implements ICompetitorFacade {
   }
 
   @Override
-  public Competitor getById(UUID id) throws CompetitorNotFoundException {
+  public Competitor getById(UUID id) throws NotFoundException {
     return competitorRepository.getById(id);
   }
 }

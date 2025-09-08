@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.jpa.service;
 
-import com.ratracejoe.sportsday.domain.exception.ActivityNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.jpa.model.ActivityEntity;
 import com.ratracejoe.sportsday.jpa.repository.ActivityJpaRepository;
@@ -26,7 +26,7 @@ public class ActivityRepositoryJpaImpl implements IActivityRepository {
   }
 
   @Override
-  public Activity getById(UUID id) throws ActivityNotFoundException {
+  public Activity getById(UUID id) throws NotFoundException {
     return activityCache.getById(id);
   }
 
@@ -45,9 +45,9 @@ public class ActivityRepositoryJpaImpl implements IActivityRepository {
 
   @Override
   @Transactional
-  public void deleteById(UUID id) throws ActivityNotFoundException {
+  public void deleteById(UUID id) throws NotFoundException {
     if (!activityRepository.existsById(id)) {
-      throw new ActivityNotFoundException(id);
+      throw new NotFoundException(Activity.class, id);
     }
     activityCache.deleteById(id);
     activityRepository.deleteById(id);

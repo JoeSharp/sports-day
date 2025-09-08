@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday.domain.fixtures;
 
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.ports.outgoing.IGenericRepository;
 import java.util.HashMap;
 import java.util.List;
@@ -7,20 +8,19 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class MemoryGenericRepository<T, E extends Exception> implements IGenericRepository<T, E> {
+public class MemoryGenericRepository<T> implements IGenericRepository<T> {
+  private final Class<T> clazz;
   private final Map<UUID, T> activities;
   private final Function<T, UUID> idExtractor;
-  private final Function<UUID, E> exceptionSupplier;
 
-  public MemoryGenericRepository(
-      Function<T, UUID> idExtractor, Function<UUID, E> exceptionSupplier) {
+  public MemoryGenericRepository(Class<T> clazz, Function<T, UUID> idExtractor) {
+    this.clazz = clazz;
     this.activities = new HashMap<>();
     this.idExtractor = idExtractor;
-    this.exceptionSupplier = exceptionSupplier;
   }
 
   @Override
-  public T getById(UUID id) throws E {
+  public T getById(UUID id) throws NotFoundException {
     checkUuidExists(id);
     return activities.get(id);
   }
@@ -36,14 +36,14 @@ public class MemoryGenericRepository<T, E extends Exception> implements IGeneric
   }
 
   @Override
-  public void deleteById(UUID id) throws E {
+  public void deleteById(UUID id) throws NotFoundException {
     checkUuidExists(id);
     activities.remove(id);
   }
 
-  private void checkUuidExists(UUID id) throws E {
+  private void checkUuidExists(UUID id) throws NotFoundException {
     if (!activities.containsKey(id)) {
-      throw this.exceptionSupplier.apply(id);
+      throw new NotFoundException(this.clazz, id);
     }
   }
 }

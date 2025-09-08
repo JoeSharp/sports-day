@@ -1,7 +1,6 @@
 package com.ratracejoe.sportsday.domain.facade;
 
-import com.ratracejoe.sportsday.domain.exception.CompetitorNotFoundException;
-import com.ratracejoe.sportsday.domain.exception.TeamNotFoundException;
+import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
 import com.ratracejoe.sportsday.ports.incoming.ITeamFacade;
@@ -38,20 +37,19 @@ public class TeamFacade implements ITeamFacade {
   }
 
   @Override
-  public Team getById(UUID id) throws TeamNotFoundException {
+  public Team getById(UUID id) throws NotFoundException {
     return teamRepository.getById(id);
   }
 
   @Override
-  public List<Competitor> getMembers(UUID teamId) throws TeamNotFoundException {
+  public List<Competitor> getMembers(UUID teamId) throws NotFoundException {
     Team team = teamRepository.getById(teamId);
     List<UUID> memberIds = membershipRepository.getMemberIds(team.id());
     return memberIds.stream().map(competitorRepository::getById).toList();
   }
 
   @Override
-  public void registerMember(UUID teamId, UUID competitorId)
-      throws TeamNotFoundException, CompetitorNotFoundException {
+  public void registerMember(UUID teamId, UUID competitorId) throws NotFoundException {
     Team team = teamRepository.getById(teamId);
     Competitor competitor = competitorRepository.getById(competitorId);
     membershipRepository.addMembership(team.id(), competitor.id());
