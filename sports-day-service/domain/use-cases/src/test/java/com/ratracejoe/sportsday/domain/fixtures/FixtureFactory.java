@@ -21,11 +21,15 @@ public class FixtureFactory {
     MemoryEventRepository eventRepository = new MemoryEventRepository();
     MemoryMembershipRepository membershipRepository =
         new MemoryMembershipRepository(teamRepository, competitorRepository);
+    MemoryParticipantRepository participantRepository =
+        new MemoryParticipantRepository(eventRepository, competitorRepository);
     teamFacade =
         new TeamFacade(auditLogger, teamRepository, competitorRepository, membershipRepository);
     competitorFacade = new CompetitorFacade(competitorRepository);
     activityFacade = new ActivityFacade(activityRepository, auditLogger);
-    eventFacade = new EventFacade(eventRepository, activityRepository);
+    eventFacade =
+        new EventFacade(
+            eventRepository, activityRepository, participantRepository, competitorRepository);
   }
 
   public ActivityFacade activityFacade() {

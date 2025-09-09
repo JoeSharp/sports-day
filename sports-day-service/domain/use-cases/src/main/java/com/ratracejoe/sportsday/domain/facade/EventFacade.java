@@ -1,40 +1,53 @@
 package com.ratracejoe.sportsday.domain.facade;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
-import com.ratracejoe.sportsday.domain.model.Activity;
 import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.ParticipantType;
 import com.ratracejoe.sportsday.ports.incoming.IEventFacade;
 import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
+import com.ratracejoe.sportsday.ports.outgoing.ICompetitorRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IEventRepository;
+import com.ratracejoe.sportsday.ports.outgoing.IParticipantRepository;
 import java.util.UUID;
 
 public class EventFacade implements IEventFacade {
   private final IEventRepository eventRepository;
   private final IActivityRepository activityRepository;
+  private final IParticipantRepository participantRepository;
+  private final ICompetitorRepository competitorRepository;
 
-  public EventFacade(IEventRepository eventRepository, IActivityRepository activityRepository)
+  public EventFacade(
+      IEventRepository eventRepository,
+      IActivityRepository activityRepository,
+      IParticipantRepository participantRepository,
+      ICompetitorRepository competitorRepository)
       throws NotFoundException {
     this.eventRepository = eventRepository;
     this.activityRepository = activityRepository;
+    this.participantRepository = participantRepository;
+    this.competitorRepository = competitorRepository;
   }
 
   @Override
   public Event createEvent(UUID activityId, ParticipantType participantType, int maxParticipants)
       throws NotFoundException {
-    Activity activity = activityRepository.getById(activityId);
-    Event event = new Event(UUID.randomUUID(), activity, participantType, maxParticipants);
+    activityRepository.checkExists(activityId); // Ensure it exists
+    Event event = new Event(UUID.randomUUID(), activityId, participantType, maxParticipants);
     eventRepository.save(event);
     return event;
   }
 
   @Override
   public Event getById(UUID id) throws NotFoundException {
-    return null;
+    return eventRepository.getById(id);
   }
 
   @Override
-  public void registerParticipant(UUID eventId, UUID participantId) throws NotFoundException {}
+  public void registerParticipant(UUID eventId, UUID participantId) throws NotFoundException {
+    eventRepository.checkExists(eventId);
+    competitorRepository.checkExists(participantId);
+    participantRepository.addParticipant(eventId, participantId);
+  }
 
   @Override
   public void startEvent(UUID id) throws NotFoundException {}

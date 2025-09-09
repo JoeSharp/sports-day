@@ -10,6 +10,10 @@ import java.util.UUID;
  * @param <T> The type being persisted
  */
 public interface IGenericRepository<T> {
+  default void checkExists(UUID id) throws NotFoundException {
+    getById(id);
+  }
+
   T getById(UUID id) throws NotFoundException;
 
   List<T> getAll();
