@@ -26,6 +26,6 @@ public class MemoryParticipantRepository implements IParticipantRepository {
 
   @Override
   public List<UUID> getParticipants(UUID eventId) {
-    return relationshipRepository.getLeftsForRight(eventId);
+    return relationshipRepository.getRightsForLeft(eventId);
   }
 }

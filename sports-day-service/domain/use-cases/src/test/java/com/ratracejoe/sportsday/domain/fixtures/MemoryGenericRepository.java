@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public class MemoryGenericRepository<T> implements IGenericRepository<T> {
   private final Class<T> clazz;
-  private final Map<UUID, T> activities;
+  private final Map<UUID, T> entities;
   private final Function<T, UUID> idExtractor;
   private final List<UUID> callsToGetById;
   private final AtomicInteger callsToGetAll;
@@ -33,7 +33,7 @@ public class MemoryGenericRepository<T> implements IGenericRepository<T> {
 
   public MemoryGenericRepository(Class<T> clazz, Function<T, UUID> idExtractor) {
     this.clazz = clazz;
-    this.activities = new HashMap<>();
+    this.entities = new HashMap<>();
     this.idExtractor = idExtractor;
     this.callsToGetById = new ArrayList<>();
     this.callsToGetAll = new AtomicInteger(0);
@@ -52,30 +52,30 @@ public class MemoryGenericRepository<T> implements IGenericRepository<T> {
   public T getById(UUID id) throws NotFoundException {
     callsToGetById.add(id);
     checkUuidExists(id);
-    return activities.get(id);
+    return entities.get(id);
   }
 
   @Override
   public List<T> getAll() {
     callsToGetAll.incrementAndGet();
-    return activities.values().stream().toList();
+    return entities.values().stream().toList();
   }
 
   @Override
   public void save(T item) {
     callsToSave.add(item);
-    activities.put(idExtractor.apply(item), item);
+    entities.put(idExtractor.apply(item), item);
   }
 
   @Override
   public void deleteById(UUID id) throws NotFoundException {
     callsToDelete.add(id);
     checkUuidExists(id);
-    activities.remove(id);
+    entities.remove(id);
   }
 
   private void checkUuidExists(UUID id) throws NotFoundException {
-    if (!activities.containsKey(id)) {
+    if (!entities.containsKey(id)) {
       throw new NotFoundException(this.clazz, id);
     }
   }

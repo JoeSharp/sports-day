@@ -1,5 +1,7 @@
 package com.ratracejoe.sportsday.ports.incoming;
 
+import com.ratracejoe.sportsday.domain.exception.InvalidEventStateException;
+import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.ParticipantType;
@@ -11,9 +13,11 @@ public interface IEventFacade {
 
   Event getById(UUID id) throws NotFoundException;
 
-  void registerParticipant(UUID eventId, UUID participantId) throws NotFoundException;
+  void registerParticipant(UUID eventId, UUID participantId)
+      throws NotFoundException, InvalidEventStateException;
 
-  void startEvent(UUID id) throws NotFoundException;
+  void startEvent(UUID id)
+      throws NotFoundException, InvalidEventStateException, NoParticipantsException;
 
-  void stopEvent(UUID id) throws NotFoundException;
+  void stopEvent(UUID id) throws NotFoundException, InvalidEventStateException;
 }

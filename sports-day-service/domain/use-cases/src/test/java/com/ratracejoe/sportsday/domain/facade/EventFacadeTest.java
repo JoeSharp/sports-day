@@ -1,13 +1,12 @@
 package com.ratracejoe.sportsday.domain.facade;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.ratracejoe.sportsday.domain.exception.InvalidEventStateException;
+import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.fixtures.FixtureFactory;
-import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.domain.model.Competitor;
-import com.ratracejoe.sportsday.domain.model.Event;
-import com.ratracejoe.sportsday.domain.model.ParticipantType;
+import com.ratracejoe.sportsday.domain.model.*;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +35,7 @@ class EventFacadeTest {
 
     // Then
     assertThat(smallRamble).isNotNull().extracting(Event::id).isNotNull();
+    assertThat(smallRamble).extracting(Event::state).isEqualTo(EventState.CREATING);
   }
 
   @Test
@@ -59,4 +59,54 @@ class EventFacadeTest {
     // Then
     assertThat(smallRambleUnderway).isNotNull();
   }
+
+  @Test
+  void startEvent() {
+    // Given
+    Activity walking = activityFacade.createActivity("Walking", "Burns calories");
+    Event smallRamble = eventFacade.createEvent(walking.id(), ParticipantType.INDIVIDUAL, 4);
+    Competitor solo = competitorFacade.createCompetitor("Han Solo");
+    eventFacade.registerParticipant(smallRamble.id(), solo.id());
+
+    // When
+    eventFacade.startEvent(smallRamble.id());
+    Event after = eventFacade.getById(smallRamble.id());
+
+    // Then
+    assertThat(after).extracting(Event::state).isEqualTo(EventState.STARTED);
+  }
+
+  @Test
+  void cannotStartEventWithoutParticipants() {
+    // Given
+    Activity walking = activityFacade.createActivity("Walking", "Burns calories");
+    Event smallRamble = eventFacade.createEvent(walking.id(), ParticipantType.INDIVIDUAL, 4);
+
+    // When, Then
+    assertThatThrownBy(() -> eventFacade.startEvent(smallRamble.id()))
+        .isInstanceOf(NoParticipantsException.class);
+  }
+
+  @Test
+  void cannotStartEventTwice() {
+    // Given
+    Activity walking = activityFacade.createActivity("Walking", "Burns calories");
+    Event smallRamble = eventFacade.createEvent(walking.id(), ParticipantType.INDIVIDUAL, 4);
+    Competitor solo = competitorFacade.createCompetitor("Han Solo");
+    eventFacade.registerParticipant(smallRamble.id(), solo.id());
+    eventFacade.startEvent(smallRamble.id());
+
+    // When, Then
+    assertThatThrownBy(() -> eventFacade.startEvent(smallRamble.id()))
+        .isInstanceOf(InvalidEventStateException.class);
+  }
+
+  @Test
+  void cannotRegisterTooManyParticipants() {}
+
+  @Test
+  void cannotEndEventTwice() {}
+
+  @Test
+  void cannotEndEventWithoutResults() {}
 }
