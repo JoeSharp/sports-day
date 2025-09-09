@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday.domain.facade;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ratracejoe.sportsday.domain.fixtures.FixtureFactory;
@@ -29,10 +30,6 @@ class EventFacadeTest {
   void createEvent() {
     // Given
     Activity walking = activityFacade.createActivity("Walking", "Burns calories");
-    List<Competitor> competitors =
-        Stream.of("Alan", "Bobbie", "Cherly", "Diane")
-            .map(competitorFacade::createCompetitor)
-            .toList();
 
     // When
     Event smallRamble = eventFacade.createEvent(walking.id(), ParticipantType.INDIVIDUAL, 4);
