@@ -7,7 +7,7 @@ import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.ParticipantType;
 import java.util.UUID;
 
-public interface IEventFacade {
+public interface IEventService {
   Event createEvent(UUID activityId, ParticipantType participantType, int maxParticipants)
       throws NotFoundException;
 

@@ -5,7 +5,7 @@ import com.ratracejoe.sportsday.domain.model.Activity;
 import java.util.List;
 import java.util.UUID;
 
-public interface IActivityFacade {
+public interface IActivityService {
 
   Activity getById(UUID id) throws NotFoundException;
 

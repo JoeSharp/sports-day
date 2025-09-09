@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.domain.facade;
+package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class EventFacadeTest {
-  private ActivityFacade activityFacade;
-  private EventFacade eventFacade;
-  private CompetitorFacade competitorFacade;
+class EventServiceTest {
+  private ActivityService activityFacade;
+  private EventService eventFacade;
+  private CompetitorService competitorFacade;
 
   @BeforeEach
   void beforeEach() {

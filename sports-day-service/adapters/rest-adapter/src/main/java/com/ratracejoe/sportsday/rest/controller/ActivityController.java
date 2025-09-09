@@ -1,7 +1,7 @@
 package com.ratracejoe.sportsday.rest.controller;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
-import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
+import com.ratracejoe.sportsday.ports.incoming.IActivityService;
 import com.ratracejoe.sportsday.rest.model.ActivityDTO;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ActivityController {
   private final Logger LOGGER = LoggerFactory.getLogger(ActivityController.class);
-  private final IActivityFacade activityService;
+  private final IActivityService activityService;
 
   @GetMapping("/{id}")
   public ActivityDTO getActivity(@PathVariable UUID id) throws NotFoundException {

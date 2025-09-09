@@ -1,11 +1,11 @@
 package com.ratracejoe.sportsday.web.config;
 
-import com.ratracejoe.sportsday.domain.facade.ActivityFacade;
-import com.ratracejoe.sportsday.domain.facade.CompetitorFacade;
-import com.ratracejoe.sportsday.domain.facade.TeamFacade;
-import com.ratracejoe.sportsday.ports.incoming.IActivityFacade;
-import com.ratracejoe.sportsday.ports.incoming.ICompetitorFacade;
-import com.ratracejoe.sportsday.ports.incoming.ITeamFacade;
+import com.ratracejoe.sportsday.domain.service.ActivityService;
+import com.ratracejoe.sportsday.domain.service.CompetitorService;
+import com.ratracejoe.sportsday.domain.service.TeamService;
+import com.ratracejoe.sportsday.ports.incoming.IActivityService;
+import com.ratracejoe.sportsday.ports.incoming.ICompetitorService;
+import com.ratracejoe.sportsday.ports.incoming.ITeamService;
 import com.ratracejoe.sportsday.ports.outgoing.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,21 +13,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DomainFacadeConfig {
   @Bean
-  public IActivityFacade activityFacade(IActivityRepository repository, IAuditLogger auditLogger) {
-    return new ActivityFacade(repository, auditLogger);
+  public IActivityService activityFacade(IActivityRepository repository, IAuditLogger auditLogger) {
+    return new ActivityService(repository, auditLogger);
   }
 
   @Bean
-  public ITeamFacade teamFacade(
+  public ITeamService teamFacade(
       ITeamRepository teamRepo,
       ICompetitorRepository competitorRepo,
       IMembershipRepository membershipRepo,
       IAuditLogger auditLogger) {
-    return new TeamFacade(auditLogger, teamRepo, competitorRepo, membershipRepo);
+    return new TeamService(auditLogger, teamRepo, competitorRepo, membershipRepo);
   }
 
   @Bean
-  public ICompetitorFacade competitorFacade(ICompetitorRepository competitorRepository) {
-    return new CompetitorFacade(competitorRepository);
+  public ICompetitorService competitorFacade(ICompetitorRepository competitorRepository) {
+    return new CompetitorService(competitorRepository);
   }
 }

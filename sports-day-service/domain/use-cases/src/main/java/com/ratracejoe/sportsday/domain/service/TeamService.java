@@ -1,20 +1,20 @@
-package com.ratracejoe.sportsday.domain.facade;
+package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
-import com.ratracejoe.sportsday.ports.incoming.ITeamFacade;
+import com.ratracejoe.sportsday.ports.incoming.ITeamService;
 import com.ratracejoe.sportsday.ports.outgoing.*;
 import java.util.List;
 import java.util.UUID;
 
-public class TeamFacade implements ITeamFacade {
+public class TeamService implements ITeamService {
   private final IAuditLogger auditLogger;
   private final ITeamRepository teamRepository;
   private final ICompetitorRepository competitorRepository;
   private final IMembershipRepository membershipRepository;
 
-  public TeamFacade(
+  public TeamService(
       IAuditLogger auditLogger,
       ITeamRepository teamRepository,
       ICompetitorRepository competitorRepository,

@@ -1,24 +1,24 @@
-package com.ratracejoe.sportsday.domain.facade;
+package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.EventState;
 import com.ratracejoe.sportsday.domain.model.ParticipantType;
-import com.ratracejoe.sportsday.ports.incoming.IEventFacade;
+import com.ratracejoe.sportsday.ports.incoming.IEventService;
 import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.ICompetitorRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IEventRepository;
 import com.ratracejoe.sportsday.ports.outgoing.IParticipantRepository;
 import java.util.UUID;
 
-public class EventFacade implements IEventFacade {
+public class EventService implements IEventService {
   private final IEventRepository eventRepository;
   private final IActivityRepository activityRepository;
   private final IParticipantRepository participantRepository;
   private final ICompetitorRepository competitorRepository;
 
-  public EventFacade(
+  public EventService(
       IEventRepository eventRepository,
       IActivityRepository activityRepository,
       IParticipantRepository participantRepository,

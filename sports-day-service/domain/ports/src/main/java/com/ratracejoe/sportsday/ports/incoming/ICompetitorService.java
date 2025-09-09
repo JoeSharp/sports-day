@@ -4,7 +4,7 @@ import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import java.util.UUID;
 
-public interface ICompetitorFacade {
+public interface ICompetitorService {
   Competitor createCompetitor(String name);
 
   Competitor getById(UUID id) throws NotFoundException;

@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.domain.facade;
+package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,13 +8,13 @@ import com.ratracejoe.sportsday.domain.outgoing.MemoryCompetitorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class CompetitorFacadeTest {
-  private CompetitorFacade competitorFacade;
+class CompetitorServiceTest {
+  private CompetitorService competitorFacade;
 
   @BeforeEach
   void beforeEach() {
     MemoryCompetitorRepository competitorRepository = new MemoryCompetitorRepository();
-    competitorFacade = new CompetitorFacade(competitorRepository);
+    competitorFacade = new CompetitorService(competitorRepository);
   }
 
   @Test

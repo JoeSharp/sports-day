@@ -6,7 +6,7 @@ import com.ratracejoe.sportsday.domain.model.Team;
 import java.util.List;
 import java.util.UUID;
 
-public interface ITeamFacade {
+public interface ITeamService {
   Team createTeam(String name);
 
   Team getById(UUID id) throws NotFoundException;

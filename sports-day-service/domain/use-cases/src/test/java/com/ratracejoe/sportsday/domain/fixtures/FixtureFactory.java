@@ -1,17 +1,17 @@
 package com.ratracejoe.sportsday.domain.fixtures;
 
-import com.ratracejoe.sportsday.domain.facade.ActivityFacade;
-import com.ratracejoe.sportsday.domain.facade.CompetitorFacade;
-import com.ratracejoe.sportsday.domain.facade.EventFacade;
-import com.ratracejoe.sportsday.domain.facade.TeamFacade;
 import com.ratracejoe.sportsday.domain.outgoing.*;
+import com.ratracejoe.sportsday.domain.service.ActivityService;
+import com.ratracejoe.sportsday.domain.service.CompetitorService;
+import com.ratracejoe.sportsday.domain.service.EventService;
+import com.ratracejoe.sportsday.domain.service.TeamService;
 
 public class FixtureFactory {
   private final MemoryAuditLogger auditLogger;
-  private final ActivityFacade activityFacade;
-  private final TeamFacade teamFacade;
-  private final CompetitorFacade competitorFacade;
-  private final EventFacade eventFacade;
+  private final ActivityService activityFacade;
+  private final TeamService teamFacade;
+  private final CompetitorService competitorFacade;
+  private final EventService eventFacade;
 
   public FixtureFactory() {
     auditLogger = new MemoryAuditLogger();
@@ -24,27 +24,27 @@ public class FixtureFactory {
     MemoryParticipantRepository participantRepository =
         new MemoryParticipantRepository(eventRepository, competitorRepository);
     teamFacade =
-        new TeamFacade(auditLogger, teamRepository, competitorRepository, membershipRepository);
-    competitorFacade = new CompetitorFacade(competitorRepository);
-    activityFacade = new ActivityFacade(activityRepository, auditLogger);
+        new TeamService(auditLogger, teamRepository, competitorRepository, membershipRepository);
+    competitorFacade = new CompetitorService(competitorRepository);
+    activityFacade = new ActivityService(activityRepository, auditLogger);
     eventFacade =
-        new EventFacade(
+        new EventService(
             eventRepository, activityRepository, participantRepository, competitorRepository);
   }
 
-  public ActivityFacade activityFacade() {
+  public ActivityService activityFacade() {
     return activityFacade;
   }
 
-  public CompetitorFacade competitorFacade() {
+  public CompetitorService competitorFacade() {
     return competitorFacade;
   }
 
-  public TeamFacade teamFacade() {
+  public TeamService teamFacade() {
     return teamFacade;
   }
 
-  public EventFacade eventFacade() {
+  public EventService eventFacade() {
     return eventFacade;
   }
 

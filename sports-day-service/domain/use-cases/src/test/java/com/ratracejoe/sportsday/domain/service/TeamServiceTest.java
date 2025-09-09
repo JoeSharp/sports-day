@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.domain.facade;
+package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,9 +11,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class TeamFacadeTest {
-  private TeamFacade teamFacade;
-  private CompetitorFacade competitorFacade;
+class TeamServiceTest {
+  private TeamService teamFacade;
+  private CompetitorService competitorFacade;
   private MemoryAuditLogger auditLogger;
 
   @BeforeEach

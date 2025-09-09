@@ -1,15 +1,15 @@
-package com.ratracejoe.sportsday.domain.facade;
+package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
-import com.ratracejoe.sportsday.ports.incoming.ICompetitorFacade;
+import com.ratracejoe.sportsday.ports.incoming.ICompetitorService;
 import com.ratracejoe.sportsday.ports.outgoing.ICompetitorRepository;
 import java.util.UUID;
 
-public class CompetitorFacade implements ICompetitorFacade {
+public class CompetitorService implements ICompetitorService {
   private final ICompetitorRepository competitorRepository;
 
-  public CompetitorFacade(ICompetitorRepository competitorRepository) {
+  public CompetitorService(ICompetitorRepository competitorRepository) {
     this.competitorRepository = competitorRepository;
   }
 

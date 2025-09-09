@@ -1,4 +1,4 @@
-package com.ratracejoe.sportsday.domain.facade;
+package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -11,9 +11,9 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ActivityFacadeTest {
+class ActivityServiceTest {
   private MemoryAuditLogger auditLogger;
-  private ActivityFacade activityFacade;
+  private ActivityService activityFacade;
 
   @BeforeEach
   void beforeEach() {
