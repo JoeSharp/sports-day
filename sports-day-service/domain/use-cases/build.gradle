@@ -1,14 +1,5 @@
-plugins {
-    id 'java'
-    id "com.diffplug.spotless" version "6.25.0"
-}
-
 group = 'com.ratracejoe'
 version = '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     implementation project(":domain:ports")
@@ -17,15 +8,4 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.26.3'
     testImplementation project(":adapters:repository:repository-memory-adapter")
     testImplementation project(":adapters:audit:audit-memory-adapter")
-}
-
-test {
-    useJUnitPlatform()
-}
-
-tasks.compileJava.finalizedBy(tasks.spotlessApply)
-spotless {
-    java {
-        googleJavaFormat()
-    }
 }

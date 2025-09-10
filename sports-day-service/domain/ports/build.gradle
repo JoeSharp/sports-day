@@ -1,22 +1,2 @@
-plugins {
-    id 'java'
-    id "com.diffplug.spotless" version "6.25.0"
-}
-
 group = 'com.ratracejoe'
 version = '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
-test {
-    useJUnitPlatform()
-}
-
-tasks.compileJava.finalizedBy(tasks.spotlessApply)
-spotless {
-    java {
-        googleJavaFormat()
-    }
-}

@@ -1,14 +1,5 @@
-plugins {
-    id 'java'
-    id "com.diffplug.spotless" version "6.25.0"
-}
-
 group = 'com.ratracejoe.sportsday.repository.cache'
 version = '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     implementation project(":domain:ports")
@@ -16,15 +7,4 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.assertj:assertj-core:3.26.3'
-}
-
-test {
-    useJUnitPlatform()
-}
-
-tasks.compileJava.finalizedBy(tasks.spotlessApply)
-spotless {
-    java {
-        googleJavaFormat()
-    }
 }
