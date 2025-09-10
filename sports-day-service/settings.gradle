@@ -1,6 +1,6 @@
 rootProject.name = 'sports-day'
 
-include 'app'
+include 'spring-app'
 include 'domain:use-cases'
 include 'domain:ports'
 include 'adapters:service:rest-adapter'

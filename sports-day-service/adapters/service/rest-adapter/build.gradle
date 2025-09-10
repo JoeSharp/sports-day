@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id "com.diffplug.spotless" version "6.25.0"
 }
@@ -13,15 +12,15 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework:spring-web")
+    implementation("org.springframework:spring-web:6.2.8")
     implementation project(":domain:ports")
 
-    implementation("org.slf4j:slf4j-api") // Service
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("jakarta.servlet:jakarta.servlet-api")
+    implementation("org.slf4j:slf4j-api:2.0.16") // Service
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
 tasks.compileJava.finalizedBy(tasks.spotlessApply)

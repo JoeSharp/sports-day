@@ -7,8 +7,10 @@ import com.ratracejoe.sportsday.rest.model.LoginResponseDTO;
 import com.ratracejoe.sportsday.rest.model.RefreshRequestDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.LinkedMultiValueMap;
@@ -108,7 +110,8 @@ public class AuthController {
         }
 
         @Override
-        public void handleError(ClientHttpResponse response) throws IOException {
+        public void handleError(URI url, HttpMethod method, ClientHttpResponse response)
+            throws IOException {
           logger.warn(
               "Error when logging out: {} - {}",
               response.getStatusCode(),

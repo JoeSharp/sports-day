@@ -12,6 +12,9 @@ plugins {
 }
 
 subprojects {
+	ext {
+		lombokVersion = '1.18.36'
+	}
 	repositories {
 		mavenCentral()
 	}

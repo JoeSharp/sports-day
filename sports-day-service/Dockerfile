@@ -6,8 +6,8 @@ COPY gradle ./gradle
 COPY build.gradle settings.gradle ./
 RUN ./gradlew --version
 COPY . .
-RUN ./gradlew build :web-api:bootJar --no-daemon -x test
-RUN test -f /app/web-api/build/libs/web-api-0.0.1-SNAPSHOT.jar
+RUN ./gradlew build :spring-app:bootJar --no-daemon -x test
+RUN test -f /app/spring-app/build/libs/spring-app-0.0.1-SNAPSHOT.jar
 
 # Stage 2: Runtime
 FROM amazoncorretto:21-alpine-jdk
@@ -16,7 +16,7 @@ LABEL authors="joesharpcs.co.uk"
 # Install curl
 RUN apk --no-cache add curl
 
-COPY --from=builder /app/web-api/build/libs/web-api-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/spring-app/build/libs/spring-app-0.0.1-SNAPSHOT.jar app.jar
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 CMD curl -f http://localhost:8080/api/actuator/health || exit 1
 
