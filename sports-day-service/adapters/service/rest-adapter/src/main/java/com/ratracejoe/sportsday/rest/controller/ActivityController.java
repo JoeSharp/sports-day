@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/activities", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ActivityController {
-  private final Logger LOGGER = LoggerFactory.getLogger(ActivityController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ActivityController.class);
   private final IActivityService activityService;
 
   @GetMapping("/{id}")

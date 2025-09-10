@@ -12,3 +12,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
+
+// This is here so that the PathVariables can be associated by variable name
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += '-parameters'
+}

@@ -25,7 +25,7 @@ import org.springframework.web.client.RestClient;
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
-  Logger logger = LoggerFactory.getLogger(AuthController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 
   private final String clientId;
   private final String clientSecret;
@@ -112,7 +112,7 @@ public class AuthController {
         @Override
         public void handleError(URI url, HttpMethod method, ClientHttpResponse response)
             throws IOException {
-          logger.warn(
+          LOGGER.warn(
               "Error when logging out: {} - {}",
               response.getStatusCode(),
               response.getStatusText());
