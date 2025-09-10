@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.web.config;
 
-import com.ratracejoe.sportsday.ports.incoming.IActivityService;
+import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
 import com.ratracejoe.sportsday.rest.controller.ActivityController;
 import com.ratracejoe.sportsday.rest.controller.AuthController;
 import com.ratracejoe.sportsday.rest.exception.SportsExceptionHandler;
@@ -14,8 +14,8 @@ import org.springframework.web.client.RestClient;
 public class RestAdapterConfig {
 
   @Bean
-  public ActivityController activityController(IActivityService activityFacade) {
-    return new ActivityController(activityFacade);
+  public ActivityController activityController(IActivityService activityService) {
+    return new ActivityController(activityService);
   }
 
   @Bean

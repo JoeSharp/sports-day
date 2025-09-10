@@ -4,17 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
-import com.ratracejoe.sportsday.domain.outgoing.MemoryCompetitorRepository;
+import com.ratracejoe.sportsday.repository.memory.MemoryCompetitorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CompetitorServiceTest {
-  private CompetitorService competitorFacade;
+  private CompetitorService competitorService;
 
   @BeforeEach
   void beforeEach() {
     MemoryCompetitorRepository competitorRepository = new MemoryCompetitorRepository();
-    competitorFacade = new CompetitorService(competitorRepository);
+    competitorService = new CompetitorService(competitorRepository);
   }
 
   @Test
@@ -23,7 +23,7 @@ class CompetitorServiceTest {
     String competitorName = "Max Power";
 
     // When
-    Competitor competitor = competitorFacade.createCompetitor(competitorName);
+    Competitor competitor = competitorService.createCompetitor(competitorName);
 
     // Then
     assertThat(competitor).extracting(Competitor::id).isNotNull();
@@ -33,10 +33,10 @@ class CompetitorServiceTest {
   @Test
   void getById() throws NotFoundException {
     // Given
-    Competitor competitor = competitorFacade.createCompetitor("Min Juice");
+    Competitor competitor = competitorService.createCompetitor("Min Juice");
 
     // When
-    Competitor found = competitorFacade.getById(competitor.id());
+    Competitor found = competitorService.getById(competitor.id());
 
     // Then
     assertThat(found).isEqualTo(competitor);

@@ -3,32 +3,32 @@ package com.ratracejoe.sportsday.domain.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.ratracejoe.sportsday.domain.MemoryAdapters;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
-import com.ratracejoe.sportsday.domain.fixtures.FixtureFactory;
 import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.domain.outgoing.MemoryAuditLogger;
+import com.ratracejoe.sportsday.memory.MemoryAuditLogger;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ActivityServiceTest {
   private MemoryAuditLogger auditLogger;
-  private ActivityService activityFacade;
+  private ActivityService activityService;
 
   @BeforeEach
   void beforeEach() {
-    FixtureFactory fixtureFactory = new FixtureFactory();
-    auditLogger = fixtureFactory.auditLogger();
-    activityFacade = fixtureFactory.activityFacade();
+    MemoryAdapters memoryAdapters = new MemoryAdapters();
+    auditLogger = memoryAdapters.auditLogger();
+    activityService = memoryAdapters.activityService();
   }
 
   @Test
   void getByIdAuditsCorrectly() throws NotFoundException {
     // Given
-    Activity activity = activityFacade.createActivity("Swimming", "flapping in water");
+    Activity activity = activityService.createActivity("Swimming", "flapping in water");
 
     // When
-    Activity found = activityFacade.getById(activity.id());
+    Activity found = activityService.getById(activity.id());
 
     // Then
     assertThat(activity).isEqualTo(found);
@@ -44,23 +44,23 @@ class ActivityServiceTest {
     UUID id = UUID.randomUUID();
 
     // When, Then
-    assertThatThrownBy(() -> activityFacade.getById(id)).isInstanceOf(NotFoundException.class);
+    assertThatThrownBy(() -> activityService.getById(id)).isInstanceOf(NotFoundException.class);
     assertThat(auditLogger.getMessages()).containsExactly("Failed to read Activity " + id);
   }
 
   @Test
   void deleteByUuidSucceeds() throws NotFoundException {
     // Given
-    Activity activity = activityFacade.createActivity("Swimming", "flapping in water");
-    assertThat(activityFacade.getById(activity.id()))
+    Activity activity = activityService.createActivity("Swimming", "flapping in water");
+    assertThat(activityService.getById(activity.id()))
         .extracting(Activity::name)
         .isEqualTo("Swimming");
 
     // When
-    activityFacade.deleteByUuid(activity.id());
+    activityService.deleteByUuid(activity.id());
 
     // Then
-    assertThatThrownBy(() -> activityFacade.getById(activity.id()))
+    assertThatThrownBy(() -> activityService.getById(activity.id()))
         .isInstanceOf(NotFoundException.class);
 
     assertThat(auditLogger.getMessages())
@@ -77,7 +77,8 @@ class ActivityServiceTest {
     UUID id = UUID.randomUUID();
 
     // When, Then
-    assertThatThrownBy(() -> activityFacade.deleteByUuid(id)).isInstanceOf(NotFoundException.class);
+    assertThatThrownBy(() -> activityService.deleteByUuid(id))
+        .isInstanceOf(NotFoundException.class);
 
     assertThat(auditLogger.getMessages()).containsExactly("Failed to delete Activity " + id);
   }

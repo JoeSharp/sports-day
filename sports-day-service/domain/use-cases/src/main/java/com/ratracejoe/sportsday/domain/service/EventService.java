@@ -5,11 +5,11 @@ import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.EventState;
 import com.ratracejoe.sportsday.domain.model.ParticipantType;
-import com.ratracejoe.sportsday.ports.incoming.IEventService;
-import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
-import com.ratracejoe.sportsday.ports.outgoing.ICompetitorRepository;
-import com.ratracejoe.sportsday.ports.outgoing.IEventRepository;
-import com.ratracejoe.sportsday.ports.outgoing.IParticipantRepository;
+import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
+import com.ratracejoe.sportsday.ports.outgoing.repository.IActivityRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.IEventRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.IParticipantRepository;
 import java.util.UUID;
 
 public class EventService implements IEventService {

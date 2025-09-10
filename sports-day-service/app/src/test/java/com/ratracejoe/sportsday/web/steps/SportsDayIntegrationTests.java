@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.web.steps;
 
-import static com.ratracejoe.sportsday.kafka.KafkaAuditLoggerImpl.AUDIT_TOPIC;
+import static com.ratracejoe.sportsday.audit.kafka.KafkaAuditLoggerImpl.AUDIT_TOPIC;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ratracejoe.sportsday.rest.model.ActivityDTO;

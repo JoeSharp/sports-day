@@ -22,10 +22,11 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation project(":domain:use-cases")
 	implementation project(":domain:ports")
-	implementation project(":adapters:rest-adapter")
-	implementation project(":adapters:repository-jpa-adapter")
-	implementation project(":adapters:audit-kafka-adapter")
-	implementation project(":adapters:repository-redis-adapter")
+	implementation project(":adapters:service:rest-adapter")
+	implementation project(":adapters:repository:repository-jpa-adapter")
+	implementation project(":adapters:audit:audit-kafka-adapter")
+	implementation project(":adapters:repository:repository-redis-adapter")
+    implementation project(":adapters:repository:repository-cache-adapter")
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

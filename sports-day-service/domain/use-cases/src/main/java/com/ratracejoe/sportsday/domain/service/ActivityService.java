@@ -2,9 +2,9 @@ package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.ports.incoming.IActivityService;
-import com.ratracejoe.sportsday.ports.outgoing.IActivityRepository;
-import com.ratracejoe.sportsday.ports.outgoing.IAuditLogger;
+import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
+import com.ratracejoe.sportsday.ports.outgoing.audit.IAuditLogger;
+import com.ratracejoe.sportsday.ports.outgoing.repository.IActivityRepository;
 import java.util.List;
 import java.util.UUID;
 

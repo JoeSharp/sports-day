@@ -2,8 +2,8 @@ package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
-import com.ratracejoe.sportsday.ports.incoming.ICompetitorService;
-import com.ratracejoe.sportsday.ports.outgoing.ICompetitorRepository;
+import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
+import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
 import java.util.UUID;
 
 public class CompetitorService implements ICompetitorService {

@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id "com.diffplug.spotless" version "6.25.0"
+}
+
+group = 'com.ratracejoe.sportsday.rest'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.springframework:spring-web")
+    implementation project(":domain:ports")
+
+    implementation("org.slf4j:slf4j-api") // Service
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("jakarta.servlet:jakarta.servlet-api")
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.compileJava.finalizedBy(tasks.spotlessApply)
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}

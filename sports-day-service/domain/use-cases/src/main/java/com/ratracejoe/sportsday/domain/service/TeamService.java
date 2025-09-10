@@ -3,8 +3,11 @@ package com.ratracejoe.sportsday.domain.service;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
-import com.ratracejoe.sportsday.ports.incoming.ITeamService;
-import com.ratracejoe.sportsday.ports.outgoing.*;
+import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
+import com.ratracejoe.sportsday.ports.outgoing.audit.IAuditLogger;
+import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.IMembershipRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.ITeamRepository;
 import java.util.List;
 import java.util.UUID;
 

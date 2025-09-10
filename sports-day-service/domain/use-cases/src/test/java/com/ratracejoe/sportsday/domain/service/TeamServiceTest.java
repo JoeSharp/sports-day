@@ -2,26 +2,26 @@ package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ratracejoe.sportsday.domain.MemoryAdapters;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
-import com.ratracejoe.sportsday.domain.fixtures.FixtureFactory;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
-import com.ratracejoe.sportsday.domain.outgoing.MemoryAuditLogger;
+import com.ratracejoe.sportsday.memory.MemoryAuditLogger;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TeamServiceTest {
-  private TeamService teamFacade;
-  private CompetitorService competitorFacade;
+  private TeamService teamService;
+  private CompetitorService competitorService;
   private MemoryAuditLogger auditLogger;
 
   @BeforeEach
   void beforeEach() {
-    FixtureFactory fixtures = new FixtureFactory();
+    MemoryAdapters fixtures = new MemoryAdapters();
     auditLogger = fixtures.auditLogger();
-    teamFacade = fixtures.teamFacade();
-    competitorFacade = fixtures.competitorFacade();
+    teamService = fixtures.teamService();
+    competitorService = fixtures.competitorService();
   }
 
   @Test
@@ -30,7 +30,7 @@ class TeamServiceTest {
     String teamName = "The Hamsters";
 
     // When
-    Team team = teamFacade.createTeam(teamName);
+    Team team = teamService.createTeam(teamName);
 
     // Then
     assertThat(team).extracting(Team::id).isNotNull();
@@ -42,10 +42,10 @@ class TeamServiceTest {
   @Test
   void getById() throws NotFoundException {
     // Given
-    Team team = teamFacade.createTeam("The Snakes");
+    Team team = teamService.createTeam("The Snakes");
 
     // When
-    Team found = teamFacade.getById(team.id());
+    Team found = teamService.getById(team.id());
 
     // Then
     assertThat(found).isEqualTo(team);
@@ -56,15 +56,15 @@ class TeamServiceTest {
   @Test
   void registerAndRetrieveMembers() throws NotFoundException {
     // Given
-    Team team = teamFacade.createTeam("The Eagles");
-    Competitor memberA = competitorFacade.createCompetitor("Adam Zebra");
-    Competitor memberB = competitorFacade.createCompetitor("Billy Yoghurt");
-    competitorFacade.createCompetitor("Charlie Wurgle");
+    Team team = teamService.createTeam("The Eagles");
+    Competitor memberA = competitorService.createCompetitor("Adam Zebra");
+    Competitor memberB = competitorService.createCompetitor("Billy Yoghurt");
+    competitorService.createCompetitor("Charlie Wurgle");
 
     // When
-    teamFacade.registerMember(team.id(), memberA.id());
-    teamFacade.registerMember(team.id(), memberB.id());
-    List<Competitor> members = teamFacade.getMembers(team.id());
+    teamService.registerMember(team.id(), memberA.id());
+    teamService.registerMember(team.id(), memberB.id());
+    List<Competitor> members = teamService.getMembers(team.id());
 
     // Then
     assertThat(members).containsExactlyInAnyOrder(memberA, memberB);
