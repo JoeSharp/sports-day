@@ -1,10 +1,10 @@
-package com.ratracejoe.sportsday.rest.controller;
+package com.ratracejoe.sportsday.rest.auth.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ratracejoe.sportsday.rest.exception.InvalidAuthException;
-import com.ratracejoe.sportsday.rest.model.LoginRequestDTO;
-import com.ratracejoe.sportsday.rest.model.LoginResponseDTO;
-import com.ratracejoe.sportsday.rest.model.RefreshRequestDTO;
+import com.ratracejoe.sportsday.rest.auth.exception.InvalidAuthException;
+import com.ratracejoe.sportsday.rest.auth.model.LoginRequestDTO;
+import com.ratracejoe.sportsday.rest.auth.model.LoginResponseDTO;
+import com.ratracejoe.sportsday.rest.auth.model.RefreshRequestDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URI;

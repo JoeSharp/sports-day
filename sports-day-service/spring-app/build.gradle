@@ -15,7 +15,8 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation project(":domain:use-cases")
 	implementation project(":domain:ports")
-	implementation project(":adapters:service:rest-adapter")
+    implementation project(":adapters:infrastructure:infra-rest-auth-adapter")
+	implementation project(":adapters:service:service-rest-adapter")
 	implementation project(":adapters:repository:repository-jpa-adapter")
 	implementation project(":adapters:audit:audit-kafka-adapter")
 	implementation project(":adapters:repository:repository-redis-adapter")

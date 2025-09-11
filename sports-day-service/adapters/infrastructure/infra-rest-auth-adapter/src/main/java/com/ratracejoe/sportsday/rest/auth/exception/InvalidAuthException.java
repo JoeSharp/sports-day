@@ -1,3 +1,3 @@
-package com.ratracejoe.sportsday.rest.exception;
+package com.ratracejoe.sportsday.rest.auth.exception;
 
 public class InvalidAuthException extends Exception {}

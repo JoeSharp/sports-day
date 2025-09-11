@@ -1,9 +1,8 @@
 package com.ratracejoe.sportsday.web.config;
 
 import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
+import com.ratracejoe.sportsday.rest.auth.controller.AuthController;
 import com.ratracejoe.sportsday.rest.controller.ActivityController;
-import com.ratracejoe.sportsday.rest.controller.AuthController;
-import com.ratracejoe.sportsday.rest.exception.SportsExceptionHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

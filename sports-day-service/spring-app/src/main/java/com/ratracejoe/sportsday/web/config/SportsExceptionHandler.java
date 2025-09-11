@@ -1,6 +1,7 @@
-package com.ratracejoe.sportsday.rest.exception;
+package com.ratracejoe.sportsday.web.config;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
+import com.ratracejoe.sportsday.rest.auth.exception.InvalidAuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

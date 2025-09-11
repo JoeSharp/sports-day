@@ -2,10 +2,11 @@ package com.ratracejoe.sportsday.web.steps;
 
 import static com.ratracejoe.sportsday.audit.kafka.KafkaAuditLoggerImpl.AUDIT_TOPIC;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 
+import com.ratracejoe.sportsday.rest.auth.model.LoginRequestDTO;
+import com.ratracejoe.sportsday.rest.auth.model.LoginResponseDTO;
 import com.ratracejoe.sportsday.rest.model.ActivityDTO;
-import com.ratracejoe.sportsday.rest.model.LoginRequestDTO;
-import com.ratracejoe.sportsday.rest.model.LoginResponseDTO;
 import com.ratracejoe.sportsday.web.util.KeycloakExtension;
 import com.ratracejoe.sportsday.web.util.TestUser;
 import com.redis.testcontainers.RedisContainer;
@@ -17,7 +18,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +27,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 import org.testcontainers.utility.DockerImageName;
@@ -206,6 +204,8 @@ public class SportsDayIntegrationTests {
         var startsWith = String.format("Activity '%s' created with ID", activityUnderTest.name());
         assertThat(auditsReceived).anyMatch(l -> l.startsWith(startsWith));
         break;
+      default:
+        fail("Invalid action to capture for audit {}", action);
     }
   }
 
@@ -240,35 +240,6 @@ public class SportsDayIntegrationTests {
     headers.setBearerAuth(loginResponse.getBody().accessToken());
     return headers;
   }
-
-  private ResponseErrorHandler EXPECT_2XX =
-      new ResponseErrorHandler() {
-        @Override
-        public boolean hasError(ClientHttpResponse response) throws IOException {
-          return response.getStatusCode().is2xxSuccessful();
-        }
-
-        @Override
-        public void handleError(ClientHttpResponse response) throws IOException {
-          throw new AssertionError(
-              String.format(
-                  "Failed to make call %s - %s",
-                  response.getStatusCode(), response.getStatusText()));
-        }
-      };
-
-  private ResponseErrorHandler EXPECT_NOT_FOUND =
-      new ResponseErrorHandler() {
-        @Override
-        public boolean hasError(ClientHttpResponse response) throws IOException {
-          return response.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND);
-        }
-
-        @Override
-        public void handleError(ClientHttpResponse response) throws IOException {
-          throw new AssertionError("Did not get the expected 404 error");
-        }
-      };
 
   private ResponseEntity<List<ActivityDTO>> callGetActivities() {
     HttpEntity<Void> request = new HttpEntity<>(getLoggedInHeaders());
