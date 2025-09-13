@@ -2,14 +2,13 @@ package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
-import com.ratracejoe.sportsday.domain.model.Event;
-import com.ratracejoe.sportsday.domain.model.EventState;
-import com.ratracejoe.sportsday.domain.model.ParticipantType;
+import com.ratracejoe.sportsday.domain.model.*;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 import com.ratracejoe.sportsday.ports.outgoing.repository.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
 import com.ratracejoe.sportsday.ports.outgoing.repository.IEventRepository;
 import com.ratracejoe.sportsday.ports.outgoing.repository.IParticipantRepository;
+import java.util.List;
 import java.util.UUID;
 
 public class EventService implements IEventService {
@@ -31,12 +30,18 @@ public class EventService implements IEventService {
   }
 
   @Override
-  public Event createEvent(UUID activityId, ParticipantType participantType, int maxParticipants)
+  public Event createEvent(
+      UUID activityId, ParticipantType participantType, GoalType goalType, int maxParticipants)
       throws NotFoundException {
     activityRepository.checkExists(activityId); // Ensure it exists
     Event event =
         new Event(
-            UUID.randomUUID(), activityId, EventState.CREATING, participantType, maxParticipants);
+            UUID.randomUUID(),
+            activityId,
+            EventState.CREATING,
+            participantType,
+            goalType,
+            maxParticipants);
     eventRepository.save(event);
     return event;
   }
@@ -51,6 +56,13 @@ public class EventService implements IEventService {
     eventRepository.checkExists(eventId);
     competitorRepository.checkExists(participantId);
     participantRepository.addParticipant(eventId, participantId);
+  }
+
+  @Override
+  public List<Competitor> getParticipants(UUID eventId) throws NotFoundException {
+    return participantRepository.getParticipants(eventId).stream()
+        .map(competitorRepository::getById)
+        .toList();
   }
 
   @Override

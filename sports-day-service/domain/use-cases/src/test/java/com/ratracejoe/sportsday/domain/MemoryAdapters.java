@@ -1,9 +1,6 @@
 package com.ratracejoe.sportsday.domain;
 
-import com.ratracejoe.sportsday.domain.service.ActivityService;
-import com.ratracejoe.sportsday.domain.service.CompetitorService;
-import com.ratracejoe.sportsday.domain.service.EventService;
-import com.ratracejoe.sportsday.domain.service.TeamService;
+import com.ratracejoe.sportsday.domain.service.*;
 import com.ratracejoe.sportsday.memory.MemoryAuditLogger;
 import com.ratracejoe.sportsday.repository.memory.MemoryActivityRepository;
 import com.ratracejoe.sportsday.repository.memory.MemoryCompetitorRepository;
@@ -18,6 +15,7 @@ public class MemoryAdapters {
   private final TeamService teamService;
   private final CompetitorService competitorService;
   private final EventService eventService;
+  private final ScoreService scoreService;
 
   public MemoryAdapters() {
     auditLogger = new MemoryAuditLogger();
@@ -36,6 +34,7 @@ public class MemoryAdapters {
     eventService =
         new EventService(
             eventRepository, activityRepository, participantRepository, competitorRepository);
+    scoreService = new ScoreService();
   }
 
   public ActivityService activityService() {
@@ -52,6 +51,10 @@ public class MemoryAdapters {
 
   public EventService eventService() {
     return eventService;
+  }
+
+  public ScoreService scoreService() {
+    return scoreService;
   }
 
   public MemoryAuditLogger auditLogger() {

@@ -7,9 +7,15 @@ public record Event(
     UUID activityId,
     EventState state,
     ParticipantType participantType,
+    GoalType goalType,
     int maxParticipants) {
   public Event withState(EventState newState) {
     return new Event(
-        id, activityId, state.nextStateIsValid(newState), participantType, maxParticipants);
+        id,
+        activityId,
+        state.nextStateIsValid(newState),
+        participantType,
+        goalType,
+        maxParticipants);
   }
 }
