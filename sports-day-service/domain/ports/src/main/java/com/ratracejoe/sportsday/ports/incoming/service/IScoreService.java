@@ -4,5 +4,10 @@ import com.ratracejoe.sportsday.ports.incoming.service.score.IFinishingOrderServ
 import com.ratracejoe.sportsday.ports.incoming.service.score.IPointScoreService;
 import com.ratracejoe.sportsday.ports.incoming.service.score.ITimedFinishingOrderService;
 
-public interface IScoreService
-    extends ITimedFinishingOrderService, IFinishingOrderService, IPointScoreService {}
+public interface IScoreService {
+  ITimedFinishingOrderService timedFinishingOrderService();
+
+  IFinishingOrderService finishingOrderService();
+
+  IPointScoreService pointScoreService();
+}

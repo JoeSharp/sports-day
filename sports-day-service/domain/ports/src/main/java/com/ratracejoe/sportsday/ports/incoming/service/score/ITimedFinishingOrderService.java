@@ -6,6 +6,8 @@ import com.ratracejoe.sportsday.domain.model.score.TimedFinishingOrder;
 import java.util.UUID;
 
 public interface ITimedFinishingOrderService {
+  TimedFinishingOrder createNew(UUID eventId);
+
   TimedFinishingOrder getTimedFinishingOrder(UUID eventId)
       throws NotFoundException, IncorrectEventTypeException;
 

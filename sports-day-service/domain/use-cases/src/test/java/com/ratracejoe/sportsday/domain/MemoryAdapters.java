@@ -42,9 +42,6 @@ public class MemoryAdapters {
         new TeamService(auditLogger, teamRepository, competitorRepository, membershipRepository);
     competitorService = new CompetitorService(competitorRepository);
     activityService = new ActivityService(activityRepository, auditLogger);
-    eventService =
-        new EventService(
-            eventRepository, activityRepository, participantRepository, competitorRepository);
     FinishingOrderService finishingOrderService =
         new FinishingOrderService(competitorRepository, finishingOrderRepository);
     TimedFinishingOrderService timedFinishingOrderService =
@@ -53,6 +50,13 @@ public class MemoryAdapters {
         new PointScoreService(competitorRepository, pointScoreSheetRepository);
     scoreService =
         new ScoreService(finishingOrderService, timedFinishingOrderService, pointScoreService);
+    eventService =
+        new EventService(
+            eventRepository,
+            activityRepository,
+            participantRepository,
+            competitorRepository,
+            scoreService);
   }
 
   public ActivityService activityService() {

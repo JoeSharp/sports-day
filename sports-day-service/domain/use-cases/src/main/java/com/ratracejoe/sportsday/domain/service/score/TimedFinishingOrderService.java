@@ -20,6 +20,13 @@ public class TimedFinishingOrderService implements ITimedFinishingOrderService {
   }
 
   @Override
+  public TimedFinishingOrder createNew(UUID eventId) {
+    TimedFinishingOrder timedFinishingOrder = TimedFinishingOrder.create(eventId);
+    finishingOrderRepository.save(timedFinishingOrder);
+    return timedFinishingOrder;
+  }
+
+  @Override
   public TimedFinishingOrder getTimedFinishingOrder(UUID eventId)
       throws NotFoundException, IncorrectEventTypeException {
     return finishingOrderRepository.getById(eventId);

@@ -4,6 +4,7 @@ import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.*;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
+import com.ratracejoe.sportsday.ports.incoming.service.IScoreService;
 import com.ratracejoe.sportsday.ports.outgoing.repository.IActivityRepository;
 import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
 import com.ratracejoe.sportsday.ports.outgoing.repository.IEventRepository;
@@ -16,17 +17,20 @@ public class EventService implements IEventService {
   private final IActivityRepository activityRepository;
   private final IParticipantRepository participantRepository;
   private final ICompetitorRepository competitorRepository;
+  private final IScoreService scoreService;
 
   public EventService(
       IEventRepository eventRepository,
       IActivityRepository activityRepository,
       IParticipantRepository participantRepository,
-      ICompetitorRepository competitorRepository)
+      ICompetitorRepository competitorRepository,
+      IScoreService scoreService)
       throws NotFoundException {
     this.eventRepository = eventRepository;
     this.activityRepository = activityRepository;
     this.participantRepository = participantRepository;
     this.competitorRepository = competitorRepository;
+    this.scoreService = scoreService;
   }
 
   @Override
@@ -43,6 +47,17 @@ public class EventService implements IEventService {
             scoreType,
             maxParticipants);
     eventRepository.save(event);
+    switch (scoreType) {
+      case FINISHING_ORDER:
+        scoreService.finishingOrderService().createNew(event.id());
+        break;
+      case TIMED_FINISHING_ORDER:
+        scoreService.timedFinishingOrderService().createNew(event.id());
+        break;
+      case POINTS_SCORE_SHEET:
+        scoreService.pointScoreService().createNew(event.id());
+        break;
+    }
     return event;
   }
 

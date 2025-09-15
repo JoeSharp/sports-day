@@ -20,6 +20,13 @@ public class FinishingOrderService implements IFinishingOrderService {
   }
 
   @Override
+  public FinishingOrder createNew(UUID eventId) {
+    FinishingOrder finishingOrder = FinishingOrder.create(eventId);
+    finishingOrderRepository.save(finishingOrder);
+    return finishingOrder;
+  }
+
+  @Override
   public FinishingOrder getFinishingOrder(UUID eventId)
       throws NotFoundException, IncorrectEventTypeException {
     return finishingOrderRepository.getById(eventId);

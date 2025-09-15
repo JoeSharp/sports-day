@@ -19,6 +19,13 @@ public class PointScoreService implements IPointScoreService {
   }
 
   @Override
+  public PointScoreSheet createNew(UUID eventId) {
+    PointScoreSheet pointScoreSheet = PointScoreSheet.create(eventId);
+    scoreSheetRepository.save(pointScoreSheet);
+    return pointScoreSheet;
+  }
+
+  @Override
   public PointScoreSheet getPoints(UUID eventId)
       throws NotFoundException, IncorrectEventTypeException {
     return scoreSheetRepository.getById(eventId);

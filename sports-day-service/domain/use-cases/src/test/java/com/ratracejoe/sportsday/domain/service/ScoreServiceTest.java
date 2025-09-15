@@ -7,8 +7,10 @@ import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.score.FinishingOrder;
+import com.ratracejoe.sportsday.domain.model.score.PointScoreSheet;
 import com.ratracejoe.sportsday.domain.model.score.TimedFinishingOrder;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,8 +37,9 @@ class ScoreServiceTest {
     // When
     competitors.stream()
         .map(Competitor::id)
-        .forEach(cId -> scoreService.passFinishLine(event.id(), cId));
-    FinishingOrder finishingOrder = scoreService.getFinishingOrder(event.id());
+        .forEach(cId -> scoreService.finishingOrderService().passFinishLine(event.id(), cId));
+    FinishingOrder finishingOrder =
+        scoreService.finishingOrderService().getFinishingOrder(event.id());
 
     // Then
     assertThat(finishingOrder).isNotNull();
@@ -56,8 +59,11 @@ class ScoreServiceTest {
         .map(Competitor::id)
         .forEach(
             cId ->
-                scoreService.passFinishLineInTime(event.id(), cId, finishTime.getAndDecrement()));
-    TimedFinishingOrder finishingOrder = scoreService.getTimedFinishingOrder(event.id());
+                scoreService
+                    .timedFinishingOrderService()
+                    .passFinishLineInTime(event.id(), cId, finishTime.getAndDecrement()));
+    TimedFinishingOrder finishingOrder =
+        scoreService.timedFinishingOrderService().getTimedFinishingOrder(event.id());
 
     // Then
     assertThat(finishingOrder).isNotNull();
@@ -69,5 +75,17 @@ class ScoreServiceTest {
   void scoreSheet() {
     // Given
     Event event = fixtures.scoredEventStarted();
+    List<Competitor> competitors = eventService.getParticipants(event.id());
+    Random random = new Random();
+
+    // When
+    competitors.stream()
+        .map(Competitor::id)
+        .forEach(
+            cId -> scoreService.pointScoreService().addPoints(event.id(), cId, random.nextInt(3)));
+    PointScoreSheet result = scoreService.pointScoreService().getPoints(event.id());
+
+    // Then
+    assertThat(result).isNotNull();
   }
 }

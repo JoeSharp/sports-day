@@ -6,6 +6,8 @@ import com.ratracejoe.sportsday.domain.model.score.PointScoreSheet;
 import java.util.UUID;
 
 public interface IPointScoreService {
+  PointScoreSheet createNew(UUID eventId);
+
   PointScoreSheet getPoints(UUID eventId) throws NotFoundException, IncorrectEventTypeException;
 
   default void addPoint(UUID eventId, UUID participantId) throws IncorrectEventTypeException {
