@@ -11,8 +11,6 @@ public class TeamCommandService implements ICommandHandler {
     this.teamService = teamService;
   }
 
-    @Override
-    public void handleCommand() throws InvalidCommandException {
-
-    }
+  @Override
+  public void handleCommand() throws InvalidCommandException {}
 }

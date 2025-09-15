@@ -21,8 +21,7 @@ public class SportsTestFixtures {
     Activity activity = activityCreated();
     return memoryAdapters
         .eventService()
-        .createEvent(
-            activity.id(), ParticipantType.INDIVIDUAL, GoalType.ORDER_OVER_FIXED_DISTANCE, 4);
+        .createEvent(activity.id(), ParticipantType.INDIVIDUAL, ScoreType.FINISHING_ORDER, 4);
   }
 
   public Event eventCreatedWithSoloParticipant() {
@@ -32,13 +31,33 @@ public class SportsTestFixtures {
     return event;
   }
 
-  public Event finishOrderEventStarted() {
+  public Event scoredEventStarted() {
     Activity activity = activityCreated();
     Event event =
         memoryAdapters
             .eventService()
             .createEvent(
-                activity.id(), ParticipantType.INDIVIDUAL, GoalType.ORDER_OVER_FIXED_DISTANCE, 10);
+                activity.id(), ParticipantType.INDIVIDUAL, ScoreType.POINTS_SCORE_SHEET, 2);
+
+    Stream.of("Manchester United", "Liverpool")
+        .map(memoryAdapters.competitorService()::createCompetitor)
+        .map(Competitor::id)
+        .forEach(cId -> memoryAdapters.eventService().registerParticipant(event.id(), cId));
+    memoryAdapters.eventService().startEvent(event.id());
+    return event;
+  }
+
+  public Event finishOrderEventStarted() {
+    return finishOrderEventStarted(false);
+  }
+
+  public Event finishOrderEventStarted(boolean timed) {
+    ScoreType scoreType = timed ? ScoreType.TIMED_FINISHING_ORDER : ScoreType.FINISHING_ORDER;
+    Activity activity = activityCreated();
+    Event event =
+        memoryAdapters
+            .eventService()
+            .createEvent(activity.id(), ParticipantType.INDIVIDUAL, scoreType, 10);
 
     Stream.of("One", "Two", "Three", "Four")
         .map(memoryAdapters.competitorService()::createCompetitor)

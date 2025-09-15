@@ -11,8 +11,6 @@ public class EventCommandService implements ICommandHandler {
     this.eventService = eventService;
   }
 
-    @Override
-    public void handleCommand() throws InvalidCommandException {
-
-    }
+  @Override
+  public void handleCommand() throws InvalidCommandException {}
 }

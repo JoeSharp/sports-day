@@ -11,8 +11,6 @@ public class ActivityCommandService implements ICommandHandler {
     this.activityService = activityService;
   }
 
-    @Override
-    public void handleCommand() throws InvalidCommandException {
-
-    }
+  @Override
+  public void handleCommand() throws InvalidCommandException {}
 }

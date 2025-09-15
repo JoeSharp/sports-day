@@ -31,7 +31,7 @@ public class EventService implements IEventService {
 
   @Override
   public Event createEvent(
-      UUID activityId, ParticipantType participantType, GoalType goalType, int maxParticipants)
+      UUID activityId, ParticipantType participantType, ScoreType scoreType, int maxParticipants)
       throws NotFoundException {
     activityRepository.checkExists(activityId); // Ensure it exists
     Event event =
@@ -40,7 +40,7 @@ public class EventService implements IEventService {
             activityId,
             EventState.CREATING,
             participantType,
-            goalType,
+            scoreType,
             maxParticipants);
     eventRepository.save(event);
     return event;

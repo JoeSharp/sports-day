@@ -5,14 +5,14 @@ import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Event;
-import com.ratracejoe.sportsday.domain.model.GoalType;
 import com.ratracejoe.sportsday.domain.model.ParticipantType;
+import com.ratracejoe.sportsday.domain.model.ScoreType;
 import java.util.List;
 import java.util.UUID;
 
 public interface IEventService {
   Event createEvent(
-      UUID activityId, ParticipantType participantType, GoalType goalType, int maxParticipants)
+      UUID activityId, ParticipantType participantType, ScoreType scoreType, int maxParticipants)
       throws NotFoundException;
 
   Event getById(UUID id) throws NotFoundException;
