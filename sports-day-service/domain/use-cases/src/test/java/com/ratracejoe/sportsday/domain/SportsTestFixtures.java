@@ -1,6 +1,7 @@
 package com.ratracejoe.sportsday.domain;
 
 import com.ratracejoe.sportsday.domain.model.*;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -51,6 +52,10 @@ public class SportsTestFixtures {
     return finishOrderEventStarted(false);
   }
 
+  public Competitor findCompetitor(List<Competitor> competitors, String name) {
+    return competitors.stream().filter(c -> c.name().contains(name)).findFirst().orElseThrow();
+  }
+
   public Event finishOrderEventStarted(boolean timed) {
     ScoreType scoreType = timed ? ScoreType.TIMED_FINISHING_ORDER : ScoreType.FINISHING_ORDER;
     Activity activity = activityCreated();
@@ -59,7 +64,7 @@ public class SportsTestFixtures {
             .eventService()
             .createEvent(activity.id(), ParticipantType.INDIVIDUAL, scoreType, 10);
 
-    Stream.of("One", "Two", "Three", "Four")
+    Stream.of("Max Verstappen", "Lewis Hamilton", "Lando Norris", "Charles Leclerc")
         .map(memoryAdapters.competitorService()::createCompetitor)
         .map(Competitor::id)
         .forEach(cId -> memoryAdapters.eventService().registerParticipant(event.id(), cId));
