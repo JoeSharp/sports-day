@@ -10,6 +10,7 @@ import com.ratracejoe.sportsday.domain.model.score.FinishingOrder;
 import com.ratracejoe.sportsday.domain.model.score.PointScoreSheet;
 import com.ratracejoe.sportsday.domain.model.score.TimedFinishingOrder;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -66,16 +67,18 @@ class ScoreServiceTest {
     scoreService.timedFinishingOrderService().passFinishLineInTime(event.id(), lando.id(), 3000);
     scoreService.timedFinishingOrderService().passFinishLineInTime(event.id(), charles.id(), 1500);
 
-    TimedFinishingOrder finishingOrder =
+    TimedFinishingOrder timedFinishingOrder =
         scoreService.timedFinishingOrderService().getTimedFinishingOrder(event.id());
+    List<UUID> finishingOrder = timedFinishingOrder.finishingOrder();
 
     // Then
-    assertThat(finishingOrder).isNotNull();
-    assertThat(finishingOrder.finishTimeMilliseconds())
+    assertThat(timedFinishingOrder).isNotNull();
+    assertThat(timedFinishingOrder.finishTimeMilliseconds())
         .containsEntry(max.id(), 2000L)
         .containsEntry(lewis.id(), 1600L)
         .containsEntry(lando.id(), 3000L)
         .containsEntry(charles.id(), 1500L);
+    assertThat(finishingOrder).containsExactly(charles.id(), lewis.id(), max.id(), lando.id());
   }
 
   @Test

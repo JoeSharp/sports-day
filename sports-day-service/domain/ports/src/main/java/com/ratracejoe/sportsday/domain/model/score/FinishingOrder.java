@@ -11,8 +11,7 @@ public record FinishingOrder(UUID eventId, List<UUID> finishers) {
   }
 
   public FinishingOrder withFinisher(UUID competitorId) {
-    List<UUID> newFinishers = new ArrayList<>();
-    newFinishers.addAll(this.finishers);
+    List<UUID> newFinishers = new ArrayList<>(this.finishers);
     newFinishers.add(competitorId);
     return new FinishingOrder(this.eventId, newFinishers);
   }

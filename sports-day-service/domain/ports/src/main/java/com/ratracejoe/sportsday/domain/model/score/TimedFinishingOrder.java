@@ -1,9 +1,6 @@
 package com.ratracejoe.sportsday.domain.model.score;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public record TimedFinishingOrder(UUID eventId, Map<UUID, Long> finishTimeMilliseconds) {
   public static TimedFinishingOrder create(UUID eventId) {
@@ -11,9 +8,15 @@ public record TimedFinishingOrder(UUID eventId, Map<UUID, Long> finishTimeMillis
   }
 
   public TimedFinishingOrder withParticipant(UUID participantId, Long finishTime) {
-    Map<UUID, Long> newFinishTimes = new HashMap<>();
-    newFinishTimes.putAll(this.finishTimeMilliseconds);
+    Map<UUID, Long> newFinishTimes = new HashMap<>(this.finishTimeMilliseconds);
     newFinishTimes.put(participantId, finishTime);
     return new TimedFinishingOrder(this.eventId, newFinishTimes);
+  }
+
+  public List<UUID> finishingOrder() {
+    return finishTimeMilliseconds.entrySet().stream()
+        .sorted(Comparator.comparingLong(Map.Entry::getValue))
+        .map(Map.Entry::getKey)
+        .toList();
   }
 }
