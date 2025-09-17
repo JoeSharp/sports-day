@@ -40,10 +40,10 @@ public class CompetitorRepositoryRedisImpl implements ICompetitorRepository {
   }
 
   private static CachedCompetitor domainToCache(Competitor domain) {
-    return new CachedCompetitor(domain.id(), domain.name());
+    return new CachedCompetitor(domain.id(), domain.type(), domain.name());
   }
 
   private static Competitor cacheToDomain(CachedCompetitor cached) {
-    return new Competitor(cached.getId(), cached.getName());
+    return new Competitor(cached.getId(), cached.getType(), cached.getName());
   }
 }

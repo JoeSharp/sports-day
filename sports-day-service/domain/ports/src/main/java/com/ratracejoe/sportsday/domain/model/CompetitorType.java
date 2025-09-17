@@ -1,6 +1,6 @@
 package com.ratracejoe.sportsday.domain.model;
 
-public enum ParticipantType {
+public enum CompetitorType {
   INDIVIDUAL,
   TEAM
 }

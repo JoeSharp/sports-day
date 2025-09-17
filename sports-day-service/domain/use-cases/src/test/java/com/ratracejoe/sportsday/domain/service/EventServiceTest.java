@@ -36,7 +36,7 @@ class EventServiceTest {
     // When
     Event event =
         eventService.createEvent(
-            activity.id(), ParticipantType.INDIVIDUAL, ScoreType.POINTS_SCORE_SHEET, 4);
+            activity.id(), CompetitorType.INDIVIDUAL, ScoreType.POINTS_SCORE_SHEET, 4);
 
     // Then
     assertThat(event).isNotNull().extracting(Event::id).isNotNull();
@@ -55,7 +55,7 @@ class EventServiceTest {
     // When
     Event event =
         eventService.createEvent(
-            activity.id(), ParticipantType.INDIVIDUAL, ScoreType.FINISHING_ORDER, 4);
+            activity.id(), CompetitorType.INDIVIDUAL, ScoreType.FINISHING_ORDER, 4);
 
     competitors.stream()
         .map(Competitor::id)

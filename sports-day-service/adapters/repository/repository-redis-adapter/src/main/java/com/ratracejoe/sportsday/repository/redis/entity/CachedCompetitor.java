@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday.repository.redis.entity;
 
+import com.ratracejoe.sportsday.domain.model.CompetitorType;
 import jakarta.persistence.Id;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -14,5 +15,6 @@ import org.springframework.data.redis.core.index.Indexed;
 @AllArgsConstructor
 public class CachedCompetitor {
   @Id UUID id;
+  CompetitorType type;
   @Indexed String name;
 }

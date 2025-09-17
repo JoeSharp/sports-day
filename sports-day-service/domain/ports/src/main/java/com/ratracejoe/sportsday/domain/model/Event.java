@@ -6,7 +6,7 @@ public record Event(
     UUID id,
     UUID activityId,
     EventState state,
-    ParticipantType participantType,
+    CompetitorType competitorType,
     ScoreType scoreType,
     int maxParticipants) {
   public Event withState(EventState newState) {
@@ -14,7 +14,7 @@ public record Event(
         id,
         activityId,
         state.nextStateIsValid(newState),
-        participantType,
+        competitorType,
         scoreType,
         maxParticipants);
   }

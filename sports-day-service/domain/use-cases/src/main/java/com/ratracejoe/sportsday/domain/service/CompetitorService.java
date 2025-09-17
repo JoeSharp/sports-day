@@ -2,6 +2,7 @@ package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
+import com.ratracejoe.sportsday.domain.model.CompetitorType;
 import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
 import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
 import java.util.UUID;
@@ -14,8 +15,8 @@ public class CompetitorService implements ICompetitorService {
   }
 
   @Override
-  public Competitor createCompetitor(String name) {
-    Competitor competitor = new Competitor(UUID.randomUUID(), name);
+  public Competitor createCompetitor(CompetitorType type, String name) {
+    Competitor competitor = new Competitor(UUID.randomUUID(), type, name);
     competitorRepository.save(competitor);
     return competitor;
   }

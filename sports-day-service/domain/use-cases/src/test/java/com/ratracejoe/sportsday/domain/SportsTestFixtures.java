@@ -22,23 +22,38 @@ public class SportsTestFixtures {
     Activity activity = activityCreated();
     return memoryAdapters
         .eventService()
-        .createEvent(activity.id(), ParticipantType.INDIVIDUAL, ScoreType.FINISHING_ORDER, 4);
+        .createEvent(activity.id(), CompetitorType.INDIVIDUAL, ScoreType.FINISHING_ORDER, 4);
   }
 
   public Event eventCreatedWithSoloParticipant() {
     Event event = eventPrepared();
-    Competitor competitor = memoryAdapters.competitorService().createCompetitor("Han Solo");
+    Competitor competitor =
+        memoryAdapters.competitorService().createCompetitor(CompetitorType.INDIVIDUAL, "Han Solo");
     memoryAdapters.eventService().registerParticipant(event.id(), competitor.id());
     return event;
   }
 
-  public Event scoredEventStarted() {
+  public Event scoredIndividualEventStarted() {
     Activity activity = activityCreated();
     Event event =
         memoryAdapters
             .eventService()
-            .createEvent(
-                activity.id(), ParticipantType.INDIVIDUAL, ScoreType.POINTS_SCORE_SHEET, 2);
+            .createEvent(activity.id(), CompetitorType.INDIVIDUAL, ScoreType.POINTS_SCORE_SHEET, 2);
+
+    Stream.of("Tyson", "Holyfield")
+        .map(memoryAdapters.competitorService()::createCompetitor)
+        .map(Competitor::id)
+        .forEach(cId -> memoryAdapters.eventService().registerParticipant(event.id(), cId));
+    memoryAdapters.eventService().startEvent(event.id());
+    return event;
+  }
+
+  public Event scoredTeamEventStarted() {
+    Activity activity = activityCreated();
+    Event event =
+        memoryAdapters
+            .eventService()
+            .createEvent(activity.id(), CompetitorType.INDIVIDUAL, ScoreType.POINTS_SCORE_SHEET, 2);
 
     Stream.of("Manchester United", "Liverpool")
         .map(memoryAdapters.competitorService()::createCompetitor)
@@ -62,7 +77,7 @@ public class SportsTestFixtures {
     Event event =
         memoryAdapters
             .eventService()
-            .createEvent(activity.id(), ParticipantType.INDIVIDUAL, scoreType, 10);
+            .createEvent(activity.id(), CompetitorType.INDIVIDUAL, scoreType, 10);
 
     Stream.of("Max Verstappen", "Lewis Hamilton", "Lando Norris", "Charles Leclerc")
         .map(memoryAdapters.competitorService()::createCompetitor)

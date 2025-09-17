@@ -82,9 +82,32 @@ class ScoreServiceTest {
   }
 
   @Test
-  void scoreSheet() {
+  void individualScoredEvent() {
     // Given
-    Event event = fixtures.scoredEventStarted();
+    Event event = fixtures.scoredIndividualEventStarted();
+    List<Competitor> competitors = eventService.getParticipants(event.id());
+    Competitor tyson = fixtures.findCompetitor(competitors, "Tyson");
+    Competitor holyfield = fixtures.findCompetitor(competitors, "Holyfield");
+
+    // When
+    scoreService.pointScoreService().addPoints(event.id(), tyson.id(), 1);
+    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
+    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
+    scoreService.pointScoreService().addPoints(event.id(), tyson.id(), 1);
+    scoreService.pointScoreService().addPoints(event.id(), tyson.id(), 1);
+    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
+    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
+    PointScoreSheet result = scoreService.pointScoreService().getPoints(event.id());
+
+    // Then
+    assertThat(result).isNotNull();
+    assertThat(result.scores()).containsEntry(tyson.id(), 3).containsEntry(holyfield.id(), 4);
+  }
+
+  @Test
+  void teamScoredEvent() {
+    // Given
+    Event event = fixtures.scoredTeamEventStarted();
     List<Competitor> competitors = eventService.getParticipants(event.id());
     Competitor manchesterUnited = fixtures.findCompetitor(competitors, "Manchester United");
     Competitor liverpool = fixtures.findCompetitor(competitors, "Liverpool");
@@ -92,17 +115,15 @@ class ScoreServiceTest {
     // When
     scoreService.pointScoreService().addPoints(event.id(), manchesterUnited.id(), 1);
     scoreService.pointScoreService().addPoints(event.id(), liverpool.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), liverpool.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), manchesterUnited.id(), 1);
     scoreService.pointScoreService().addPoints(event.id(), manchesterUnited.id(), 1);
     scoreService.pointScoreService().addPoints(event.id(), liverpool.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), liverpool.id(), 1);
+    scoreService.pointScoreService().addPoints(event.id(), manchesterUnited.id(), 1);
     PointScoreSheet result = scoreService.pointScoreService().getPoints(event.id());
 
     // Then
     assertThat(result).isNotNull();
     assertThat(result.scores())
         .containsEntry(manchesterUnited.id(), 3)
-        .containsEntry(liverpool.id(), 4);
+        .containsEntry(liverpool.id(), 2);
   }
 }
