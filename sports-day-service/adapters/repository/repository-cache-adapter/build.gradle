@@ -2,7 +2,9 @@ group = 'com.ratracejoe.sportsday.repository.cache'
 version = '0.0.1-SNAPSHOT'
 
 dependencies {
-    implementation project(":domain:ports")
+    implementation project(":domain:model")
+    implementation project(":domain:ports:outgoing:repository")
+
     implementation project(":adapters:repository:repository-memory-adapter")
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'

@@ -3,7 +3,8 @@ version = '0.0.1-SNAPSHOT'
 
 dependencies {
     implementation("org.springframework:spring-web:6.2.8")
-    implementation project(":domain:ports")
+    implementation project(":domain:model")
+    implementation project(":domain:ports:incoming:service")
 
     implementation("org.slf4j:slf4j-api:2.0.16") // Service
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")

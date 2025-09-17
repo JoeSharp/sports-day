@@ -2,5 +2,6 @@ group = 'com.ratracejoe.sportsday.repository.memory'
 version = '0.0.1-SNAPSHOT'
 
 dependencies {
-    implementation project(":domain:ports")
+    implementation project(":domain:model")
+    implementation project(":domain:ports:outgoing:repository")
 }

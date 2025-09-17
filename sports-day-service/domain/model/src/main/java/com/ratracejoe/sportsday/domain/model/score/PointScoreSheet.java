@@ -1,6 +1,5 @@
 package com.ratracejoe.sportsday.domain.model.score;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

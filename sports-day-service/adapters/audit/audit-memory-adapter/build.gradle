@@ -2,5 +2,5 @@ group = 'com.ratracejoe.sportsday.audit.memory'
 version = '0.0.1-SNAPSHOT'
 
 dependencies {
-    implementation project(":domain:ports")
+    implementation project(":domain:ports:outgoing:audit")
 }
