@@ -11,5 +11,5 @@ public interface IFinishingOrderService {
   FinishingOrder getFinishingOrder(UUID eventId)
       throws NotFoundException, IncorrectEventTypeException;
 
-  void passFinishLine(UUID eventId, UUID partipantId) throws IncorrectEventTypeException;
+  void passFinishLine(UUID eventId, UUID participantId) throws IncorrectEventTypeException;
 }

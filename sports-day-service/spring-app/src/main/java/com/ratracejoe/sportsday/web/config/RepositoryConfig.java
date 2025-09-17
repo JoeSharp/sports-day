@@ -1,14 +1,23 @@
 package com.ratracejoe.sportsday.web.config;
 
 import com.ratracejoe.sportsday.ports.outgoing.repository.*;
+import com.ratracejoe.sportsday.ports.outgoing.repository.score.IFinishingOrderRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.score.IPointScoreSheetRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.score.ITimedFinishingOrderRepository;
 import com.ratracejoe.sportsday.repository.cache.ActivityCachedRepository;
 import com.ratracejoe.sportsday.repository.cache.CompetitorCachedRepository;
 import com.ratracejoe.sportsday.repository.cache.TeamCachedRepository;
-import com.ratracejoe.sportsday.repository.jpa.repository.ActivityJpaRepository;
-import com.ratracejoe.sportsday.repository.jpa.repository.CompetitorJpaRepository;
-import com.ratracejoe.sportsday.repository.jpa.repository.EventJpaRepository;
-import com.ratracejoe.sportsday.repository.jpa.repository.TeamJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.IActivityJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.ICompetitorJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.IEventJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.ITeamJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.score.IFinishingOrderJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.score.IPointScoreSheetJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.score.ITimedFinishingOrderJpaRepository;
 import com.ratracejoe.sportsday.repository.jpa.service.*;
+import com.ratracejoe.sportsday.repository.jpa.service.score.FinishingOrderRepositoryJpaImpl;
+import com.ratracejoe.sportsday.repository.jpa.service.score.PointScoreRepositoryJpaImpl;
+import com.ratracejoe.sportsday.repository.jpa.service.score.TimedFinishingOrderRepositoryJpaImpl;
 import com.ratracejoe.sportsday.repository.redis.crud.ActivityRedisCache;
 import com.ratracejoe.sportsday.repository.redis.crud.CompetitorRedisCache;
 import com.ratracejoe.sportsday.repository.redis.crud.TeamRedisCache;
@@ -23,7 +32,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class RepositoryConfig {
   @Bean
   public IActivityRepository activityRepository(
-      ActivityJpaRepository repository, ActivityRedisCache cache) {
+      IActivityJpaRepository repository, ActivityRedisCache cache) {
     IActivityRepository jpaRepo = new ActivityRepositoryJpaImpl(repository);
     IActivityRepository cacheRepo = new ActivityRepositoryRedisImpl(cache);
     return new ActivityCachedRepository(jpaRepo, cacheRepo);
@@ -31,14 +40,14 @@ public class RepositoryConfig {
 
   @Bean
   public ICompetitorRepository competitorRepository(
-      CompetitorJpaRepository repository, CompetitorRedisCache cache) {
+      ICompetitorJpaRepository repository, CompetitorRedisCache cache) {
     ICompetitorRepository jpaRepo = new CompetitorRepositoryJpaImpl(repository);
     ICompetitorRepository cacheRepo = new CompetitorRepositoryRedisImpl(cache);
     return new CompetitorCachedRepository(jpaRepo, cacheRepo);
   }
 
   @Bean
-  public ITeamRepository teamRepository(TeamJpaRepository jpa, TeamRedisCache cache) {
+  public ITeamRepository teamRepository(ITeamJpaRepository jpa, TeamRedisCache cache) {
     ITeamRepository jpaRepo = new TeamRepositoryJpaImpl(jpa);
     ITeamRepository cacheRepo = new TeamRepositoryRedisImpl(cache);
     return new TeamCachedRepository(jpaRepo, cacheRepo);
@@ -55,7 +64,25 @@ public class RepositoryConfig {
   }
 
   @Bean
-  public IEventRepository eventRepository(EventJpaRepository repository) {
+  public IEventRepository eventRepository(IEventJpaRepository repository) {
     return new EventRepositoryJpaImpl(repository);
+  }
+
+  @Bean
+  public ITimedFinishingOrderRepository timedFinishingOrderRepository(
+      ITimedFinishingOrderJpaRepository jpaRepository) {
+    return new TimedFinishingOrderRepositoryJpaImpl(jpaRepository);
+  }
+
+  @Bean
+  public IFinishingOrderRepository finishingOrderRepository(
+      IFinishingOrderJpaRepository jpaRepository) {
+    return new FinishingOrderRepositoryJpaImpl(jpaRepository);
+  }
+
+  @Bean
+  public IPointScoreSheetRepository scoreSheetRepository(
+      IPointScoreSheetJpaRepository jpaRepository) {
+    return new PointScoreRepositoryJpaImpl(jpaRepository);
   }
 }

@@ -6,4 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CompetitorJpaRepository extends JpaRepository<CompetitorEntity, UUID> {}
+public interface ICompetitorJpaRepository extends JpaRepository<CompetitorEntity, UUID> {}

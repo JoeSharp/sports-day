@@ -33,10 +33,10 @@ public class FinishingOrderService implements IFinishingOrderService {
   }
 
   @Override
-  public void passFinishLine(UUID eventId, UUID partipantId) throws IncorrectEventTypeException {
+  public void passFinishLine(UUID eventId, UUID participantId) throws IncorrectEventTypeException {
     FinishingOrder finishingOrder = finishingOrderRepository.getById(eventId);
-    competitorRepository.checkExists(partipantId);
-    FinishingOrder newFinishingOrder = finishingOrder.withFinisher(partipantId);
+    competitorRepository.checkExists(participantId);
+    FinishingOrder newFinishingOrder = finishingOrder.withFinisher(participantId);
     finishingOrderRepository.save(newFinishingOrder);
   }
 }
