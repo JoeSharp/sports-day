@@ -1,19 +1,14 @@
 package com.ratracejoe.sportsday.web.config;
 
-import com.ratracejoe.sportsday.ports.outgoing.repository.IActivityRepository;
-import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
-import com.ratracejoe.sportsday.ports.outgoing.repository.IMembershipRepository;
-import com.ratracejoe.sportsday.ports.outgoing.repository.ITeamRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.*;
 import com.ratracejoe.sportsday.repository.cache.ActivityCachedRepository;
 import com.ratracejoe.sportsday.repository.cache.CompetitorCachedRepository;
 import com.ratracejoe.sportsday.repository.cache.TeamCachedRepository;
 import com.ratracejoe.sportsday.repository.jpa.repository.ActivityJpaRepository;
 import com.ratracejoe.sportsday.repository.jpa.repository.CompetitorJpaRepository;
+import com.ratracejoe.sportsday.repository.jpa.repository.EventJpaRepository;
 import com.ratracejoe.sportsday.repository.jpa.repository.TeamJpaRepository;
-import com.ratracejoe.sportsday.repository.jpa.service.ActivityRepositoryJpaImpl;
-import com.ratracejoe.sportsday.repository.jpa.service.CompetitorRepositoryJpaImpl;
-import com.ratracejoe.sportsday.repository.jpa.service.MembershipRepositoryJpaImpl;
-import com.ratracejoe.sportsday.repository.jpa.service.TeamRepositoryJpaImpl;
+import com.ratracejoe.sportsday.repository.jpa.service.*;
 import com.ratracejoe.sportsday.repository.redis.crud.ActivityRedisCache;
 import com.ratracejoe.sportsday.repository.redis.crud.CompetitorRedisCache;
 import com.ratracejoe.sportsday.repository.redis.crud.TeamRedisCache;
@@ -52,5 +47,15 @@ public class RepositoryConfig {
   @Bean
   public IMembershipRepository membershipRepository(JdbcTemplate jdbcTemplate) {
     return new MembershipRepositoryJpaImpl(jdbcTemplate);
+  }
+
+  @Bean
+  public IParticipantRepository participantRepository(JdbcTemplate jdbcTemplate) {
+    return new ParticipantRepositoryJpaImpl(jdbcTemplate);
+  }
+
+  @Bean
+  public IEventRepository eventRepository(EventJpaRepository repository) {
+    return new EventRepositoryJpaImpl(repository);
   }
 }

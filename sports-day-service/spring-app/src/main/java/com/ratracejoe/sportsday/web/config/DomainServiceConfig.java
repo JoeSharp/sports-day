@@ -1,16 +1,15 @@
 package com.ratracejoe.sportsday.web.config;
 
-import com.ratracejoe.sportsday.domain.service.ActivityService;
-import com.ratracejoe.sportsday.domain.service.CompetitorService;
-import com.ratracejoe.sportsday.domain.service.TeamService;
-import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
-import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
-import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
+import com.ratracejoe.sportsday.domain.service.*;
+import com.ratracejoe.sportsday.domain.service.score.FinishingOrderService;
+import com.ratracejoe.sportsday.domain.service.score.PointScoreService;
+import com.ratracejoe.sportsday.domain.service.score.TimedFinishingOrderService;
+import com.ratracejoe.sportsday.ports.incoming.service.*;
 import com.ratracejoe.sportsday.ports.outgoing.audit.IAuditLogger;
-import com.ratracejoe.sportsday.ports.outgoing.repository.IActivityRepository;
-import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
-import com.ratracejoe.sportsday.ports.outgoing.repository.IMembershipRepository;
-import com.ratracejoe.sportsday.ports.outgoing.repository.ITeamRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.*;
+import com.ratracejoe.sportsday.ports.outgoing.repository.score.IFinishingOrderRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.score.IPointScoreSheetRepository;
+import com.ratracejoe.sportsday.ports.outgoing.repository.score.ITimedFinishingOrderRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,5 +33,49 @@ public class DomainServiceConfig {
   @Bean
   public ICompetitorService competitorService(ICompetitorRepository competitorRepository) {
     return new CompetitorService(competitorRepository);
+  }
+
+  @Bean
+  public FinishingOrderService finishingOrderService(
+      ICompetitorRepository competitorRepository,
+      IFinishingOrderRepository finishingOrderRepository) {
+
+    return new FinishingOrderService(competitorRepository, finishingOrderRepository);
+  }
+
+  @Bean
+  public TimedFinishingOrderService timedFinishingOrderService(
+      ICompetitorRepository competitorRepository,
+      ITimedFinishingOrderRepository finishingOrderRepository) {
+    return new TimedFinishingOrderService(competitorRepository, finishingOrderRepository);
+  }
+
+  @Bean
+  public PointScoreService pointScoreService(
+      ICompetitorRepository competitorRepository, IPointScoreSheetRepository scoreSheetRepository) {
+    return new PointScoreService(competitorRepository, scoreSheetRepository);
+  }
+
+  @Bean
+  public IScoreService scoreService(
+      FinishingOrderService finishingOrderService,
+      TimedFinishingOrderService timedFinishingOrderService,
+      PointScoreService pointScoreService) {
+    return new ScoreService(finishingOrderService, timedFinishingOrderService, pointScoreService);
+  }
+
+  @Bean
+  public IEventService eventService(
+      IEventRepository eventRepository,
+      IActivityRepository activityRepository,
+      IParticipantRepository participantRepository,
+      ICompetitorRepository competitorRepository,
+      IScoreService scoreService) {
+    return new EventService(
+        eventRepository,
+        activityRepository,
+        participantRepository,
+        competitorRepository,
+        scoreService);
   }
 }

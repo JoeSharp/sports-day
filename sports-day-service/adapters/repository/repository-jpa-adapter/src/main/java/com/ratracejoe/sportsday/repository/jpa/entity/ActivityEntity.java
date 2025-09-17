@@ -18,8 +18,8 @@ public class ActivityEntity {
   private String name;
   private String description;
 
-  public static ActivityEntity domainToEntity(Activity activity) {
-    return new ActivityEntity(activity.id(), activity.name(), activity.description());
+  public static ActivityEntity domainToEntity(Activity domain) {
+    return new ActivityEntity(domain.id(), domain.name(), domain.description());
   }
 
   public static Activity entityToDomain(ActivityEntity entity) {

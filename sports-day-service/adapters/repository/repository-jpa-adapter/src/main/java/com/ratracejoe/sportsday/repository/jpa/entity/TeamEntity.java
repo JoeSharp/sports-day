@@ -19,8 +19,8 @@ public class TeamEntity {
 
   private String name;
 
-  public static TeamEntity domainToEntity(Team activity) {
-    return new TeamEntity(activity.id(), activity.name());
+  public static TeamEntity domainToEntity(Team domain) {
+    return new TeamEntity(domain.id(), domain.name());
   }
 
   public static Team entityToDomain(TeamEntity entity) {
