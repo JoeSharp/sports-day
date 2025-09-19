@@ -1,0 +1,20 @@
+group = 'com.ratracejoe.sportsday.rest-auth'
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+    implementation("org.springframework:spring-web:6.2.8")
+    implementation project(":domain:model")
+    implementation project(":domain:ports:outgoing:auth")
+
+    implementation("org.slf4j:slf4j-api:2.0.16") // Service
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
+
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+}
+
+// This is here so that the PathVariables can be associated by variable name
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += '-parameters'
+}

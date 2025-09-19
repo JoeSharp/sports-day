@@ -4,6 +4,7 @@ import com.ratracejoe.sportsday.domain.service.*;
 import com.ratracejoe.sportsday.domain.service.score.FinishingOrderService;
 import com.ratracejoe.sportsday.domain.service.score.PointScoreService;
 import com.ratracejoe.sportsday.domain.service.score.TimedFinishingOrderService;
+import com.ratracejoe.sportsday.ports.incoming.auth.ISportsDayUserSupplier;
 import com.ratracejoe.sportsday.ports.incoming.service.*;
 import com.ratracejoe.sportsday.ports.outgoing.audit.IAuditLogger;
 import com.ratracejoe.sportsday.ports.outgoing.repository.*;
@@ -17,8 +18,10 @@ import org.springframework.context.annotation.Configuration;
 public class DomainServiceConfig {
   @Bean
   public IActivityService activityService(
-      IActivityRepository repository, IAuditLogger auditLogger) {
-    return new ActivityService(repository, auditLogger);
+      IActivityRepository repository,
+      IAuditLogger auditLogger,
+      ISportsDayUserSupplier userSupplier) {
+    return new ActivityService(repository, auditLogger, userSupplier);
   }
 
   @Bean

@@ -3,7 +3,6 @@ package com.ratracejoe.sportsday.domain.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.ratracejoe.sportsday.domain.MemoryAdapters;
 import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.exception.InvalidEventStateException;
 import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
@@ -15,17 +14,14 @@ import org.junit.jupiter.api.Test;
 
 class EventServiceTest {
   private SportsTestFixtures fixtures;
-  private ActivityService activityService;
   private EventService eventService;
   private CompetitorService competitorService;
 
   @BeforeEach
   void beforeEach() {
-    MemoryAdapters adapters = new MemoryAdapters();
-    fixtures = new SportsTestFixtures(adapters);
-    activityService = adapters.activityService();
-    eventService = adapters.eventService();
-    competitorService = adapters.competitorService();
+    fixtures = new SportsTestFixtures();
+    eventService = fixtures.memoryAdapters().eventService();
+    competitorService = fixtures.memoryAdapters().competitorService();
   }
 
   @Test

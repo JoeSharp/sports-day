@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday.domain;
 
+import com.ratracejoe.sportsday.auth.MemorySportsDayUserSupplier;
 import com.ratracejoe.sportsday.domain.service.*;
 import com.ratracejoe.sportsday.domain.service.score.FinishingOrderService;
 import com.ratracejoe.sportsday.domain.service.score.PointScoreService;
@@ -16,6 +17,7 @@ import com.ratracejoe.sportsday.repository.memory.score.MemoryPointScoreSheetRep
 import com.ratracejoe.sportsday.repository.memory.score.MemoryTimedFinishingOrderRepository;
 
 public class MemoryAdapters {
+  private MemorySportsDayUserSupplier userSupplier;
   private final MemoryAuditLogger auditLogger;
   private final ActivityService activityService;
   private final TeamService teamService;
@@ -25,6 +27,7 @@ public class MemoryAdapters {
 
   public MemoryAdapters() {
     auditLogger = new MemoryAuditLogger();
+    userSupplier = new MemorySportsDayUserSupplier();
     MemoryActivityRepository activityRepository = new MemoryActivityRepository();
     MemoryTeamRepository teamRepository = new MemoryTeamRepository();
     MemoryCompetitorRepository competitorRepository = new MemoryCompetitorRepository();
@@ -41,7 +44,7 @@ public class MemoryAdapters {
     teamService =
         new TeamService(auditLogger, teamRepository, competitorRepository, membershipRepository);
     competitorService = new CompetitorService(competitorRepository);
-    activityService = new ActivityService(activityRepository, auditLogger);
+    activityService = new ActivityService(activityRepository, auditLogger, userSupplier);
     FinishingOrderService finishingOrderService =
         new FinishingOrderService(competitorRepository, finishingOrderRepository);
     TimedFinishingOrderService timedFinishingOrderService =
@@ -77,6 +80,10 @@ public class MemoryAdapters {
 
   public ScoreService scoreService() {
     return scoreService;
+  }
+
+  public MemorySportsDayUserSupplier userSupplier() {
+    return userSupplier;
   }
 
   public MemoryAuditLogger auditLogger() {

@@ -2,7 +2,7 @@ package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ratracejoe.sportsday.domain.MemoryAdapters;
+import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
@@ -18,10 +18,10 @@ class TeamServiceTest {
 
   @BeforeEach
   void beforeEach() {
-    MemoryAdapters fixtures = new MemoryAdapters();
-    auditLogger = fixtures.auditLogger();
-    teamService = fixtures.teamService();
-    competitorService = fixtures.competitorService();
+    SportsTestFixtures fixtures = new SportsTestFixtures();
+    auditLogger = fixtures.memoryAdapters().auditLogger();
+    teamService = fixtures.memoryAdapters().teamService();
+    competitorService = fixtures.memoryAdapters().competitorService();
   }
 
   @Test

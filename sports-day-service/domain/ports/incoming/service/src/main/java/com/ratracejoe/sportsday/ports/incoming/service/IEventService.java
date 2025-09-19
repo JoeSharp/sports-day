@@ -3,6 +3,7 @@ package com.ratracejoe.sportsday.ports.incoming.service;
 import com.ratracejoe.sportsday.domain.exception.InvalidEventStateException;
 import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
+import com.ratracejoe.sportsday.domain.exception.UnauthorisedException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.CompetitorType;
 import com.ratracejoe.sportsday.domain.model.Event;
@@ -13,17 +14,21 @@ import java.util.UUID;
 public interface IEventService {
   Event createEvent(
       UUID activityId, CompetitorType competitorType, ScoreType scoreType, int maxParticipants)
-      throws NotFoundException;
+      throws NotFoundException, UnauthorisedException;
 
   Event getById(UUID id) throws NotFoundException;
 
   void registerParticipant(UUID eventId, UUID participantId)
-      throws NotFoundException, InvalidEventStateException;
+      throws NotFoundException, InvalidEventStateException, UnauthorisedException;
 
   List<Competitor> getParticipants(UUID eventId) throws NotFoundException;
 
   void startEvent(UUID id)
-      throws NotFoundException, InvalidEventStateException, NoParticipantsException;
+      throws NotFoundException,
+          InvalidEventStateException,
+          NoParticipantsException,
+          UnauthorisedException;
 
-  void stopEvent(UUID id) throws NotFoundException, InvalidEventStateException;
+  void stopEvent(UUID id)
+      throws NotFoundException, InvalidEventStateException, UnauthorisedException;
 }

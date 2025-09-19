@@ -4,6 +4,7 @@ version = '0.0.1-SNAPSHOT'
 dependencies {
     implementation project(":domain:model")
     implementation project(":domain:ports:incoming:service")
+    implementation project(":domain:ports:outgoing:auth")
     implementation project(":domain:ports:outgoing:audit")
     implementation project(":domain:ports:outgoing:repository")
     testImplementation platform('org.junit:junit-bom:5.9.1')
@@ -11,4 +12,5 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.26.3'
     testImplementation project(":adapters:repository:repository-memory-adapter")
     testImplementation project(":adapters:audit:audit-memory-adapter")
+    testImplementation project(":adapters:auth:auth-memory-adapter")
 }

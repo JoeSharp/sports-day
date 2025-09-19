@@ -2,7 +2,6 @@ package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ratracejoe.sportsday.domain.MemoryAdapters;
 import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Event;
@@ -15,16 +14,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ScoreServiceTest {
+  private SportsTestFixtures fixtures;
   private EventService eventService;
   private ScoreService scoreService;
-  private SportsTestFixtures fixtures;
 
   @BeforeEach
   void beforeEach() {
-    MemoryAdapters adapters = new MemoryAdapters();
-    fixtures = new SportsTestFixtures(adapters);
-    scoreService = adapters.scoreService();
-    eventService = adapters.eventService();
+    fixtures = new SportsTestFixtures();
+    scoreService = fixtures.memoryAdapters().scoreService();
+    eventService = fixtures.memoryAdapters().eventService();
   }
 
   @Test

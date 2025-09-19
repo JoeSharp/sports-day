@@ -1,5 +1,7 @@
 package com.ratracejoe.sportsday.domain;
 
+import com.ratracejoe.sportsday.domain.auth.SportsDayRole;
+import com.ratracejoe.sportsday.domain.auth.SportsDayUser;
 import com.ratracejoe.sportsday.domain.model.*;
 import java.util.List;
 import java.util.UUID;
@@ -8,11 +10,23 @@ import java.util.stream.Stream;
 public class SportsTestFixtures {
   private final MemoryAdapters memoryAdapters;
 
-  public SportsTestFixtures(final MemoryAdapters memoryAdapters) {
-    this.memoryAdapters = memoryAdapters;
+  public SportsTestFixtures() {
+    this.memoryAdapters = new MemoryAdapters();
+  }
+
+  public MemoryAdapters memoryAdapters() {
+    return memoryAdapters;
+  }
+
+  public void userLoggedInWithRole(SportsDayRole... roles) {
+    memoryAdapters
+        .userSupplier()
+        .setCurrentUser(
+            new SportsDayUser(UUID.randomUUID().toString(), "Test User", List.of(roles)));
   }
 
   public Activity activityCreated() {
+    userLoggedInWithRole(SportsDayRole.PE_TEACHER);
     return memoryAdapters
         .activityService()
         .createActivity("Walking" + UUID.randomUUID(), "Burns calories" + UUID.randomUUID());

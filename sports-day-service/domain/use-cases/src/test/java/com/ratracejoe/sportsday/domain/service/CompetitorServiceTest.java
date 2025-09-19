@@ -2,9 +2,9 @@ package com.ratracejoe.sportsday.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
-import com.ratracejoe.sportsday.repository.memory.MemoryCompetitorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +13,8 @@ class CompetitorServiceTest {
 
   @BeforeEach
   void beforeEach() {
-    MemoryCompetitorRepository competitorRepository = new MemoryCompetitorRepository();
-    competitorService = new CompetitorService(competitorRepository);
+    SportsTestFixtures fixtures = new SportsTestFixtures();
+    competitorService = fixtures.memoryAdapters().competitorService();
   }
 
   @Test
