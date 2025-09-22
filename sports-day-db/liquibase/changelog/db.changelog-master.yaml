@@ -13,3 +13,5 @@ databaseChangeLog:
       file: changelog/init_score_finishing_order.yaml
   - include:
       file: changelog/init_score_timed_finishing_order.yaml
+  - include:
+      file: changelog/init_score_points.yaml
