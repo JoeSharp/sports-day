@@ -13,6 +13,8 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @SpringBootApplication
 @EnableRedisRepositories(basePackageClasses = ActivityRedisCache.class)
 public class RedisTestApplication {
+  public static final int REDIS_PORT = 6379;
+
   @Bean
   public ActivityRepositoryRedisImpl activityRepositoryRedis(ActivityRedisCache redisCache) {
     return new ActivityRepositoryRedisImpl(redisCache);
