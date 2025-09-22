@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Joe Sharp
+      labels: init
+      comment: Create initial Score - Timed Finishing Order table
+      changes:
+        - createTable:
+            tableName: score_timed_finishing_order
+            columns:
+              - column:
+                  name: event_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: timed_finishers
+            columns:
+              - column:
+                  name: event_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: finisher_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: score
+                  type: INT
+              - addForeignKeyConstraint:
+                  baseTableName: timed_finishers
+                  baseColumnNames: event_id
+                  referencedTableName: score_timed_finishing_order
+                  referencedColumnNames: event_id
+                  constraintName: fk_timed_finishers_event
+
+              - addUniqueConstraint:
+                  tableName: timed_finishers
+                  columnNames: event_id, finisher_id
+                  constraintName: uq_event_finisher

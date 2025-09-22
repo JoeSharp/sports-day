@@ -4,6 +4,7 @@ import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.exception.UnauthorisedException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.CompetitorType;
+import java.util.List;
 import java.util.UUID;
 
 public interface ICompetitorService {
@@ -14,4 +15,6 @@ public interface ICompetitorService {
   Competitor createCompetitor(CompetitorType type, String name) throws UnauthorisedException;
 
   Competitor getById(UUID id) throws NotFoundException;
+
+  List<Competitor> getAll();
 }

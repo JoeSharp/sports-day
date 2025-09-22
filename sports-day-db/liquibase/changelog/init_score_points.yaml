@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Joe Sharp
+      labels: init
+      comment: Create initial Score - Points
+      changes:
+        - createTable:
+            tableName: score_points
+            columns:
+              - column:
+                  name: event_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: points_by_participant
+            columns:
+              - column:
+                  name: event_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: finisher_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: score
+                  type: INT
+              - addForeignKeyConstraint:
+                  baseTableName: points_by_participant
+                  baseColumnNames: event_id
+                  referencedTableName: score_points
+                  referencedColumnNames: event_id
+                  constraintName: fk_points_score_event
+
+              - addUniqueConstraint:
+                  tableName: points_by_participant
+                  columnNames: event_id, finisher_id
+                  constraintName: uq_event_points_score_finisher

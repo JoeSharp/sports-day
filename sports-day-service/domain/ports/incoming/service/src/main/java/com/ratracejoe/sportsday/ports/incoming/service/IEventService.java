@@ -18,6 +18,8 @@ public interface IEventService {
 
   Event getById(UUID id) throws NotFoundException;
 
+  List<Event> getAll();
+
   void registerParticipant(UUID eventId, UUID participantId)
       throws NotFoundException, InvalidEventStateException, UnauthorisedException;
 
@@ -31,4 +33,6 @@ public interface IEventService {
 
   void stopEvent(UUID id)
       throws NotFoundException, InvalidEventStateException, UnauthorisedException;
+
+  void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException;
 }

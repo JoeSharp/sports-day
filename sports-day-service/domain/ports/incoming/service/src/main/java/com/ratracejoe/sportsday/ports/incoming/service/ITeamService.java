@@ -12,8 +12,12 @@ public interface ITeamService {
 
   Team getById(UUID id) throws NotFoundException;
 
+  List<Team> getAll();
+
   List<Competitor> getMembers(UUID id) throws NotFoundException;
 
   void registerMember(UUID teamId, UUID competitorId)
       throws NotFoundException, UnauthorisedException;
+
+  void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException;
 }

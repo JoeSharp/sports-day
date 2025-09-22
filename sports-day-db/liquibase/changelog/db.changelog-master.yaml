@@ -2,10 +2,14 @@ databaseChangeLog:
   - include:
       file: changelog/init_activity_table.yaml
   - include:
+      file: changelog/populate_activity_table.yaml
+  - include:
       file: changelog/init_competitor_table.yaml
   - include:
       file: changelog/init_team_table.yaml
   - include:
-      file: changelog/init_membership_table.yaml
+      file: changelog/init_event_table.yaml
   - include:
-      file: changelog/populate_activity_table.yaml
+      file: changelog/init_score_finishing_order.yaml
+  - include:
+      file: changelog/init_score_timed_finishing_order.yaml

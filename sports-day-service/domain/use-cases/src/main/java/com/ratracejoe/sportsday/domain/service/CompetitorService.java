@@ -5,6 +5,7 @@ import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.CompetitorType;
 import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
 import com.ratracejoe.sportsday.ports.outgoing.repository.ICompetitorRepository;
+import java.util.List;
 import java.util.UUID;
 
 public class CompetitorService implements ICompetitorService {
@@ -24,5 +25,10 @@ public class CompetitorService implements ICompetitorService {
   @Override
   public Competitor getById(UUID id) throws NotFoundException {
     return competitorRepository.getById(id);
+  }
+
+  @Override
+  public List<Competitor> getAll() {
+    return competitorRepository.getAll();
   }
 }

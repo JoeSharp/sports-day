@@ -27,8 +27,9 @@ public class RestAdapterConfig {
   }
 
   @Bean
-  public EventController eventController(IEventService eventService) {
-    return new EventController(eventService);
+  public EventController eventController(
+      IEventService eventService, ICompetitorService competitorService) {
+    return new EventController(eventService, competitorService);
   }
 
   @Bean

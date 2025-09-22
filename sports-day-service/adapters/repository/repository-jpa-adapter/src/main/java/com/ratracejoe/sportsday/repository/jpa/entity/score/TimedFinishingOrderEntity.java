@@ -17,8 +17,8 @@ public class TimedFinishingOrderEntity {
   @Id private UUID eventId;
 
   @ElementCollection
-  @CollectionTable(name = "timed_finishers", joinColumns = @JoinColumn(name = "user_id"))
-  @MapKeyColumn(name = "event_id")
+  @CollectionTable(name = "timed_finishers", joinColumns = @JoinColumn(name = "event_id"))
+  @MapKeyColumn(name = "finisher_id")
   @Column(name = "score")
   private Map<UUID, Long> finishTimeMilliseconds;
 

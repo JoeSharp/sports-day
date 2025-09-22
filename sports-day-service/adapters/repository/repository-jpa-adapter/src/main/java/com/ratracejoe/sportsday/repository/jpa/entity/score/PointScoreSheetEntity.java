@@ -17,8 +17,8 @@ public class PointScoreSheetEntity {
   @Id private UUID eventId;
 
   @ElementCollection
-  @CollectionTable(name = "scores", joinColumns = @JoinColumn(name = "user_id"))
-  @MapKeyColumn(name = "event_id")
+  @CollectionTable(name = "scores", joinColumns = @JoinColumn(name = "event_id"))
+  @MapKeyColumn(name = "participant_id")
   @Column(name = "score")
   private Map<UUID, Integer> scores;
 

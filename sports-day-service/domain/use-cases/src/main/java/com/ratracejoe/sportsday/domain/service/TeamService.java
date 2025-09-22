@@ -1,6 +1,7 @@
 package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
+import com.ratracejoe.sportsday.domain.exception.UnauthorisedException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
 import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
@@ -42,6 +43,11 @@ public class TeamService implements ITeamService {
   }
 
   @Override
+  public List<Team> getAll() {
+    return teamRepository.getAll();
+  }
+
+  @Override
   public List<Competitor> getMembers(UUID teamId) throws NotFoundException {
     Team team = teamRepository.getById(teamId);
     List<UUID> memberIds = membershipRepository.getMemberIds(team.id());
@@ -53,5 +59,10 @@ public class TeamService implements ITeamService {
     Team team = teamRepository.getById(teamId);
     Competitor competitor = competitorRepository.getById(competitorId);
     membershipRepository.addMembership(team.id(), competitor.id());
+  }
+
+  @Override
+  public void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException {
+    teamRepository.deleteById(id);
   }
 }

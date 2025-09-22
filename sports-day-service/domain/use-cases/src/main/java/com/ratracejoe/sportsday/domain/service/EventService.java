@@ -2,6 +2,7 @@ package com.ratracejoe.sportsday.domain.service;
 
 import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
+import com.ratracejoe.sportsday.domain.exception.UnauthorisedException;
 import com.ratracejoe.sportsday.domain.model.*;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 import com.ratracejoe.sportsday.ports.incoming.service.IScoreService;
@@ -67,6 +68,11 @@ public class EventService implements IEventService {
   }
 
   @Override
+  public List<Event> getAll() {
+    return eventRepository.getAll();
+  }
+
+  @Override
   public void registerParticipant(UUID eventId, UUID participantId) throws NotFoundException {
     eventRepository.checkExists(eventId);
     competitorRepository.checkExists(participantId);
@@ -93,5 +99,10 @@ public class EventService implements IEventService {
   public void stopEvent(UUID id) throws NotFoundException {
     Event updated = eventRepository.getById(id).withState(EventState.FINISHED);
     eventRepository.save(updated);
+  }
+
+  @Override
+  public void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException {
+    eventRepository.deleteById(id);
   }
 }

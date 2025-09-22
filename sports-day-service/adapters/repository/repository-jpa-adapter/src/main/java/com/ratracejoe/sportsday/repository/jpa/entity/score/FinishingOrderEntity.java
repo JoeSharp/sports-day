@@ -18,6 +18,7 @@ public class FinishingOrderEntity {
 
   @ElementCollection
   @CollectionTable(name = "ordered_finishers", joinColumns = @JoinColumn(name = "event_id"))
+  @OrderColumn(name = "finisher_order")
   @Column(name = "finisher")
   private List<UUID> finishers;
 

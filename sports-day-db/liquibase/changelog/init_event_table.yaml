@@ -3,10 +3,10 @@ databaseChangeLog:
       id: 1
       author: Joe Sharp
       labels: init
-      comment: Create initial Team table
+      comment: Create initial Event table
       changes:
         - createTable:
-            tableName: team
+            tableName: event
             columns:
               - column:
                   name: id
@@ -15,21 +15,37 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: name
+                  name: activity_id
+                  type: uuid
+              - column:
+                  name: state
                   type: varchar(50)
                   constraints:
                     nullable: false
+              - column:
+                  name: competitor_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: score_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_participant
+                  type: int
         - createTable:
-            tableName: membership
+            tableName: participation
             columns:
               - column:
-                  name: team_id
+                  name: event_id
                   type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: competitor_id
+                  name: participant_id
                   type: uuid
                   constraints:
                     primaryKey: true
