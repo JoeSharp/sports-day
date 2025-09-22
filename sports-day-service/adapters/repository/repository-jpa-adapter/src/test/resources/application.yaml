@@ -1,0 +1,5 @@
+spring:
+  liquibase:
+    enabled: false
+  datasource:
+    url: jdbc:tc:postgresql:9.6.8:///sports_day?TC_INITFUNCTION=com.ratracejoe.sportsday.repository.jpa.SportsDayEntryPoint::createDatabase
