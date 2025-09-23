@@ -59,12 +59,17 @@ class ISportsDayUserSupplierTest {
         .isInstanceOf(UnauthorisedException.class);
   }
 
+  @Test
+  void noUserIsUnauthorised() {
+    // Given
+    ISportsDayUserSupplier supplier = () -> null;
+
+    // When, Then
+    assertThatThrownBy(() -> supplier.userHasRoles(SportsDayRole.STUDENT))
+        .isInstanceOf(UnauthorisedException.class);
+  }
+
   private ISportsDayUserSupplier withRoles(SportsDayRole... roles) {
-    return new ISportsDayUserSupplier() {
-      @Override
-      public SportsDayUser getUser() {
-        return new SportsDayUser(UUID.randomUUID().toString(), "Foo", List.of(roles));
-      }
-    };
+    return () -> new SportsDayUser(UUID.randomUUID().toString(), "Foo", List.of(roles));
   }
 }
