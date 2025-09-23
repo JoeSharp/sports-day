@@ -6,20 +6,20 @@ import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
-import com.ratracejoe.sportsday.memory.MemoryAuditLogger;
+import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
+import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TeamServiceTest {
-  private TeamService teamService;
-  private CompetitorService competitorService;
-  private MemoryAuditLogger auditLogger;
+  private SportsTestFixtures fixtures;
+  private ITeamService teamService;
+  private ICompetitorService competitorService;
 
   @BeforeEach
   void beforeEach() {
-    SportsTestFixtures fixtures = new SportsTestFixtures();
-    auditLogger = fixtures.memoryAdapters().auditLogger();
+    fixtures = new SportsTestFixtures();
     teamService = fixtures.memoryAdapters().teamService();
     competitorService = fixtures.memoryAdapters().competitorService();
   }
@@ -35,7 +35,7 @@ class TeamServiceTest {
     // Then
     assertThat(team).extracting(Team::id).isNotNull();
     assertThat(team).isNotNull().extracting(Team::name).isEqualTo(teamName);
-    assertThat(auditLogger.getMessages())
+    assertThat(fixtures.memoryAdapters().getAuditMessages())
         .containsExactly("Team 'The Hamsters' created with ID: " + team.id());
   }
 
@@ -49,7 +49,7 @@ class TeamServiceTest {
 
     // Then
     assertThat(found).isEqualTo(team);
-    assertThat(auditLogger.getMessages())
+    assertThat(fixtures.memoryAdapters().getAuditMessages())
         .containsExactly("Team 'The Snakes' created with ID: " + team.id());
   }
 
@@ -68,7 +68,7 @@ class TeamServiceTest {
 
     // Then
     assertThat(members).containsExactlyInAnyOrder(memberA, memberB);
-    assertThat(auditLogger.getMessages())
+    assertThat(fixtures.memoryAdapters().getAuditMessages())
         .containsExactly("Team 'The Eagles' created with ID: " + team.id());
   }
 }

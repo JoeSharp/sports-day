@@ -3,14 +3,13 @@ package com.ratracejoe.sportsday.domain.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.ratracejoe.sportsday.auth.MemorySportsDayUserSupplier;
 import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.auth.SportsDayRole;
 import com.ratracejoe.sportsday.domain.auth.SportsDayUser;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.exception.UnauthorisedException;
 import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.memory.MemoryAuditLogger;
+import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -21,16 +20,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class ActivityServiceTest {
   private SportsTestFixtures fixtures;
-  private MemoryAuditLogger auditLogger;
-  private MemorySportsDayUserSupplier userSupplier;
-  private ActivityService activityService;
+  private IActivityService activityService;
 
   @BeforeEach
   void beforeEach() {
     fixtures = new SportsTestFixtures();
-    auditLogger = fixtures.memoryAdapters().auditLogger();
     activityService = fixtures.memoryAdapters().activityService();
-    userSupplier = fixtures.memoryAdapters().userSupplier();
   }
 
   @Test
@@ -43,7 +38,7 @@ class ActivityServiceTest {
 
     // Then
     assertThat(activity).isEqualTo(found);
-    assertThat(auditLogger.getMessages())
+    assertThat(fixtures.memoryAdapters().getAuditMessages())
         .containsExactly(
             "Activity '" + activity.name() + "' created with ID: " + activity.id(),
             "Activity " + activity.id() + " read");
@@ -56,7 +51,8 @@ class ActivityServiceTest {
 
     // When, Then
     assertThatThrownBy(() -> activityService.getById(id)).isInstanceOf(NotFoundException.class);
-    assertThat(auditLogger.getMessages()).containsExactly("Failed to read Activity " + id);
+    assertThat(fixtures.memoryAdapters().getAuditMessages())
+        .containsExactly("Failed to read Activity " + id);
   }
 
   static Stream<SportsDayRole> nonAuthorisedActivityCreators() {
@@ -67,8 +63,9 @@ class ActivityServiceTest {
   @MethodSource("nonAuthorisedActivityCreators")
   void nonAuthorisedUsersCannotCreateActivity(SportsDayRole role) {
     // Given
-    userSupplier.setCurrentUser(
-        new SportsDayUser(UUID.randomUUID().toString(), "Test", List.of(role)));
+    fixtures
+        .memoryAdapters()
+        .setCurrentUser(new SportsDayUser(UUID.randomUUID().toString(), "Test", List.of(role)));
 
     assertThatThrownBy(() -> activityService.createActivity("anything", "goes"))
         .isInstanceOf(UnauthorisedException.class);
@@ -90,7 +87,7 @@ class ActivityServiceTest {
     assertThatThrownBy(() -> activityService.getById(activityId))
         .isInstanceOf(NotFoundException.class);
 
-    assertThat(auditLogger.getMessages())
+    assertThat(fixtures.memoryAdapters().getAuditMessages())
         .containsExactly(
             "Activity '" + activity.name() + "' created with ID: " + activity.id(),
             "Activity " + activity.id() + " read",
@@ -107,6 +104,7 @@ class ActivityServiceTest {
     assertThatThrownBy(() -> activityService.deleteByUuid(id))
         .isInstanceOf(NotFoundException.class);
 
-    assertThat(auditLogger.getMessages()).containsExactly("Failed to delete Activity " + id);
+    assertThat(fixtures.memoryAdapters().getAuditMessages())
+        .containsExactly("Failed to delete Activity " + id);
   }
 }

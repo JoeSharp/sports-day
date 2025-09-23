@@ -1,11 +1,19 @@
 package com.ratracejoe.sportsday.domain;
 
 import com.ratracejoe.sportsday.auth.MemorySportsDayUserSupplier;
+import com.ratracejoe.sportsday.domain.auth.SportsDayUser;
 import com.ratracejoe.sportsday.domain.service.*;
 import com.ratracejoe.sportsday.domain.service.score.FinishingOrderService;
 import com.ratracejoe.sportsday.domain.service.score.PointScoreService;
 import com.ratracejoe.sportsday.domain.service.score.TimedFinishingOrderService;
 import com.ratracejoe.sportsday.memory.MemoryAuditLogger;
+import com.ratracejoe.sportsday.ports.incoming.auth.ISportsDayUserSupplier;
+import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
+import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
+import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
+import com.ratracejoe.sportsday.ports.incoming.service.IScoreService;
+import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
+import com.ratracejoe.sportsday.ports.outgoing.audit.IAuditLogger;
 import com.ratracejoe.sportsday.repository.memory.MemoryActivityRepository;
 import com.ratracejoe.sportsday.repository.memory.MemoryCompetitorRepository;
 import com.ratracejoe.sportsday.repository.memory.MemoryEventRepository;
@@ -15,15 +23,16 @@ import com.ratracejoe.sportsday.repository.memory.MemoryTeamRepository;
 import com.ratracejoe.sportsday.repository.memory.score.MemoryFinishingOrderRepository;
 import com.ratracejoe.sportsday.repository.memory.score.MemoryPointScoreSheetRepository;
 import com.ratracejoe.sportsday.repository.memory.score.MemoryTimedFinishingOrderRepository;
+import java.util.List;
 
 public class MemoryAdapters {
-  private MemorySportsDayUserSupplier userSupplier;
+  private final MemorySportsDayUserSupplier userSupplier;
   private final MemoryAuditLogger auditLogger;
-  private final ActivityService activityService;
-  private final TeamService teamService;
-  private final CompetitorService competitorService;
-  private final EventService eventService;
-  private final ScoreService scoreService;
+  private final IActivityService activityService;
+  private final ITeamService teamService;
+  private final ICompetitorService competitorService;
+  private final IEventService eventService;
+  private final IScoreService scoreService;
 
   public MemoryAdapters() {
     auditLogger = new MemoryAuditLogger();
@@ -62,31 +71,39 @@ public class MemoryAdapters {
             scoreService);
   }
 
-  public ActivityService activityService() {
+  public void setCurrentUser(SportsDayUser currentUser) {
+    userSupplier.setCurrentUser(currentUser);
+  }
+
+  public List<String> getAuditMessages() {
+    return auditLogger.getMessages();
+  }
+
+  public IActivityService activityService() {
     return activityService;
   }
 
-  public CompetitorService competitorService() {
+  public ICompetitorService competitorService() {
     return competitorService;
   }
 
-  public TeamService teamService() {
+  public ITeamService teamService() {
     return teamService;
   }
 
-  public EventService eventService() {
+  public IEventService eventService() {
     return eventService;
   }
 
-  public ScoreService scoreService() {
+  public IScoreService scoreService() {
     return scoreService;
   }
 
-  public MemorySportsDayUserSupplier userSupplier() {
+  public ISportsDayUserSupplier userSupplier() {
     return userSupplier;
   }
 
-  public MemoryAuditLogger auditLogger() {
+  public IAuditLogger auditLogger() {
     return auditLogger;
   }
 }

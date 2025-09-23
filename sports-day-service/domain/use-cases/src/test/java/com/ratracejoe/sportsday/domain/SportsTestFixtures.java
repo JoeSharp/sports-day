@@ -19,10 +19,8 @@ public class SportsTestFixtures {
   }
 
   public void userLoggedInWithRole(SportsDayRole... roles) {
-    memoryAdapters
-        .userSupplier()
-        .setCurrentUser(
-            new SportsDayUser(UUID.randomUUID().toString(), "Test User", List.of(roles)));
+    memoryAdapters.setCurrentUser(
+        new SportsDayUser(UUID.randomUUID().toString(), "Test User", List.of(roles)));
   }
 
   public Activity activityCreated() {

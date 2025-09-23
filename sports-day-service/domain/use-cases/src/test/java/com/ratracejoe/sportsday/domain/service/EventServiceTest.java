@@ -7,6 +7,8 @@ import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.exception.InvalidEventStateException;
 import com.ratracejoe.sportsday.domain.exception.NoParticipantsException;
 import com.ratracejoe.sportsday.domain.model.*;
+import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
+import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +16,8 @@ import org.junit.jupiter.api.Test;
 
 class EventServiceTest {
   private SportsTestFixtures fixtures;
-  private EventService eventService;
-  private CompetitorService competitorService;
+  private IEventService eventService;
+  private ICompetitorService competitorService;
 
   @BeforeEach
   void beforeEach() {

@@ -8,6 +8,8 @@ import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.score.FinishingOrder;
 import com.ratracejoe.sportsday.domain.model.score.PointScoreSheet;
 import com.ratracejoe.sportsday.domain.model.score.TimedFinishingOrder;
+import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
+import com.ratracejoe.sportsday.ports.incoming.service.IScoreService;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +17,8 @@ import org.junit.jupiter.api.Test;
 
 class ScoreServiceTest {
   private SportsTestFixtures fixtures;
-  private EventService eventService;
-  private ScoreService scoreService;
+  private IEventService eventService;
+  private IScoreService scoreService;
 
   @BeforeEach
   void beforeEach() {

@@ -5,11 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ratracejoe.sportsday.domain.SportsTestFixtures;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
+import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CompetitorServiceTest {
-  private CompetitorService competitorService;
+  private ICompetitorService competitorService;
 
   @BeforeEach
   void beforeEach() {
