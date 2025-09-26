@@ -1,5 +1,5 @@
-# Stage 1: Build
-FROM node:20-alpine AS builder
+# Stage 1: Build - Have to be SUPER specific with the build image, since things keep going pear shaped
+FROM node@sha256:66ccf8d19d2efc6c770027baf508aa5ee9f164dcecd2f73d7fd4fe55c7688173 AS builder
 WORKDIR /app
 COPY package.json ./
 RUN npm install
