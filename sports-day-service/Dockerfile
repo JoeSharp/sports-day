@@ -4,12 +4,12 @@ WORKDIR /app
 COPY gradlew gradlew.bat ./
 COPY gradle ./gradle
 COPY build.gradle settings.gradle ./
-RUN ./gradlew --version
+RUN ./gradlew dependencies
 COPY . .
 RUN ./gradlew build :spring-app:bootJar --no-daemon -x test
 RUN test -f /app/spring-app/build/libs/spring-app-0.0.1-SNAPSHOT.jar
 
-# Stage 2: Runtime
+# Stage 3: Runtime
 FROM amazoncorretto:21-alpine-jdk
 LABEL authors="joesharpcs.co.uk"
 
