@@ -5,6 +5,14 @@ plugins {
 group = 'com.ratracejoe.sportsday.redis'
 version = '0.0.1-SNAPSHOT'
 
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
 dependencies {
     implementation project(":domain:model")
     implementation project(":domain:ports:outgoing:repository")
