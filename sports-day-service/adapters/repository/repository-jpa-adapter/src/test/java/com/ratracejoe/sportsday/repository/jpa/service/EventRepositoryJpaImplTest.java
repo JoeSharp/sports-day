@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class EventRepositoryJpaImplTest {
+class EventRepositoryJpaImplTest {
   @Autowired private EventRepositoryJpaImpl eventRepository;
 
   @Test
