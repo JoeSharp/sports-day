@@ -1,6 +1,9 @@
 plugins {
-    id 'org.springframework.boot'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyVersion}"
 }
+
+apply plugin: 'java-library'
 
 group = 'com.ratracejoe.sportsday.jpa'
 version = '0.0.1-SNAPSHOT'

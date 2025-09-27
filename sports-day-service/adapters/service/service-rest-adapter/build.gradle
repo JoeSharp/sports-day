@@ -1,3 +1,5 @@
+apply plugin: 'java-library'
+
 group = 'com.ratracejoe.sportsday.rest'
 version = '0.0.1-SNAPSHOT'
 

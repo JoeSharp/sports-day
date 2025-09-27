@@ -113,7 +113,7 @@ docker-build-ui:
 # Build the JAR file for the backend service
 build-service:
 	echo "Building Boot JAR"
-	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service :web-api:bootJar
+	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service :spring-app:bootJar
 
 # Build the Docker image for the backend service
 docker-build-service: 
