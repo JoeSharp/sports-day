@@ -3,12 +3,14 @@ package com.ratracejoe.sportsday.repository.file.score;
 import static com.ratracejoe.sportsday.repository.file.CsvUtils.*;
 
 import com.ratracejoe.sportsday.domain.model.score.FinishingOrder;
+import com.ratracejoe.sportsday.ports.outgoing.repository.score.IFinishingOrderRepository;
 import com.ratracejoe.sportsday.repository.file.GenericEntityFileRepository;
 import java.nio.file.Path;
 import java.util.UUID;
 
-public class FinishingOrderRepositoryFileImpl extends GenericEntityFileRepository<FinishingOrder> {
-  protected FinishingOrderRepositoryFileImpl(Path rootDirectory) {
+public class FinishingOrderRepositoryFileImpl extends GenericEntityFileRepository<FinishingOrder>
+    implements IFinishingOrderRepository {
+  public FinishingOrderRepositoryFileImpl(Path rootDirectory) {
     super(FinishingOrder.class, FinishingOrder::eventId, "finishing_order", rootDirectory);
   }
 

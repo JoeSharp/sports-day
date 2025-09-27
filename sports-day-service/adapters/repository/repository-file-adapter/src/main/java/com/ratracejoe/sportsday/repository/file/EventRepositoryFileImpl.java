@@ -6,14 +6,16 @@ import com.ratracejoe.sportsday.domain.model.CompetitorType;
 import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.domain.model.EventState;
 import com.ratracejoe.sportsday.domain.model.ScoreType;
+import com.ratracejoe.sportsday.ports.outgoing.repository.IEventRepository;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EventRepositoryFileImpl extends GenericEntityFileRepository<Event> {
-  protected EventRepositoryFileImpl(Path rootDirectory) {
+public class EventRepositoryFileImpl extends GenericEntityFileRepository<Event>
+    implements IEventRepository {
+  public EventRepositoryFileImpl(Path rootDirectory) {
     super(Event.class, Event::id, "event", rootDirectory);
   }
 

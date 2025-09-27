@@ -3,14 +3,16 @@ package com.ratracejoe.sportsday.repository.file;
 import static com.ratracejoe.sportsday.repository.file.CsvUtils.CSV_DELIMITER;
 
 import com.ratracejoe.sportsday.domain.model.Team;
+import com.ratracejoe.sportsday.ports.outgoing.repository.ITeamRepository;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TeamRepositoryFileImpl extends GenericEntityFileRepository<Team> {
-  protected TeamRepositoryFileImpl(Path rootDirectory) {
+public class TeamRepositoryFileImpl extends GenericEntityFileRepository<Team>
+    implements ITeamRepository {
+  public TeamRepositoryFileImpl(Path rootDirectory) {
     super(Team.class, Team::id, "team", rootDirectory);
   }
 

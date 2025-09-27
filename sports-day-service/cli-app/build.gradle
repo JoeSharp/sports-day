@@ -1,0 +1,16 @@
+group = 'com.ratracejoe'
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+    implementation project(":domain:use-cases")
+    implementation project(":domain:model")
+    implementation project(":domain:ports:incoming:service")
+    implementation project(":domain:ports:outgoing:audit")
+    implementation project(":domain:ports:outgoing:auth")
+    implementation project(":domain:ports:outgoing:repository")
+    implementation project(":adapters:auth:auth-memory-adapter")
+    implementation project(":adapters:service:service-command-string-adapter")
+    implementation project(":adapters:audit:audit-memory-adapter")
+    implementation project(":adapters:repository:repository-file-adapter")
+    implementation project(":adapters:repository:repository-memory-adapter")
+}
