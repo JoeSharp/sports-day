@@ -26,8 +26,8 @@ public class MembershipRepositoryJpaImpl implements IMembershipRepository {
   @Override
   public List<UUID> getMemberIds(UUID teamId) {
     return jdbcTemplate.query(
-        "SELECT m.competitorId AS id FROM membership m WHERE m.teamId = ?",
-        ps -> ps.setString(1, teamId.toString()),
+        "SELECT m.competitor_id AS id FROM membership m WHERE m.team_id = ?",
+        ps -> ps.setObject(1, teamId),
         (rs, rowNum) -> UUID.fromString(rs.getString("id")));
   }
 }

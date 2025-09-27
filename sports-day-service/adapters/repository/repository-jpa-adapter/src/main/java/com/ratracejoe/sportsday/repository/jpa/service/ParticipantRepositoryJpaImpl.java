@@ -28,8 +28,8 @@ public class ParticipantRepositoryJpaImpl implements IParticipantRepository {
   @Override
   public List<UUID> getParticipants(UUID eventId) {
     return jdbcTemplate.query(
-        "SELECT m.participant_id AS id FROM participation m WHERE m.eventId = ?",
-        ps -> ps.setString(1, eventId.toString()),
+        "SELECT m.participant_id AS id FROM participation m WHERE m.event_id = ?",
+        ps -> ps.setObject(1, eventId),
         (rs, rowNum) -> UUID.fromString(rs.getString("id")));
   }
 }
