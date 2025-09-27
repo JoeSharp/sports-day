@@ -1,7 +1,9 @@
 import LoginForm from './components/LoginForm';
-import ActivityTable from './components/ActivityTable';
+import ActivityTable from './components/Activities/ActivityTable';
+import NewActivityForm from './components/Activities/NewActivityForm';
+import CompetitorTable from './components/Competitors/CompetitorTable';
+import TeamTable from './components/Teams/TeamTable';
 import LoggedInForm from './components/LoggedInForm';
-import NewActivityForm from './components/NewActivityForm';
 import useAuthContext from './api/useAuthContext';
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
       {!accessToken && <LoginForm />}
       {!!accessToken && <ActivityTable />}
       {!!accessToken && <NewActivityForm />}
+      {!!accessToken && <CompetitorTable />}
+      {!!accessToken && <TeamTable />}
     </div>
   );
 }

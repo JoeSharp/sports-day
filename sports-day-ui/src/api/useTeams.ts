@@ -1,30 +1,30 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ActivityDTO, NewActivityDTO } from './types';
+import { TeamDTO, NewTeamDTO } from './types';
 import useAuthContext from './useAuthContext';
 
-interface UseActivities {
+interface Useteams {
   isLoading: boolean;
   error: Error | null;
-  activities: ActivityDTO[];
-  addActivity: (activity: NewActivityDTO) => void;
-  deleteActivity: (id: string) => void;
+  teams: TeamDTO[];
+  addTeam: (team: NewTeamDTO) => void;
+  deleteTeam: (id: string) => void;
 }
 
-const DEFAULT_ACTIVITIES: ActivityDTO[] = [];
+const DEFAULT_TEAMS: TeamDTO[] = [];
 
-function useActivities(): UseActivities {
+function useteams(): Useteams {
   const { accessToken } = useAuthContext();
   const queryClient = useQueryClient();
 
   const {
     isLoading,
     error,
-    data: activities = DEFAULT_ACTIVITIES,
-  } = useQuery<ActivityDTO[], Error>({
+    data: teams = DEFAULT_TEAMS,
+  } = useQuery<TeamDTO[], Error>({
     enabled: !!accessToken,
-    queryKey: ['activities'],
+    queryKey: ['teams'],
     queryFn: () =>
-      fetch(`${import.meta.env.VITE_API_HOST}/api/activities`, {
+      fetch(`${import.meta.env.VITE_API_HOST}/api/teams`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -32,30 +32,30 @@ function useActivities(): UseActivities {
       }).then((r) => r.json()),
   });
 
-  const addMutation = useMutation<ActivityDTO, Error, NewActivityDTO, unknown>({
-    mutationFn: (newActivity) => {
-      return fetch(`${import.meta.env.VITE_API_HOST}/api/activities`, {
+  const addMutation = useMutation<TeamDTO, Error, NewTeamDTO, unknown>({
+    mutationFn: (newTeam) => {
+      return fetch(`${import.meta.env.VITE_API_HOST}/api/teams`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         mode: 'cors',
-        body: JSON.stringify(newActivity),
+        body: JSON.stringify(newTeam),
       }).then((r) => r.json());
     },
-    onSuccess: (newActivity) => {
-      queryClient.setQueryData(['activities'], (old: ActivityDTO[]) => [
+    onSuccess: (newTeam) => {
+      queryClient.setQueryData(['teams'], (old: TeamDTO[]) => [
         ...old,
-        newActivity,
+        newTeam,
       ]);
     },
   });
 
   const deleteMutation = useMutation<any, Error, string, unknown>({
-    mutationFn: (activityId: string) => {
+    mutationFn: (teamId: string) => {
       return fetch(
-        `${import.meta.env.VITE_API_HOST}/api/activities/${activityId}`,
+        `${import.meta.env.VITE_API_HOST}/api/teams/${teamId}`,
         {
           method: 'DELETE',
           headers: {
@@ -65,9 +65,9 @@ function useActivities(): UseActivities {
         }
       );
     },
-    onSuccess: (_result, activityId, _context) => {
-      queryClient.setQueryData(['activities'], (old: ActivityDTO[]) =>
-        old.filter(({ id }) => id != activityId)
+    onSuccess: (_result, teamId, _context) => {
+      queryClient.setQueryData(['teams'], (old: TeamDTO[]) =>
+        old.filter(({ id }) => id != teamId)
       );
     },
   });
@@ -75,10 +75,10 @@ function useActivities(): UseActivities {
   return {
     isLoading,
     error,
-    activities,
-    addActivity: addMutation.mutate,
-    deleteActivity: deleteMutation.mutate,
+    teams,
+    addTeam: addMutation.mutate,
+    deleteTeam: deleteMutation.mutate,
   };
 }
 
-export default useActivities;
+export default useteams;
