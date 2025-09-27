@@ -19,5 +19,5 @@ public interface ITeamService {
   void registerMember(UUID teamId, UUID competitorId)
       throws NotFoundException, UnauthorisedException;
 
-  void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException;
+  void deleteById(UUID id) throws NotFoundException, UnauthorisedException;
 }

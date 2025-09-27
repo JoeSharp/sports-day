@@ -62,7 +62,7 @@ public class TeamService implements ITeamService {
   }
 
   @Override
-  public void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException {
+  public void deleteById(UUID id) throws NotFoundException, UnauthorisedException {
     teamRepository.deleteById(id);
   }
 }

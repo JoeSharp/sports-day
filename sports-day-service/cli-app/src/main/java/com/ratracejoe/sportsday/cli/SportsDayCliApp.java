@@ -81,22 +81,7 @@ public class SportsDayCliApp {
     ITeamRepository teamRepository = new TeamRepositoryFileImpl(rootDirectory);
     IParticipantRepository participantRepository = new ParticipantRepositoryFileImpl(rootDirectory);
     IMembershipRepository membershipRepository = new MembershipRepositoryFileImpl(rootDirectory);
-    IFinishingOrderRepository finishingOrderRepository =
-        new FinishingOrderRepositoryFileImpl(rootDirectory);
-    ITimedFinishingOrderRepository timedFinishingOrderRepository =
-        new TimedFinishingOrderRepositoryFileImpl(rootDirectory);
-    IPointScoreSheetRepository pointScoreSheetRepository =
-        new PointScoreRepositoryFileImpl(rootDirectory);
-
-    // Services
-    IFinishingOrderService finishingOrderService =
-        new FinishingOrderService(competitorRepository, finishingOrderRepository);
-    ITimedFinishingOrderService timedFinishingOrderService =
-        new TimedFinishingOrderService(competitorRepository, timedFinishingOrderRepository);
-    IPointScoreService pointScoreService =
-        new PointScoreService(competitorRepository, pointScoreSheetRepository);
-    IScoreService scoreService =
-        new ScoreService(finishingOrderService, timedFinishingOrderService, pointScoreService);
+    IScoreService scoreService = getScoreService(rootDirectory, competitorRepository);
 
     IActivityService activityService =
         new ActivityService(activityRepository, auditLogger, userSupplier);
@@ -114,5 +99,23 @@ public class SportsDayCliApp {
     // And finally...this is why we use dependency injection amiright?
     return new SportsDayCommandService(
         responseListener, activityService, competitorService, eventService, teamService);
+  }
+
+  private static IScoreService getScoreService(Path rootDirectory, ICompetitorRepository competitorRepository) {
+    IFinishingOrderRepository finishingOrderRepository =
+        new FinishingOrderRepositoryFileImpl(rootDirectory);
+    ITimedFinishingOrderRepository timedFinishingOrderRepository =
+        new TimedFinishingOrderRepositoryFileImpl(rootDirectory);
+    IPointScoreSheetRepository pointScoreSheetRepository =
+        new PointScoreRepositoryFileImpl(rootDirectory);
+
+    // Services
+    IFinishingOrderService finishingOrderService =
+        new FinishingOrderService(competitorRepository, finishingOrderRepository);
+    ITimedFinishingOrderService timedFinishingOrderService =
+        new TimedFinishingOrderService(competitorRepository, timedFinishingOrderRepository);
+    IPointScoreService pointScoreService =
+        new PointScoreService(competitorRepository, pointScoreSheetRepository);
+      return new ScoreService(finishingOrderService, timedFinishingOrderService, pointScoreService);
   }
 }

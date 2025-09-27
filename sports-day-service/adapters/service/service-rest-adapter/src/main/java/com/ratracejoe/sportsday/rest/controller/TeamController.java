@@ -50,7 +50,7 @@ public class TeamController {
   @DeleteMapping("/{id}")
   public void deleteTeam(@PathVariable UUID id) throws NotFoundException {
     LOGGER.info("Deleting team {}", id);
-    teamService.deleteByUuid(id);
+    teamService.deleteById(id);
   }
 
   private TeamDTO enrichTeam(Team team) {

@@ -72,7 +72,7 @@ class ActivityServiceTest {
   }
 
   @Test
-  void deleteByUuidSucceeds() throws NotFoundException {
+  void deleteByIdSucceeds() throws NotFoundException {
     // Given
     Activity activity = fixtures.activityCreated();
     UUID activityId = activity.id();
@@ -81,7 +81,7 @@ class ActivityServiceTest {
         .isEqualTo(activity.name());
 
     // When
-    activityService.deleteByUuid(activity.id());
+    activityService.deleteById(activity.id());
 
     // Then
     assertThatThrownBy(() -> activityService.getById(activityId))
@@ -96,12 +96,12 @@ class ActivityServiceTest {
   }
 
   @Test
-  void deleteByUuidFailsCorrectly() {
+  void deleteByIdFailsCorrectly() {
     // Given
     UUID id = UUID.randomUUID();
 
     // When, Then
-    assertThatThrownBy(() -> activityService.deleteByUuid(id))
+    assertThatThrownBy(() -> activityService.deleteById(id))
         .isInstanceOf(NotFoundException.class);
 
     assertThat(fixtures.memoryAdapters().getAuditMessages())

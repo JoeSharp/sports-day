@@ -1,20 +1,26 @@
 package com.ratracejoe.sportsday.command.services;
 
-import com.ratracejoe.sportsday.command.ICommandHandler;
 import com.ratracejoe.sportsday.command.IResponseListener;
-import com.ratracejoe.sportsday.command.InvalidCommandException;
+import com.ratracejoe.sportsday.domain.model.Event;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 
-public class EventCommandService implements ICommandHandler {
+public class EventCommandService extends GenericCommandService<Event> {
   private final IEventService eventService;
-  private final IResponseListener responseListener;
 
   public EventCommandService(
       final IEventService eventService, final IResponseListener responseListener) {
+    super(responseListener);
     this.eventService = eventService;
-    this.responseListener = responseListener;
+    registerHandler("create", this::createEvent);
+    registerHandler("getAll", getAllHandler(eventService::getAll));
+    registerHandler("getById", getByIdHandler(eventService::getById));
+    registerHandler("deleteById", deleteHandler(eventService::deleteById));
   }
 
+  private void createEvent(String input) {}
+
   @Override
-  public void handleCommand(String commandStr) throws InvalidCommandException {}
+  String domainToLogString(Event domain) {
+    return String.format("Event id: %s", domain.id());
+  }
 }

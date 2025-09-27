@@ -102,7 +102,7 @@ public class EventService implements IEventService {
   }
 
   @Override
-  public void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException {
+  public void deleteById(UUID id) throws NotFoundException, UnauthorisedException {
     eventRepository.deleteById(id);
   }
 }

@@ -14,5 +14,5 @@ public interface IActivityService {
 
   Activity createActivity(String name, String description) throws UnauthorisedException;
 
-  void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException;
+  void deleteById(UUID id) throws NotFoundException, UnauthorisedException;
 }

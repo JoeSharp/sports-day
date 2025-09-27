@@ -53,7 +53,7 @@ public class ActivityService implements IActivityService {
   }
 
   @Override
-  public void deleteByUuid(UUID id) throws NotFoundException {
+  public void deleteById(UUID id) throws NotFoundException {
     try {
       activityRepository.deleteById(id);
     } catch (NotFoundException e) {

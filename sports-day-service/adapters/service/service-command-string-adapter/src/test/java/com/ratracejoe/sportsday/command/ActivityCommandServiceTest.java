@@ -1,40 +1,17 @@
 package com.ratracejoe.sportsday.command;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.ratracejoe.sportsday.domain.model.Activity;
-import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
-import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
-import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
-import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
 import java.util.List;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class SportsDayCommandServiceTest {
-  private IResponseListener responseListener;
-  private IActivityService activityService;
-  private ICompetitorService competitorService;
-  private IEventService eventService;
-  private ITeamService teamService;
-  private SportsDayCommandService commandService;
-
-  @BeforeEach
-  void beforeEach() {
-    responseListener = mock(IResponseListener.class);
-    activityService = mock(IActivityService.class);
-    competitorService = mock(ICompetitorService.class);
-    eventService = mock(IEventService.class);
-    teamService = mock(ITeamService.class);
-    commandService =
-        new SportsDayCommandService(
-            responseListener, activityService, competitorService, eventService, teamService);
-  }
-
+class ActivityCommandServiceTest extends GenericCommandServiceTest {
   @Test
-  void addActivity() throws InvalidCommandException {
+  void createActivity() throws InvalidCommandException {
     // When
     commandService.handleCommand("activity add swimming \"in water init\"");
 
@@ -43,7 +20,7 @@ class SportsDayCommandServiceTest {
   }
 
   @Test
-  void getActivityById() throws InvalidCommandException {
+  void getById() throws InvalidCommandException {
     // When
     Activity activity = new Activity(UUID.randomUUID(), "running", "getting sweaty");
     when(activityService.getById(activity.id())).thenReturn(activity);
@@ -55,7 +32,7 @@ class SportsDayCommandServiceTest {
   }
 
   @Test
-  void getAllActivities() throws InvalidCommandException {
+  void getAll() throws InvalidCommandException {
     // When
     List<Activity> activities =
         List.of(
@@ -68,6 +45,18 @@ class SportsDayCommandServiceTest {
     // Then
     verify(activityService, times(1)).getAll();
     verify(responseListener, times(3)).handleResponse(any(String.class));
+  }
+
+  @Test
+  void deleteById() throws InvalidCommandException {
+    // Given
+    UUID activityId = UUID.randomUUID();
+
+    // When
+    commandService.handleCommand("activity deleteById " + activityId);
+
+    // Then
+    verify(activityService).deleteById(activityId);
   }
 
   @Test

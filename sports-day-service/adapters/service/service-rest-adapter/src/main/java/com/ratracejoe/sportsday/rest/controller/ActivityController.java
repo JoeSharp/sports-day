@@ -43,6 +43,6 @@ public class ActivityController {
   @DeleteMapping("/{id}")
   public void deleteActivity(@PathVariable UUID id) throws NotFoundException {
     LOGGER.info("Deleting activity {}", id);
-    activityService.deleteByUuid(id);
+    activityService.deleteById(id);
   }
 }

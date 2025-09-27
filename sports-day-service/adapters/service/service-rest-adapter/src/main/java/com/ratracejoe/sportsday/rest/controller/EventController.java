@@ -74,6 +74,6 @@ public class EventController {
   @DeleteMapping("/{id}")
   public void deleteEvent(@PathVariable UUID id) throws NotFoundException {
     LOGGER.info("Deleting event {}", id);
-    eventService.deleteByUuid(id);
+    eventService.deleteById(id);
   }
 }

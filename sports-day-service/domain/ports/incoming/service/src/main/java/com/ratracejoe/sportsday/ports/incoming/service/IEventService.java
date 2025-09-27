@@ -34,5 +34,5 @@ public interface IEventService {
   void stopEvent(UUID id)
       throws NotFoundException, InvalidEventStateException, UnauthorisedException;
 
-  void deleteByUuid(UUID id) throws NotFoundException, UnauthorisedException;
+  void deleteById(UUID id) throws NotFoundException, UnauthorisedException;
 }
