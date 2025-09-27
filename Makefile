@@ -84,6 +84,12 @@ dev-run-ui:
 	echo "Running UI in Development Mode"
 	npm run dev --prefix ./${APPLICATION_NAME}-ui
 
+# Run the CLI version of the app
+# make sports-day-cli DIR=<directory for file based storage>
+sports-day-cli:
+	./${APPLICATION_NAME}-service/gradlew -p ./${APPLICATION_NAME}-service :cli-app:installDist
+	./${APPLICATION_NAME}-service/cli-app/build/install/cli-app/bin/cli-app $(DIR)
+
 # Run the backend service outside of containers
 dev-run-service:
 	echo "Running Service in Development Mode"
@@ -278,7 +284,6 @@ docker-exec-migration-test-db:
 docker-exec-redis:
 	echo "Connecting to local cache"
 	docker exec -it ${APPLICATION_NAME}-cache redis-cli
-
 
 k8s-exec-db:
 	echo "Connecting to Database"
