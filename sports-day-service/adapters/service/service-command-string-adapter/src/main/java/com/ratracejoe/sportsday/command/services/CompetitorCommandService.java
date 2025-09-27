@@ -16,5 +16,5 @@ public class CompetitorCommandService implements ICommandHandler {
   }
 
   @Override
-  public void handleCommand(String command) throws InvalidCommandException {}
+  public void handleCommand(String commandStr) throws InvalidCommandException {}
 }

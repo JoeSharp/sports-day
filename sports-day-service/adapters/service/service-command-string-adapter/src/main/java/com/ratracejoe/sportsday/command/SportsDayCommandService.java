@@ -8,12 +8,10 @@ import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
 import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
+import java.util.Map;
 
 public class SportsDayCommandService implements ICommandHandler {
-  private final ActivityCommandService activityService;
-  private final CompetitorCommandService competitorService;
-  private final EventCommandService eventService;
-  private final TeamCommandService teamService;
+  private final Map<String, ICommandHandler> commandHandlers;
 
   public SportsDayCommandService(
       IResponseListener responseListener,
@@ -21,12 +19,22 @@ public class SportsDayCommandService implements ICommandHandler {
       ICompetitorService competitorService,
       IEventService eventService,
       ITeamService teamService) {
-    this.activityService = new ActivityCommandService(activityService, responseListener);
-    this.competitorService = new CompetitorCommandService(competitorService, responseListener);
-    this.eventService = new EventCommandService(eventService, responseListener);
-    this.teamService = new TeamCommandService(teamService, responseListener);
+    commandHandlers =
+        Map.of(
+            "activity", new ActivityCommandService(activityService, responseListener),
+            "competitor", new CompetitorCommandService(competitorService, responseListener),
+            "team", new TeamCommandService(teamService, responseListener),
+            "event", new EventCommandService(eventService, responseListener));
   }
 
   @Override
-  public void handleCommand(String command) throws InvalidCommandException {}
+  public void handleCommand(String commandStr) throws InvalidCommandException {
+    Command command = Command.fromString(commandStr);
+
+    if (!commandHandlers.containsKey(command.opcode())) {
+      throw new InvalidCommandException();
+    }
+
+    commandHandlers.get(command.opcode()).handleCommand(command.operand());
+  }
 }
