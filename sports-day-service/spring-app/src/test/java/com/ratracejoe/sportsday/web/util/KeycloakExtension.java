@@ -1,18 +1,16 @@
 package com.ratracejoe.sportsday.web.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 
-public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
+public class KeycloakExtension {
   private static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:26.1.3";
   private static final String CLIENT_ID = "timesheets-service";
   private static final String CLIENT_SECRET = "rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy";
@@ -25,6 +23,10 @@ public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
           .withClasspathResourceMapping(
               "keycloak/", "/opt/keycloak/data/import/", BindMode.READ_ONLY);
   private static RestClient keycloakClient;
+
+  public void registerDynamicProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", this::getIssuerUri);
+  }
 
   public HttpHeaders getAuthHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -56,19 +58,9 @@ public class KeycloakExtension implements BeforeAllCallback, AfterAllCallback {
     keycloakClient = RestClient.builder().baseUrl(getIssuerUri()).build();
   }
 
-  @Override
-  public void beforeAll(ExtensionContext context) {
-    beforeAll();
-  }
-
   public void afterAll() {
     keycloak.stop();
     keycloak.close();
-  }
-
-  @Override
-  public void afterAll(ExtensionContext context) {
-    afterAll();
   }
 
   public String getIssuerUri() {

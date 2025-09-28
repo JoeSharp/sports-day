@@ -12,6 +12,7 @@ import com.ratracejoe.sportsday.web.util.SportsDayContainers;
 import com.ratracejoe.sportsday.web.util.TestClient;
 import com.ratracejoe.sportsday.web.util.TestUser;
 import io.cucumber.java.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,15 @@ public class TeamControllerIntegrationTest {
 
   @KafkaListener(topics = "audit", groupId = "testGroup")
   public static void processMessage(String content) {
-    SportsDayContainers.processMessage(content);
+    SportsDayContainers.getKafkaExtension().processMessage(content);
   }
 
   static {
-    SportsDayContainers.beforeAll();
+    try {
+      SportsDayContainers.beforeAll();
+    } catch (Exception e) {
+      Assertions.fail("Could not initialise containers");
+    }
   }
 
   @AfterAll

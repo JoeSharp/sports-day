@@ -41,7 +41,7 @@ public class SportsDayIntegrationTests {
 
   @KafkaListener(topics = "audit", groupId = "testGroup")
   public void processMessage(String content) {
-    SportsDayContainers.processMessage(content);
+    SportsDayContainers.getKafkaExtension().processMessage(content);
   }
 
   /**
@@ -50,12 +50,12 @@ public class SportsDayIntegrationTests {
    * overriding those Cucumber lifecycle methods and manually setting up those things.
    */
   @BeforeAll
-  public static void beforeAll() {
+  public static void beforeAll() throws Exception {
     SportsDayContainers.beforeAll();
   }
 
   @AfterAll
-  public static void afterAll() {
+  public static void afterAll() throws Exception {
     SportsDayContainers.afterAll();
   }
 
@@ -96,7 +96,7 @@ public class SportsDayIntegrationTests {
     Awaitility.await()
         .atMost(Duration.ofSeconds(5))
         .pollInterval(Duration.ofSeconds(1))
-        .until(() -> SportsDayContainers.getAuditsReceived().contains(msg));
+        .until(() -> SportsDayContainers.getKafkaExtension().getAuditsReceived().contains(msg));
   }
 
   @When("the client requests activities")
@@ -149,18 +149,19 @@ public class SportsDayIntegrationTests {
 
   @And("an audit captures the reading of the list of activities")
   public void anAuditCapturesTheReadingOfTheListOfActivities() {
-    assertThat(SportsDayContainers.getAuditsReceived()).contains("Activities were read");
+    assertThat(SportsDayContainers.getKafkaExtension().getAuditsReceived())
+        .contains("Activities were read");
   }
 
   @And("an audit captures the failed read")
   public void anAuditCapturesTheFailedRead() {
-    assertThat(SportsDayContainers.getAuditsReceived())
+    assertThat(SportsDayContainers.getKafkaExtension().getAuditsReceived())
         .contains(String.format("Failed to read Activity %s", activityUnderTest.id()));
   }
 
   @And("an audit captures the failed deletion")
   public void anAuditCapturesTheFailedDeletion() {
-    assertThat(SportsDayContainers.getAuditsReceived())
+    assertThat(SportsDayContainers.getKafkaExtension().getAuditsReceived())
         .contains(String.format("Failed to delete Activity %s", activityUnderTest.id()));
   }
 
@@ -168,16 +169,17 @@ public class SportsDayIntegrationTests {
   public void anAuditCapturesThatSingleActivity(String action) {
     switch (action) {
       case "read":
-        assertThat(SportsDayContainers.getAuditsReceived())
+        assertThat(SportsDayContainers.getKafkaExtension().getAuditsReceived())
             .contains(String.format("Activity %s read", activityUnderTest.id()));
         break;
       case "deletion":
-        assertThat(SportsDayContainers.getAuditsReceived())
+        assertThat(SportsDayContainers.getKafkaExtension().getAuditsReceived())
             .contains(String.format("Activity %s deleted", activityUnderTest.id()));
         break;
       case "creation":
         var startsWith = String.format("Activity '%s' created with ID", activityUnderTest.name());
-        assertThat(SportsDayContainers.getAuditsReceived()).anyMatch(l -> l.startsWith(startsWith));
+        assertThat(SportsDayContainers.getKafkaExtension().getAuditsReceived())
+            .anyMatch(l -> l.startsWith(startsWith));
         break;
       default:
         fail("Invalid action to capture for audit {}", action);
