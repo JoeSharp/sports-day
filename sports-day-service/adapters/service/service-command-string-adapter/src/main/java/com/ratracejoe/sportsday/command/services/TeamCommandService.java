@@ -1,5 +1,6 @@
 package com.ratracejoe.sportsday.command.services;
 
+import com.ratracejoe.sportsday.command.Command;
 import com.ratracejoe.sportsday.command.IResponseListener;
 import com.ratracejoe.sportsday.domain.model.Team;
 import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
@@ -18,7 +19,7 @@ public class TeamCommandService extends GenericCommandService<Team> {
   }
 
   private void createTeam(String input) {
-    teamService.createTeam(input);
+    teamService.createTeam(Command.stripQuotes(input));
   }
 
   @Override

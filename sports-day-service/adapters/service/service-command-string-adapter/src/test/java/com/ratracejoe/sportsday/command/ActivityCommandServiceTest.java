@@ -34,12 +34,12 @@ class ActivityCommandServiceTest extends GenericCommandServiceTest {
   @Test
   void getAll() throws InvalidCommandException {
     // When
-    List<Activity> activities =
+    List<Activity> domainList =
         List.of(
             new Activity(UUID.randomUUID(), "running", "getting sweaty"),
             new Activity(UUID.randomUUID(), "swimming", "getting wet"),
             new Activity(UUID.randomUUID(), "sky diving", "go splat"));
-    when(activityService.getAll()).thenReturn(activities);
+    when(activityService.getAll()).thenReturn(domainList);
     commandService.handleCommand("activity getAll");
 
     // Then
@@ -50,13 +50,13 @@ class ActivityCommandServiceTest extends GenericCommandServiceTest {
   @Test
   void deleteById() throws InvalidCommandException {
     // Given
-    UUID activityId = UUID.randomUUID();
+    UUID id = UUID.randomUUID();
 
     // When
-    commandService.handleCommand("activity deleteById " + activityId);
+    commandService.handleCommand("activity deleteById " + id);
 
     // Then
-    verify(activityService).deleteById(activityId);
+    verify(activityService).deleteById(id);
   }
 
   @Test
