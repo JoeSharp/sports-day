@@ -3,6 +3,7 @@ package com.ratracejoe.sportsday.rest.controller;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
 import com.ratracejoe.sportsday.rest.model.CompetitorDTO;
+import com.ratracejoe.sportsday.rest.model.NewCompetitorDTO;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class CompetitorController {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public CompetitorDTO createCompetitor(@RequestBody CompetitorDTO newCompetitor) {
+  public CompetitorDTO createCompetitor(@RequestBody NewCompetitorDTO newCompetitor) {
     var competitor = competitorService.createCompetitor(newCompetitor.name());
     LOGGER.info("Created Competitor {}", competitor);
     return CompetitorDTO.fromDomain(competitor);

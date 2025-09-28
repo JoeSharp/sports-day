@@ -4,6 +4,7 @@ import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.domain.model.Competitor;
 import com.ratracejoe.sportsday.domain.model.Team;
 import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
+import com.ratracejoe.sportsday.rest.model.NewTeamDTO;
 import com.ratracejoe.sportsday.rest.model.TeamDTO;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class TeamController {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public TeamDTO createTeam(@RequestBody TeamDTO newTeam) {
+  public TeamDTO createTeam(@RequestBody NewTeamDTO newTeam) {
     var team = teamService.createTeam(newTeam.name());
     LOGGER.info("Created Team {}", team);
     return enrichTeam(team);

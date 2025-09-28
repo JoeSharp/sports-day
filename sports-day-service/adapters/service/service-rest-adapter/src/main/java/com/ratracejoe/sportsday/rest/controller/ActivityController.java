@@ -3,6 +3,7 @@ package com.ratracejoe.sportsday.rest.controller;
 import com.ratracejoe.sportsday.domain.exception.NotFoundException;
 import com.ratracejoe.sportsday.ports.incoming.service.IActivityService;
 import com.ratracejoe.sportsday.rest.model.ActivityDTO;
+import com.ratracejoe.sportsday.rest.model.NewActivityDTO;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class ActivityController {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public ActivityDTO createActivity(@RequestBody ActivityDTO newActivity) {
+  public ActivityDTO createActivity(@RequestBody NewActivityDTO newActivity) {
     var activity =
         ActivityDTO.fromDomain(
             activityService.createActivity(newActivity.name(), newActivity.description()));

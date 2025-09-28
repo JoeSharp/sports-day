@@ -6,6 +6,7 @@ import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 import com.ratracejoe.sportsday.rest.model.CompetitorDTO;
 import com.ratracejoe.sportsday.rest.model.EventDTO;
+import com.ratracejoe.sportsday.rest.model.NewEventDTO;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class EventController {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public EventDTO createEvent(@RequestBody EventDTO newEvent) {
+  public EventDTO createEvent(@RequestBody NewEventDTO newEvent) {
     var event =
         eventService.createEvent(
             newEvent.activityId(),
@@ -54,7 +55,8 @@ public class EventController {
   }
 
   @PostMapping("/{eventId}/registerParticipant/{participantId}")
-  public EventDTO registerMember(@PathVariable UUID eventId, @PathVariable UUID participantId) {
+  public EventDTO registerParticipant(
+      @PathVariable UUID eventId, @PathVariable UUID participantId) {
     eventService.registerParticipant(eventId, participantId);
     return getById(eventId);
   }

@@ -101,8 +101,7 @@ class ActivityServiceTest {
     UUID id = UUID.randomUUID();
 
     // When, Then
-    assertThatThrownBy(() -> activityService.deleteById(id))
-        .isInstanceOf(NotFoundException.class);
+    assertThatThrownBy(() -> activityService.deleteById(id)).isInstanceOf(NotFoundException.class);
 
     assertThat(fixtures.memoryAdapters().getAuditMessages())
         .containsExactly("Failed to delete Activity " + id);
