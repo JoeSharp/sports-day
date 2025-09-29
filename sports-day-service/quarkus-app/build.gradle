@@ -1,0 +1,32 @@
+plugins {
+    id 'io.quarkus' version '3.9.5'
+}
+
+group = 'com.ratracejoe'
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+    implementation enforcedPlatform("io.quarkus.platform:quarkus-bom:3.9.5")
+    implementation 'io.quarkus:quarkus-rest'
+    implementation 'io.quarkus:quarkus-arc'
+    // Both are required to pick up spring dependencies
+    implementation 'io.quarkus:quarkus-spring-web'
+    implementation 'io.quarkus:quarkus-rest-jackson'
+
+    implementation project(":domain:use-cases")
+    implementation project(":domain:model")
+    implementation project(":domain:ports:incoming:service")
+    implementation project(":domain:ports:outgoing:audit")
+    implementation project(":domain:ports:outgoing:auth")
+    implementation project(":domain:ports:outgoing:repository")
+    implementation project(":adapters:auth:auth-memory-adapter")
+    implementation project(":adapters:audit:audit-memory-adapter")
+    implementation project(":adapters:auth:auth-rest-adapter")
+    implementation project(":adapters:service:service-rest-adapter")
+    implementation project(":adapters:repository:repository-memory-adapter")
+
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+}
