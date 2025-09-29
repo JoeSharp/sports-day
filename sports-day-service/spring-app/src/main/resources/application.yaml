@@ -4,18 +4,15 @@ server:
 spring:
   application:
     name: sports-day-service
-  jpa:
-    hibernate:
-      ddl-auto: update
   datasource:
-    url: ${DB_URL:jdbc:postgresql://${LOCAL_STACK}:5432/sports_day}
+    url: ${DB_URL:jdbc:postgresql://${LOCAL_STACK_HOST}:5432/sports_day}
     username: ${DB_USERNAME:}
     password: ${DB_PASSWORD:}
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:${LOCAL_STACK}:29092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:${LOCAL_STACK_HOST}:29092}
   data:
     redis:
-      host: ${REDIS_HOST:${LOCAL_STACK}}
+      host: ${REDIS_HOST:${LOCAL_STACK_HOST}}
       port: ${REDIS_PORT:6379}
   security:
     oauth2:
@@ -26,10 +23,10 @@ spring:
             clientSecret: ${CLIENT_SECRET:rX0uyWb89PxdeclkQoLMtmRtCLRxFlKy}
       resourceserver:
         jwt:
-          issuer-uri: ${OAUTH2_URL:https://sports-day-auth.${LOCAL_STACK}.nip.io:8085/realms/ratracejoe}
+          issuer-uri: ${OAUTH2_URL:https://sports-day-auth.${LOCAL_STACK_HOST}.nip.io:8085/realms/ratracejoe}
 
 cors:
-  ui-host: ${UI_DOMAIN:http://sports-day-ui.${LOCAL_STACK}.nip.io:9080}
+  ui-host: ${UI_DOMAIN:http://sports-day-ui.${LOCAL_STACK_HOST}.nip.io:9080}
 logging:
   level:
     org:

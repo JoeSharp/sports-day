@@ -2,7 +2,6 @@ package com.ratracejoe.sportsday.web.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.kafka.ConfluentKafkaContainer;
 

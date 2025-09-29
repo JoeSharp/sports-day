@@ -9,7 +9,6 @@ public class SportsDayContainers {
   @Getter private static final KafkaExtension kafkaExtension = new KafkaExtension();
   private static final RedisExtension redisExtension = new RedisExtension();
 
-
   /**
    * It's a bit odd, but I think that the Cucumber runner is overriding the lifecycle methods used
    * by JUnit 5 to initialise Extensions, and the Testcontainers annotation. So here we are

@@ -2,7 +2,7 @@ import React from 'react';
 import useTeams from '../../api/useTeams';
 
 function teamTable() {
-  const { teams, deleteteam } = useTeams();
+  const { teams, deleteTeam } = useTeams();
 
   const onDelete: React.MouseEventHandler<HTMLButtonElement> =
     React.useCallback(
@@ -14,7 +14,7 @@ function teamTable() {
 
         if (!target.dataset.teamId) return;
 
-        deleteteam(target.dataset.teamId);
+        deleteTeam(target.dataset.teamId);
       },
       []
     );

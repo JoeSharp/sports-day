@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "sports-day-service",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
