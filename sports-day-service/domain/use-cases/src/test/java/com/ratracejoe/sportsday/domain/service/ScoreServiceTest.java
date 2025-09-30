@@ -10,6 +10,9 @@ import com.ratracejoe.sportsday.domain.model.score.PointScoreSheet;
 import com.ratracejoe.sportsday.domain.model.score.TimedFinishingOrder;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 import com.ratracejoe.sportsday.ports.incoming.service.IScoreService;
+import com.ratracejoe.sportsday.ports.incoming.service.score.IFinishingOrderService;
+import com.ratracejoe.sportsday.ports.incoming.service.score.IPointScoreService;
+import com.ratracejoe.sportsday.ports.incoming.service.score.ITimedFinishingOrderService;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +21,9 @@ import org.junit.jupiter.api.Test;
 class ScoreServiceTest {
   private SportsTestFixtures fixtures;
   private IEventService eventService;
+  private ITimedFinishingOrderService timedFinishingOrderService;
+  private IFinishingOrderService finishingOrderService;
+  private IPointScoreService pointScoreService;
   private IScoreService scoreService;
 
   @BeforeEach
@@ -25,6 +31,9 @@ class ScoreServiceTest {
     fixtures = new SportsTestFixtures();
     scoreService = fixtures.memoryAdapters().scoreService();
     eventService = fixtures.memoryAdapters().eventService();
+    finishingOrderService = fixtures.memoryAdapters().finishingOrderService();
+    timedFinishingOrderService = fixtures.memoryAdapters().timedFinishingOrderService();
+    pointScoreService = fixtures.memoryAdapters().pointScoreService();
   }
 
   @Test
@@ -38,12 +47,11 @@ class ScoreServiceTest {
     Competitor charles = fixtures.findCompetitor(competitors, "Leclerc");
 
     // When
-    scoreService.finishingOrderService().passFinishLine(event.id(), lewis.id());
-    scoreService.finishingOrderService().passFinishLine(event.id(), max.id());
-    scoreService.finishingOrderService().passFinishLine(event.id(), charles.id());
-    scoreService.finishingOrderService().passFinishLine(event.id(), lando.id());
-    FinishingOrder finishingOrder =
-        scoreService.finishingOrderService().getFinishingOrder(event.id());
+    finishingOrderService.passFinishLine(event.id(), lewis.id());
+    finishingOrderService.passFinishLine(event.id(), max.id());
+    finishingOrderService.passFinishLine(event.id(), charles.id());
+    finishingOrderService.passFinishLine(event.id(), lando.id());
+    FinishingOrder finishingOrder = finishingOrderService.getFinishingOrder(event.id());
 
     // Then
     assertThat(finishingOrder).isNotNull();
@@ -62,13 +70,13 @@ class ScoreServiceTest {
     Competitor charles = fixtures.findCompetitor(competitors, "Leclerc");
 
     // When
-    scoreService.timedFinishingOrderService().passFinishLineInTime(event.id(), max.id(), 2000);
-    scoreService.timedFinishingOrderService().passFinishLineInTime(event.id(), lewis.id(), 1600);
-    scoreService.timedFinishingOrderService().passFinishLineInTime(event.id(), lando.id(), 3000);
-    scoreService.timedFinishingOrderService().passFinishLineInTime(event.id(), charles.id(), 1500);
+    timedFinishingOrderService.passFinishLineInTime(event.id(), max.id(), 2000);
+    timedFinishingOrderService.passFinishLineInTime(event.id(), lewis.id(), 1600);
+    timedFinishingOrderService.passFinishLineInTime(event.id(), lando.id(), 3000);
+    timedFinishingOrderService.passFinishLineInTime(event.id(), charles.id(), 1500);
 
     TimedFinishingOrder timedFinishingOrder =
-        scoreService.timedFinishingOrderService().getTimedFinishingOrder(event.id());
+        timedFinishingOrderService.getTimedFinishingOrder(event.id());
     List<UUID> finishingOrder = timedFinishingOrder.finishingOrder();
 
     // Then
@@ -90,14 +98,14 @@ class ScoreServiceTest {
     Competitor holyfield = fixtures.findCompetitor(competitors, "Holyfield");
 
     // When
-    scoreService.pointScoreService().addPoints(event.id(), tyson.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), tyson.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), tyson.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), holyfield.id(), 1);
-    PointScoreSheet result = scoreService.pointScoreService().getPoints(event.id());
+    pointScoreService.addPoints(event.id(), tyson.id(), 1);
+    pointScoreService.addPoints(event.id(), holyfield.id(), 1);
+    pointScoreService.addPoints(event.id(), holyfield.id(), 1);
+    pointScoreService.addPoints(event.id(), tyson.id(), 1);
+    pointScoreService.addPoints(event.id(), tyson.id(), 1);
+    pointScoreService.addPoints(event.id(), holyfield.id(), 1);
+    pointScoreService.addPoints(event.id(), holyfield.id(), 1);
+    PointScoreSheet result = pointScoreService.getPoints(event.id());
 
     // Then
     assertThat(result).isNotNull();
@@ -113,12 +121,12 @@ class ScoreServiceTest {
     Competitor liverpool = fixtures.findCompetitor(competitors, "Liverpool");
 
     // When
-    scoreService.pointScoreService().addPoints(event.id(), manchesterUnited.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), liverpool.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), manchesterUnited.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), liverpool.id(), 1);
-    scoreService.pointScoreService().addPoints(event.id(), manchesterUnited.id(), 1);
-    PointScoreSheet result = scoreService.pointScoreService().getPoints(event.id());
+    pointScoreService.addPoints(event.id(), manchesterUnited.id(), 1);
+    pointScoreService.addPoints(event.id(), liverpool.id(), 1);
+    pointScoreService.addPoints(event.id(), manchesterUnited.id(), 1);
+    pointScoreService.addPoints(event.id(), liverpool.id(), 1);
+    pointScoreService.addPoints(event.id(), manchesterUnited.id(), 1);
+    PointScoreSheet result = pointScoreService.getPoints(event.id());
 
     // Then
     assertThat(result).isNotNull();

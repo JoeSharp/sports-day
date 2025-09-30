@@ -13,6 +13,9 @@ import com.ratracejoe.sportsday.ports.incoming.service.ICompetitorService;
 import com.ratracejoe.sportsday.ports.incoming.service.IEventService;
 import com.ratracejoe.sportsday.ports.incoming.service.IScoreService;
 import com.ratracejoe.sportsday.ports.incoming.service.ITeamService;
+import com.ratracejoe.sportsday.ports.incoming.service.score.IFinishingOrderService;
+import com.ratracejoe.sportsday.ports.incoming.service.score.IPointScoreService;
+import com.ratracejoe.sportsday.ports.incoming.service.score.ITimedFinishingOrderService;
 import com.ratracejoe.sportsday.ports.outgoing.audit.IAuditLogger;
 import com.ratracejoe.sportsday.repository.memory.MemoryActivityRepository;
 import com.ratracejoe.sportsday.repository.memory.MemoryCompetitorRepository;
@@ -33,6 +36,9 @@ public class MemoryAdapters {
   private final ICompetitorService competitorService;
   private final IEventService eventService;
   private final IScoreService scoreService;
+  private final IFinishingOrderService finishingOrderService;
+  private final ITimedFinishingOrderService timedFinishingOrderService;
+  private final IPointScoreService pointScoreService;
 
   public MemoryAdapters() {
     auditLogger = new MemoryAuditLogger();
@@ -54,12 +60,11 @@ public class MemoryAdapters {
         new TeamService(auditLogger, teamRepository, competitorRepository, membershipRepository);
     competitorService = new CompetitorService(competitorRepository);
     activityService = new ActivityService(activityRepository, auditLogger, userSupplier);
-    FinishingOrderService finishingOrderService =
+    finishingOrderService =
         new FinishingOrderService(competitorRepository, finishingOrderRepository);
-    TimedFinishingOrderService timedFinishingOrderService =
+    timedFinishingOrderService =
         new TimedFinishingOrderService(competitorRepository, timedFinishingOrderRepository);
-    PointScoreService pointScoreService =
-        new PointScoreService(competitorRepository, pointScoreSheetRepository);
+    pointScoreService = new PointScoreService(competitorRepository, pointScoreSheetRepository);
     scoreService =
         new ScoreService(finishingOrderService, timedFinishingOrderService, pointScoreService);
     eventService =
@@ -105,5 +110,17 @@ public class MemoryAdapters {
 
   public IAuditLogger auditLogger() {
     return auditLogger;
+  }
+
+  public final IFinishingOrderService finishingOrderService() {
+    return finishingOrderService;
+  }
+
+  public final ITimedFinishingOrderService timedFinishingOrderService() {
+    return timedFinishingOrderService;
+  }
+
+  public final IPointScoreService pointScoreService() {
+    return pointScoreService;
   }
 }

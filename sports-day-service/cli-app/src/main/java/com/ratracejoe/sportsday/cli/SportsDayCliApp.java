@@ -101,7 +101,8 @@ public class SportsDayCliApp {
         responseListener, activityService, competitorService, eventService, teamService);
   }
 
-  private static IScoreService getScoreService(Path rootDirectory, ICompetitorRepository competitorRepository) {
+  private static IScoreService getScoreService(
+      Path rootDirectory, ICompetitorRepository competitorRepository) {
     IFinishingOrderRepository finishingOrderRepository =
         new FinishingOrderRepositoryFileImpl(rootDirectory);
     ITimedFinishingOrderRepository timedFinishingOrderRepository =
@@ -116,6 +117,6 @@ public class SportsDayCliApp {
         new TimedFinishingOrderService(competitorRepository, timedFinishingOrderRepository);
     IPointScoreService pointScoreService =
         new PointScoreService(competitorRepository, pointScoreSheetRepository);
-      return new ScoreService(finishingOrderService, timedFinishingOrderService, pointScoreService);
+    return new ScoreService(finishingOrderService, timedFinishingOrderService, pointScoreService);
   }
 }

@@ -1,13 +1,8 @@
 package com.ratracejoe.sportsday.ports.incoming.service;
 
-import com.ratracejoe.sportsday.ports.incoming.service.score.IFinishingOrderService;
-import com.ratracejoe.sportsday.ports.incoming.service.score.IPointScoreService;
-import com.ratracejoe.sportsday.ports.incoming.service.score.ITimedFinishingOrderService;
+import com.ratracejoe.sportsday.domain.model.ScoreType;
+import java.util.UUID;
 
 public interface IScoreService {
-  ITimedFinishingOrderService timedFinishingOrderService();
-
-  IFinishingOrderService finishingOrderService();
-
-  IPointScoreService pointScoreService();
+  void createNew(UUID eventId, ScoreType scoreType);
 }

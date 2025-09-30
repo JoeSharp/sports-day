@@ -48,17 +48,7 @@ public class EventService implements IEventService {
             scoreType,
             maxParticipants);
     eventRepository.save(event);
-    switch (scoreType) {
-      case FINISHING_ORDER:
-        scoreService.finishingOrderService().createNew(event.id());
-        break;
-      case TIMED_FINISHING_ORDER:
-        scoreService.timedFinishingOrderService().createNew(event.id());
-        break;
-      case POINTS_SCORE_SHEET:
-        scoreService.pointScoreService().createNew(event.id());
-        break;
-    }
+    scoreService.createNew(event.id(), scoreType);
     return event;
   }
 

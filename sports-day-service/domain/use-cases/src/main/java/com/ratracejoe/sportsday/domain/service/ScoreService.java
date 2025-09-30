@@ -1,9 +1,11 @@
 package com.ratracejoe.sportsday.domain.service;
 
+import com.ratracejoe.sportsday.domain.model.ScoreType;
 import com.ratracejoe.sportsday.ports.incoming.service.IScoreService;
 import com.ratracejoe.sportsday.ports.incoming.service.score.IFinishingOrderService;
 import com.ratracejoe.sportsday.ports.incoming.service.score.IPointScoreService;
 import com.ratracejoe.sportsday.ports.incoming.service.score.ITimedFinishingOrderService;
+import java.util.UUID;
 
 public class ScoreService implements IScoreService {
   private final IFinishingOrderService finishingOrderService;
@@ -20,17 +22,17 @@ public class ScoreService implements IScoreService {
   }
 
   @Override
-  public ITimedFinishingOrderService timedFinishingOrderService() {
-    return timedFinishingOrderService;
-  }
-
-  @Override
-  public IFinishingOrderService finishingOrderService() {
-    return finishingOrderService;
-  }
-
-  @Override
-  public IPointScoreService pointScoreService() {
-    return pointScoreService;
+  public void createNew(UUID eventId, ScoreType scoreType) {
+    switch (scoreType) {
+      case FINISHING_ORDER:
+        finishingOrderService.createNew(eventId);
+        break;
+      case TIMED_FINISHING_ORDER:
+        timedFinishingOrderService.createNew(eventId);
+        break;
+      case POINTS_SCORE_SHEET:
+        pointScoreService.createNew(eventId);
+        break;
+    }
   }
 }
