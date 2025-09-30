@@ -9,6 +9,7 @@ dependencies {
     implementation enforcedPlatform("io.quarkus.platform:quarkus-bom:3.9.5")
     implementation 'io.quarkus:quarkus-rest'
     implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-messaging-kafka'
     // Both are required to pick up spring dependencies
     implementation 'io.quarkus:quarkus-spring-web'
     implementation 'io.quarkus:quarkus-rest-jackson'
@@ -24,9 +25,4 @@ dependencies {
     implementation project(":adapters:auth:auth-rest-adapter")
     implementation project(":adapters:service:service-rest-adapter")
     implementation project(":adapters:repository:repository-memory-adapter")
-
-    compileOnly 'org.projectlombok:lombok:1.18.36'
-    annotationProcessor 'org.projectlombok:lombok:1.18.36'
-    testCompileOnly 'org.projectlombok:lombok:1.18.36'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
