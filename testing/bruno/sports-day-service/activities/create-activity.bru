@@ -1,0 +1,27 @@
+meta {
+  name: create-activity
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{serviceUrl}}/api/activities
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Skating",
+    "description": "Flying around on wheels"
+  }
+}
+
+script:post-response {
+  const activityId = res.getBody().id;
+  bru.setVar('activityId', activityId);
+}
+
+settings {
+  encodeUrl: true
+}

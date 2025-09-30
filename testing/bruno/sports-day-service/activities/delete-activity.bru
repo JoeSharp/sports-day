@@ -1,0 +1,15 @@
+meta {
+  name: delete-activity
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{serviceUrl}}/api/activities/{{activityId}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

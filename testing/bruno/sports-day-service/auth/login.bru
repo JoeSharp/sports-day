@@ -15,6 +15,7 @@ body:form-urlencoded {
   password: {{password}}
 }
 
-settings {
-  encodeUrl: true
+script:post-response {
+  const accessToken = res.getBody().accessToken;
+  bru.setVar('accessToken', accessToken);
 }

@@ -1,0 +1,15 @@
+meta {
+  name: get-activity
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{serviceUrl}}/api/activities/{{activityId}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
