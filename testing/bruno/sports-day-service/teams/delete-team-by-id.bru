@@ -1,0 +1,22 @@
+meta {
+  name: delete-team-by-id
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{serviceUrl}}/api/teams/{{teamId}}
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "INDIVIDUAL",
+    "name": "Lewis Hamilton"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

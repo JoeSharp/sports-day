@@ -1,0 +1,15 @@
+meta {
+  name: start-event
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{serviceUrl}}/api/events/{{eventId}}/startEvent
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

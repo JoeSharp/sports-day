@@ -1,0 +1,15 @@
+meta {
+  name: stop-event
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{serviceUrl}}/api/events/{{eventId}}/stopEvent
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

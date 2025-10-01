@@ -1,0 +1,15 @@
+meta {
+  name: register-participant
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{serviceUrl}}/api/events/{{eventId}}/registerParticipant/{{competitorId}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,15 @@
+meta {
+  name: register-member
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{serviceUrl}}/api/teams/{{teamId}}/registerMember/{{competitorId}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

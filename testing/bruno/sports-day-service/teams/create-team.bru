@@ -1,0 +1,26 @@
+meta {
+  name: create-team
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{serviceUrl}}/api/teams
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Ferrari"
+  }
+}
+
+script:post-response {
+  const teamId = res.getBody().id;
+  bru.setVar('teamId', teamId);
+}
+
+settings {
+  encodeUrl: true
+}

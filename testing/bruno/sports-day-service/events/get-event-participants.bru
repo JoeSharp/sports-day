@@ -1,0 +1,22 @@
+meta {
+  name: get-event-participants
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{serviceUrl}}/api/events/{{eventId}}/participants
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "INDIVIDUAL",
+    "name": "Lewis Hamilton"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,27 @@
+meta {
+  name: create-competitor
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{serviceUrl}}/api/competitors
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "INDIVIDUAL",
+    "name": "Lewis Hamilton"
+  }
+}
+
+script:post-response {
+  const competitorId = res.getBody().id;
+  bru.setVar('competitorId', competitorId);
+}
+
+settings {
+  encodeUrl: true
+}
