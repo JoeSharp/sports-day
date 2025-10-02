@@ -5,7 +5,4 @@ import com.ratracejoe.sportsday.domain.model.ScoreType;
 import java.util.UUID;
 
 public record NewEventDTO(
-    UUID activityId,
-    CompetitorType competitorType,
-    ScoreType scoreType,
-    int maxParticipants) {}
+    UUID activityId, CompetitorType competitorType, ScoreType scoreType, int maxParticipants) {}
