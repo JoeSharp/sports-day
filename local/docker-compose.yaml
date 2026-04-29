@@ -98,7 +98,7 @@ services:
         condition: service_healthy
 
   sports-day-db:
-    image: postgres:latest
+    image: postgres:16-alpine
     container_name: sports-day-db
     networks:
       - sports-day
@@ -167,7 +167,7 @@ services:
       - kafka
 
   auth-db:
-    image: postgres
+    image: postgres:16-alpine
     container_name: sports-day-auth-db
     networks:
       - sports-day

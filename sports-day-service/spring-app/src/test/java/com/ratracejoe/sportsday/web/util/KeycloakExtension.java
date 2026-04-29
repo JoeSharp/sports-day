@@ -21,7 +21,8 @@ public class KeycloakExtension {
           .withCommand("start-dev --import-realm")
           .withExposedPorts(KEYCLOAK_PORT)
           .withClasspathResourceMapping(
-              "keycloak/", "/opt/keycloak/data/import/", BindMode.READ_ONLY);
+              "keycloak/", "/opt/keycloak/data/import/", BindMode.READ_ONLY)
+          .withReuse(true);
   private static RestClient keycloakClient;
 
   public void registerDynamicProperties(DynamicPropertyRegistry registry) {

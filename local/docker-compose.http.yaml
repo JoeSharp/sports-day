@@ -67,7 +67,7 @@ services:
     volumes:
       - sports_day_data:/var/lib/postgresql/data
     healthcheck:
-      test: pg_isready -U ${KEYCLOAK_DATABASE_USERNAME} -d ${KEYCLOAK_DATABASE_NAME}
+      test: pg_isready -U ${SPORTS_DAY_DATABASE_USERNAME} -d ${SPORTS_DAY_DATABASE_NAME}
       interval: 10s
       timeout: 3s
       retries: 3

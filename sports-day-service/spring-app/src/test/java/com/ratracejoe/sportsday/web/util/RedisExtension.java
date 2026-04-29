@@ -8,7 +8,9 @@ public class RedisExtension {
   private static final int REDIS_PORT = 6379;
 
   private static final RedisContainer redis =
-      new RedisContainer(DockerImageName.parse("redis")).withExposedPorts(REDIS_PORT);
+      new RedisContainer(DockerImageName.parse("redis"))
+          .withExposedPorts(REDIS_PORT)
+          .withReuse(true);
 
   public void beforeAll() {
     redis.start();

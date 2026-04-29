@@ -7,7 +7,7 @@ import org.testcontainers.kafka.ConfluentKafkaContainer;
 
 public class KafkaExtension {
   private static final ConfluentKafkaContainer kafka =
-      new ConfluentKafkaContainer("confluentinc/cp-kafka:7.4.4");
+      new ConfluentKafkaContainer("confluentinc/cp-kafka:7.4.4").withReuse(true);
 
   private final List<String> auditsReceived = new ArrayList<>();
 
